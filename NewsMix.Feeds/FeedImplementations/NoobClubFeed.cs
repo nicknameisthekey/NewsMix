@@ -1,11 +1,18 @@
 using System.Diagnostics;
 using HtmlAgilityPack;
 
+namespace NewsMix.Feeds.FeedImplementations;
+
 public class NoobClubFeed : Feed
 {
     const string overwatchFeedItemType = "overwatch";
     const string wowFeedItemType = "wow";
-    const string wowClassicFeedItemType = "wow_classic";
+    public const string wowClassicFeedItemType = "wow_classic";
+    public const string hearthstoneFeedItemType = "hearthstone";
+
+    public string FeedName => "noob-club";
+
+    public string[] AvaliablePublicationTypes => new[] { hearthstoneFeedItemType, overwatchFeedItemType, wowClassicFeedItemType, wowFeedItemType };
 
     const string siteUrl = "https://www.noob-club.ru";
     static readonly Dictionary<int, string> pagesUrls = new();
@@ -35,7 +42,6 @@ public class NoobClubFeed : Feed
 
             var nodes = htmlDocument.DocumentNode
                 .SelectNodes($"//*[@class=\"entry first\"]");
-                
             foreach (var node in nodes)
             {
                 var nodeData = ParseNode(node);
@@ -62,7 +68,7 @@ public class NoobClubFeed : Feed
         {
             Text = title,
             Url = siteUrl + aritcleUrl,
-            Type = gameType
+            PublicationType = gameType
         };
     }
 
@@ -73,6 +79,7 @@ public class NoobClubFeed : Feed
             "game-icon owch" => overwatchFeedItemType,
             "game-icon wow" => wowFeedItemType,
             "game-icon wowc" => wowClassicFeedItemType,
+            "game-icon hearthstone" => hearthstoneFeedItemType,
             _ => "unknown"
         };
     }

@@ -11,6 +11,9 @@
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/bin/Debug/net7.0/NewsMix.ConsoleRunner.dll",
             "args": [],
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            },
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false
