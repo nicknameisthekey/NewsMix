@@ -7,7 +7,7 @@ public class FileRepository : UserRepository, PublicationRepository
 {
     private readonly string _baseDbPath;
     private readonly string _usersJsonFile;
-    private readonly string _publicationNotifiedListTxtFile;
+    internal readonly string _publicationNotifiedListTxtFile;
     public FileRepository(IConfiguration configuration)
     {
         _baseDbPath = configuration["FileDbPath"] ?? throw new ArgumentNullException();

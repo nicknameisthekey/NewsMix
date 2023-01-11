@@ -21,4 +21,8 @@
     <ProjectReference Include="..\NewsMix.Core\NewsMix.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="appsettings*json" CopyToPublishDirectory="Always" />
+ </ItemGroup>
+
 </Project>

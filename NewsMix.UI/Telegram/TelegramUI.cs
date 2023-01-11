@@ -83,7 +83,7 @@ public class TelegramUI : UserInterface
             user.Subscriptions.Add(new UserSubscription
             {
                 FeedName = "noob-club",
-                PublicationType = message.Text
+                PublicationType = message.Text.Replace("_", "-").Replace("/", "")
             });
 
             await _userRepo.UpsertUser(user);
