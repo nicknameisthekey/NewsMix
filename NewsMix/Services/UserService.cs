@@ -26,6 +26,10 @@ public class UserService
         if (user == null)
             throw new Exception($"user is null by userId {userId}");
 
+        if (user.Subscriptions.Any(s => s.FeedName == feedName
+                        && s.PublicationType == publicationType))
+            return;
+
         user.Subscriptions.Add(new UserSubscription
         {
             FeedName = feedName,
@@ -33,5 +37,18 @@ public class UserService
         });
 
         await _userRepository.UpsertUser(user);
+    }
+
+    public async Task AddUser(string userId, string UIType)
+    {
+        var users = await _userRepository.GetUsers();
+        if (users.Any(u => u.UserId == userId))
+            throw new Exception("user already exists");
+
+        await _userRepository.UpsertUser(new User
+        {
+            UserId = userId,
+            UIType = UIType
+        });
     }
 }

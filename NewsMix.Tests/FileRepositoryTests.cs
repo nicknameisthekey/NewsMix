@@ -1,21 +1,23 @@
-using System.Reflection;
-using Microsoft.Extensions.Configuration;
 using NewsMix.Abstractions;
 using NewsMix.Storage;
+using static TestHelpers;
 
 namespace NewsMix.Tests;
 
 public class UnitTest1
 {
-    static readonly string assemblyPath = Assembly.GetExecutingAssembly()
-                                          .Location.Replace("NewsMix.Tests.dll", "");
+    [Fact]
+    public void Not_existing_required_files_created_in_ctor()
+    {
+        var repo = new FileRepository(MockIConfiguration);
+        Assert.True(File.Exists(repo._publicationNotifiedListTxtFile));
+        Assert.True(File.Exists(repo._usersJsonFile));
+    }
 
-    static IConfiguration MockIConfiguration => new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>
-            {{"FileDbPath", assemblyPath},}!).Build();
     [Fact]
     public async Task AddToPublicationNotifiedList_doesnt_add_duplicates()
     {
+        PrepareFileStorage();
         var repo = new FileRepository(MockIConfiguration);
         File.Create(repo._publicationNotifiedListTxtFile).Close();
 
@@ -32,6 +34,7 @@ public class UnitTest1
     [Fact]
     public async Task IsPublicationNew_returns_true_if_publication_is_not_in_notified_list()
     {
+        PrepareFileStorage();
         var repo = new FileRepository(MockIConfiguration);
         File.Create(repo._publicationNotifiedListTxtFile).Close();
 
@@ -49,6 +52,7 @@ public class UnitTest1
     [Fact]
     public async Task UpserUser_adds_new_user_if_none_present_with_userId()
     {
+        PrepareFileStorage();
         var repo = new FileRepository(MockIConfiguration);
         File.Create(repo._usersJsonFile).Close();
         const string u1Id = "1234";
@@ -78,6 +82,7 @@ public class UnitTest1
     [Fact]
     public async Task UpserUser_updates_new_user_if_user_with_userId_exists()
     {
+        PrepareFileStorage();
         var repo = new FileRepository(MockIConfiguration);
         File.Create(repo._usersJsonFile).Close();
 
@@ -112,7 +117,7 @@ public class UnitTest1
     }
 }
 
-public static partial class TestsExtensions
+public static partial class TestHelpers
 {
     public static void UserShouldBeIncollection(this List<User> users, string userId)
     {

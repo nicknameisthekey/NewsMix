@@ -13,7 +13,15 @@ public class FileRepository : UserRepository, PublicationRepository
         _baseDbPath = configuration["FileDbPath"] ?? throw new ArgumentNullException();
         _usersJsonFile = Path.Combine(_baseDbPath, "users.json");
         _publicationNotifiedListTxtFile = Path.Combine(_baseDbPath, "notified_publications.txt");
-        //todo: create files if not exist
+
+        CreateFileIfNotExist(_publicationNotifiedListTxtFile);
+        CreateFileIfNotExist(_usersJsonFile);
+    }
+
+    private void CreateFileIfNotExist(string filePath)
+    {
+        if (File.Exists(filePath) == false)
+            File.Create(filePath).Close();
     }
 
     public async Task AddToPublicationNotifiedList(string publicationUniqeID)
