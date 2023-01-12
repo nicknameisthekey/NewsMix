@@ -4,7 +4,7 @@ using static TestHelpers;
 
 namespace NewsMix.Tests;
 
-public class UnitTest1
+public class FileRepositoryTests
 {
     [Fact]
     public void Not_existing_required_files_created_in_ctor()
@@ -36,7 +36,6 @@ public class UnitTest1
     {
         PrepareFileStorage();
         var repo = new FileRepository(MockIConfiguration);
-        File.Create(repo._publicationNotifiedListTxtFile).Close();
 
         const string someValue = "this is value";
         var result = await repo.IsPublicationNew(someValue);
@@ -45,8 +44,6 @@ public class UnitTest1
         await repo.AddToPublicationNotifiedList(someValue);
         result = await repo.IsPublicationNew(someValue);
         Assert.False(result);
-
-        File.Delete(repo._publicationNotifiedListTxtFile);
     }
 
     [Fact]
@@ -54,7 +51,6 @@ public class UnitTest1
     {
         PrepareFileStorage();
         var repo = new FileRepository(MockIConfiguration);
-        File.Create(repo._usersJsonFile).Close();
         const string u1Id = "1234";
         const string u2Id = "4321";
 
@@ -75,8 +71,6 @@ public class UnitTest1
 
         users.UserShouldBeIncollection(u1Id);
         users.UserShouldBeIncollection(u1Id);
-
-        File.Delete(repo._usersJsonFile);
     }
 
     [Fact]
@@ -84,7 +78,6 @@ public class UnitTest1
     {
         PrepareFileStorage();
         var repo = new FileRepository(MockIConfiguration);
-        File.Create(repo._usersJsonFile).Close();
 
         User user = new Abstractions.User
         {
@@ -112,8 +105,6 @@ public class UnitTest1
         Assert.Single(users[0].Subscriptions);
         Assert.Equal(users[0].Subscriptions[0].FeedName, user.Subscriptions[0].FeedName);
         Assert.Equal(users[0].Subscriptions[0].PublicationType, user.Subscriptions[0].PublicationType);
-
-        File.Delete(repo._usersJsonFile);
     }
 }
 

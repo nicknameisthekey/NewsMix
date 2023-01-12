@@ -22,6 +22,26 @@ public class UserServiceTests
 
         var users = await fileRepo.GetUsers();
         Assert.Single(users);
+        Assert.Single(users[0].Subscriptions);
+    }
+
+    [Fact]
+    public async Task Subscription_can_be_removed()
+    {
+        PrepareFileStorage();
+        var fileRepo = new FileRepository(MockIConfiguration);
+        var userSerivce = new UserService(fileRepo);
+        const string userId = "1234";
+        const string feedName = "feed";
+        const string pubType = "pub";
+
+        await userSerivce.AddUser(userId, "telegram");
+        await userSerivce.AddSubscription(userId, feedName, pubType);
+        await userSerivce.RemoveSubscription(userId, feedName, pubType);
+
+        var users = await fileRepo.GetUsers();
+        Assert.Single(users);
+        Assert.Empty(users[0].Subscriptions);
     }
 
     [Fact]

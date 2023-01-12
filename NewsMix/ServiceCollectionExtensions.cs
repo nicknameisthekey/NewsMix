@@ -8,14 +8,21 @@ using NewsMix.UI.Telegram;
 namespace NewsMix;
 public static class SerivceCollectionExtensions
 {
-    public static void AddNewsMix(this IServiceCollection services)
+    public static void AddNewsMix(this IServiceCollection services, bool addHosted)
     {
-        services.AddHostedService<FeedService>();
+        if (addHosted)
+        {
+            services.AddHostedService<FeedService>();
+        }
+
         services.AddTransient<UserService>();
         services.AddSingleton<Feed, NoobClubFeed>();
-        services.AddSingleton<TelegramUI>();
+        services.AddSingleton<UserInterface, TelegramUI>();
+        services.AddSingleton<TelegramUI>(); //todo
+        services.AddSingleton<ITelegramApi, TelegramApi>();
         services.AddSingleton<UserRepository, FileRepository>();
         services.AddSingleton<PublicationRepository, FileRepository>();
+        services.AddSingleton<IFeedsInformationService, FeedsInformationService>();
         services.AddHttpClient();
     }
 }

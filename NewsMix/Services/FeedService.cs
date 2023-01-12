@@ -19,6 +19,7 @@ public class FeedService : IHostedService
         _userInterfaces = userInterfaces;
     }
 
+
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         foreach (var ui in _userInterfaces)
