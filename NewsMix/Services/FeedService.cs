@@ -1,9 +1,7 @@
 using Microsoft.Extensions.Hosting;
-using NewsMix.DAL.Repositories.Abstraction;
-using NewsMix.Feeds;
-using NewsMix.UI;
+using NewsMix.Abstractions;
 
-namespace NewsMix.Core.Services;
+namespace NewsMix.Services;
 public class FeedService : IHostedService
 {
     private readonly IEnumerable<Feed> _feeds;

@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using NewsMix.DAL.Entities;
-using NewsMix.DAL.Repositories.Abstraction;
+using NewsMix.Abstractions;
 using NewsMix.UI.Telegram.Models;
 
 namespace NewsMix.UI.Telegram;
@@ -74,7 +73,7 @@ public class TelegramUI : UserInterface
             var users = await _userRepo.GetUsers();
             var user = users.FirstOrDefault(u => u.UserId == message.Sender.Id.ToString());
             if (user == null)
-                user = new DAL.Entities.User
+                user = new Abstractions.User
                 {
                     UserId = message.Sender.Id.ToString(),
                     UIType = "telegram"

@@ -1,18 +1,19 @@
 using Microsoft.Extensions.Configuration;
-using NewsMix.DAL.Entities;
-using NewsMix.DAL.Repositories.Abstraction;
+using NewsMix.Abstractions;
 using Newtonsoft.Json;
 
+namespace NewsMix.Storage;
 public class FileRepository : UserRepository, PublicationRepository
 {
     private readonly string _baseDbPath;
-    private readonly string _usersJsonFile;
+    internal readonly string _usersJsonFile;
     internal readonly string _publicationNotifiedListTxtFile;
     public FileRepository(IConfiguration configuration)
     {
         _baseDbPath = configuration["FileDbPath"] ?? throw new ArgumentNullException();
         _usersJsonFile = Path.Combine(_baseDbPath, "users.json");
         _publicationNotifiedListTxtFile = Path.Combine(_baseDbPath, "notified_publications.txt");
+        //todo: create files if not exist
     }
 
     public async Task AddToPublicationNotifiedList(string publicationUniqeID)
@@ -28,18 +29,20 @@ public class FileRepository : UserRepository, PublicationRepository
         return Task.FromResult(publications.Any(p => p == publicationUniqeID) == false);
     }
 
-    public Task<List<User>> GetUsers()
+    public async Task<List<User>> GetUsers()
     {
         var usersJson = File.ReadAllText(_usersJsonFile);
-        return Task.FromResult(JsonConvert.DeserializeObject<List<User>>(usersJson)!);
+        if (usersJson.Length == 0)
+            return new();
+        else
+            return JsonConvert.DeserializeObject<List<User>>(usersJson)!;
     }
 
-    public Task UpsertUser(User u)
+    public async Task UpsertUser(User u)
     {
-        var users = GetUsers().Result;
+        var users = await GetUsers();
         users.Remove(users.FirstOrDefault(us => us.UserId == u.UserId)!);
         users.Add(u);
         File.WriteAllText(_usersJsonFile, JsonConvert.SerializeObject(users));
-        return Task.CompletedTask;
     }
 }

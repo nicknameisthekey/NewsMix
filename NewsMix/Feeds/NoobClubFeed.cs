@@ -1,7 +1,8 @@
 using System.Diagnostics;
 using HtmlAgilityPack;
+using NewsMix.Abstractions;
 
-namespace NewsMix.Feeds.FeedImplementations;
+namespace NewsMix.Feeds;
 
 public class NoobClubFeed : Feed
 {

@@ -1,4 +1,4 @@
-namespace NewsMix.DAL.Repositories.Abstraction;
+namespace NewsMix.Abstractions;
 public interface PublicationRepository
 {
     Task<bool> IsPublicationNew(string publicationUniqeID);

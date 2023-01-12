@@ -1,7 +1,6 @@
-using NewsMix.DAL.Entities;
-using NewsMix.DAL.Repositories.Abstraction;
+using NewsMix.Abstractions;
 
-namespace NewsMix.Core.Services;
+namespace NewsMix.Services;
 public class UserService
 {
     private readonly UserRepository _userRepository;

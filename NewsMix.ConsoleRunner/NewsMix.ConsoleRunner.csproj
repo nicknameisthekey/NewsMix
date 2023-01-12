@@ -10,19 +10,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="htmlagilitypack" Version="1.11.46" />
-    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NewsMix.Core\NewsMix.Core.csproj" />
+    <ProjectReference Include="..\NewsMix\NewsMix.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="appsettings*json" CopyToPublishDirectory="Always" />
  </ItemGroup>
-
 </Project>

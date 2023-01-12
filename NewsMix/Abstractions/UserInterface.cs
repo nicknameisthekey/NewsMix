@@ -1,4 +1,4 @@
-namespace NewsMix.UI;
+namespace NewsMix.Abstractions;
 public interface UserInterface
 {
     string UIType { get; }

@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NewsMix.Core;
-using NewsMix.DAL;
 
 namespace NewsMix.ConsoleRunner;
 public class Program
@@ -12,8 +10,7 @@ public class Program
         var host = Host.CreateDefaultBuilder()
                        .ConfigureServices(s =>
                           {
-                              s.AddFileRepository();
-                              s.AddCoreServices();
+                              s.AddNewsMix();
                               s.AddLogging(b => b
                                   .AddDebug()
                                   .AddConsole());

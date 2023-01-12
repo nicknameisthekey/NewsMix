@@ -22,8 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NewsMix.DAL\NewsMix.DAL.csproj" />
-    <ProjectReference Include="..\NewsMix.Core\NewsMix.Core.csproj" />
-    <ProjectReference Include="..\NewsMix.Feeds\NewsMix.Feeds.csproj" />
+    <ProjectReference Include="..\NewsMix\NewsMix.csproj" />
   </ItemGroup>
 </Project>
