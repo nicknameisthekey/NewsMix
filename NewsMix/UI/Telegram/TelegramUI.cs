@@ -14,9 +14,9 @@ public class TelegramUI : UserInterface
 
     private ConcurrentDictionary<long, CallbackData[]> CallbackActions = new();
     private ConcurrentDictionary<long, long> SentMessagesByUser = new();
+
 #if DEBUG
     private readonly List<Update> updatesLog = new();
-
 #endif
 
     public TelegramUI(UserService userService,
@@ -83,8 +83,8 @@ public class TelegramUI : UserInterface
         await (selectedCallback!.CallbackActionType switch
         {
             SendPublicationTypes => SendFeedPublicationTypes(userId, selectedCallback.Feed),
-            Subscribe => SubscribeUser(userId, selectedCallback.Feed, selectedCallback.PublicationType!),
-            Unsubscribe => UnsubscribeUser(userId, selectedCallback.Feed, selectedCallback.PublicationType!),
+            Subscribe => SubscribeUser(userId, new(selectedCallback.Feed, selectedCallback.PublicationType!)),
+            Unsubscribe => UnsubscribeUser(userId, new(selectedCallback.Feed, selectedCallback.PublicationType!)),
             _ => throw new Exception()
         });
     }
@@ -151,15 +151,15 @@ public class TelegramUI : UserInterface
         await SendNewOrEdit(userId, allCallbacks, "Выбери тип публикаций данных");
     }
 
-    private async Task SubscribeUser(long userId, string feed, string publicationType)
+    private async Task SubscribeUser(long userId, Subscription sub)
     {
-        await _userService.AddSubscription(userId.ToString(), feed, publicationType);
+        await _userService.AddSubscription(userId.ToString(), UIType, sub);
         await SendFeeds(userId);
     }
 
-    private async Task UnsubscribeUser(long userId, string feed, string publicationType)
+    private async Task UnsubscribeUser(long userId, Subscription sub)
     {
-        await _userService.RemoveSubscription(userId.ToString(), feed, publicationType);
+        await _userService.RemoveSubscription(userId.ToString(), sub);
         await SendFeeds(userId);
     }
 

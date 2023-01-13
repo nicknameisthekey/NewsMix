@@ -11,12 +11,29 @@ namespace NewsMix.Abstractions
     {
         public string UserId { get; init; } = null!;
         public string UIType { get; init; } = null!;
-        public List<UserSubscription> Subscriptions { get; init; } = new();
+        public List<Subscription> Subscriptions { get; init; } = new();
     }
 
-    public class UserSubscription
+#pragma warning disable CS0659 //no GetHashcode()
+    public class Subscription
     {
         public string FeedName { get; init; } = null!;
         public string PublicationType { get; init; } = null!;
+
+        public Subscription(string feedName, string publicationType)
+        {
+            FeedName = feedName;
+            PublicationType = publicationType;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is Subscription sub)
+            {
+                return sub.FeedName == FeedName && sub.PublicationType == PublicationType;
+            }
+
+            return base.Equals(obj);
+        }
     }
 }

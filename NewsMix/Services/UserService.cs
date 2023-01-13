@@ -21,70 +21,59 @@ public class UserService
         return result;
     }
 
-    public async Task AddSubscription(string userId, string feedName, string publicationType)
+    public async Task AddSubscription(string userId, string UIType, Subscription sub)
     {
-        var users = await _userRepository.GetUsers();
-        var user = users.FirstOrDefault(u => u.UserId == userId);
-        if (user == null)
-            throw new Exception($"user is null by userId {userId}"); //todo: add user instead
+        var user = await GetOrCreate(userId, UIType);
 
-        if (user.Subscriptions.Any(s => s.FeedName == feedName
-                        && s.PublicationType == publicationType))
+        if (user.Subscriptions.Contains(sub))
             return;
 
-        user.Subscriptions.Add(new UserSubscription
-        {
-            FeedName = feedName,
-            PublicationType = publicationType
-        });
-
+        user.Subscriptions.Add(sub);
         await _userRepository.UpsertUser(user);
     }
-    public async Task RemoveSubscription(string userId, string feedName, string publicationType)
+
+    public async Task RemoveSubscription(string userId, Subscription sub)
     {
-        var users = await _userRepository.GetUsers();
-        var user = users.FirstOrDefault(u => u.UserId == userId);
-        if (user == null)
-            throw new Exception($"user is null by userId {userId}"); //todo: add user instead
+        var user = await GetUser(userId, throwIfNone: true);
 
-        var subscription = user.Subscriptions.FirstOrDefault(s => s.FeedName == feedName
-                        && s.PublicationType == publicationType);
-
-        if (subscription == null)
-            return;
-
-        user.Subscriptions.Remove(subscription);
-
+        user!.Subscriptions.Remove(sub);
         await _userRepository.UpsertUser(user);
     }
 
     public async Task<Dictionary<string, List<string>>> GetUserSubscriptions(string userId)
     {
-        var users = await _userRepository.GetUsers();
-        var user = users.FirstOrDefault(u => u.UserId == userId);
-        if (user == null)
+        var user = await GetUser(userId);
+        return user switch
         {
-            _logger?.LogWarning("user not found by {userId}", userId);
-            return new Dictionary<string, List<string>>();
-        }
-        var result = user.Subscriptions.GroupBy(s => s.FeedName)
-                .ToDictionary(g => g.Key, g => g.Select(s => s.PublicationType).ToList());
-        return result;
+            null => new(),
+            not null => user.Subscriptions.GroupBy(s => s.FeedName)
+                .ToDictionary(g => g.Key, g => g.Select(s => s.PublicationType).ToList())
+        };
     }
 
-    public async Task AddUser(string userId, string UIType)
+    private async Task<User?> GetUser(string userId, bool throwIfNone = false)
     {
         var users = await _userRepository.GetUsers();
-        if (users.Any(u => u.UserId == userId && u.UIType == UIType))
-        {
-            _logger?.LogWarning("Attempt to add already existing user with {userId} and {UIType}", userId, UIType);
-            return;
-        }
+        var user = users.SingleOrDefault(u => u.UserId == userId);
+        if (throwIfNone && user == null)
+            throw new Exception($"user is null by userId {userId}");
+        return user;
+    }
 
-        await _userRepository.UpsertUser(new User
+    public async Task<User> GetOrCreate(string userId, string UIType)
+    {
+        var user = await GetUser(userId, throwIfNone: false);
+        return user switch
         {
-            UserId = userId,
-            UIType = UIType
-        });
+            null => await CreateUser(userId, UIType),
+            not null => user
+        };
+    }
+
+    private async Task<User> CreateUser(string userId, string UIType)
+    {
+        var newUser = new User { UserId = userId, UIType = UIType };
+        await _userRepository.UpsertUser(newUser);
+        return newUser;
     }
 }

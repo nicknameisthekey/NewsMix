@@ -6,10 +6,11 @@ namespace NewsMix.Tests;
 
 public class FileRepositoryTests
 {
+    FileRepository NewFileRepository => new FileRepository(MockIConfiguration);
     [Fact]
     public void Not_existing_required_files_created_in_ctor()
     {
-        var repo = new FileRepository(MockIConfiguration);
+        var repo = NewFileRepository;
         Assert.True(File.Exists(repo._publicationNotifiedListTxtFile));
         Assert.True(File.Exists(repo._usersJsonFile));
     }
@@ -18,7 +19,7 @@ public class FileRepositoryTests
     public async Task AddToPublicationNotifiedList_doesnt_add_duplicates()
     {
         PrepareFileStorage();
-        var repo = new FileRepository(MockIConfiguration);
+        var repo = NewFileRepository;
         File.Create(repo._publicationNotifiedListTxtFile).Close();
 
         const string someValue = "this is value";
@@ -27,15 +28,13 @@ public class FileRepositoryTests
 
         var fileLines = File.ReadAllLines(repo._publicationNotifiedListTxtFile);
         Assert.Single(fileLines);
-
-        File.Delete(repo._publicationNotifiedListTxtFile);
     }
 
     [Fact]
     public async Task IsPublicationNew_returns_true_if_publication_is_not_in_notified_list()
     {
         PrepareFileStorage();
-        var repo = new FileRepository(MockIConfiguration);
+        var repo = NewFileRepository;
 
         const string someValue = "this is value";
         var result = await repo.IsPublicationNew(someValue);
@@ -50,7 +49,7 @@ public class FileRepositoryTests
     public async Task UpserUser_adds_new_user_if_none_present_with_userId()
     {
         PrepareFileStorage();
-        var repo = new FileRepository(MockIConfiguration);
+        var repo = NewFileRepository;
         const string u1Id = "1234";
         const string u2Id = "4321";
 
@@ -68,8 +67,8 @@ public class FileRepositoryTests
 
         var users = await repo.GetUsers();
         Assert.Equal(2, users.Count);
-
         users.UserShouldBeIncollection(u1Id);
+
         users.UserShouldBeIncollection(u1Id);
     }
 
@@ -77,18 +76,13 @@ public class FileRepositoryTests
     public async Task UpserUser_updates_new_user_if_user_with_userId_exists()
     {
         PrepareFileStorage();
-        var repo = new FileRepository(MockIConfiguration);
+        var repo = NewFileRepository;
 
         User user = new Abstractions.User
         {
             UserId = "1234",
             UIType = "Telegram",
-            Subscriptions = new List<UserSubscription>{
-                new UserSubscription{
-                     FeedName = "feed1",
-                     PublicationType = "pub1"
-                }
-            }
+            Subscriptions = new List<Subscription> { new("feed1", "pub1") }
         };
         await repo.UpsertUser(user);
         var users = await repo.GetUsers();
@@ -97,7 +91,7 @@ public class FileRepositoryTests
         Assert.Equal(users[0].Subscriptions[0].FeedName, user.Subscriptions[0].FeedName);
         Assert.Equal(users[0].Subscriptions[0].PublicationType, user.Subscriptions[0].PublicationType);
 
-        user.Subscriptions[0] = new UserSubscription { FeedName = "feed2", PublicationType = "pub2" };
+        user.Subscriptions[0] = new("feed2", "pub2");
 
         await repo.UpsertUser(user);
         users = await repo.GetUsers();
