@@ -18,12 +18,12 @@ public static partial class TestHelpers
         return directory;
     }
 
-    private static string GetTestFilesDirectory()
+    public static string GetTestFilesDirectory()
     {
         return Path.Combine(Assembly.GetExecutingAssembly()
                              .Location.Replace("NewsMix.Tests.dll", ""), "file_repo_tests");
     }
-
+    
     private static void EmptyDirectory(string directory)
     {
         if (Directory.Exists(directory) == false)

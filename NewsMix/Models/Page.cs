@@ -26,9 +26,9 @@ public class Page
     public Page(string? rawHTML)
     {
         RawHTML = rawHTML;
-        if (rawHTML?.Length > 20)
+        if (rawHTML == null || rawHTML.Length < 20)
         {
-            FailedToLoad = false;
+            FailedToLoad = true;
         }
     }
 

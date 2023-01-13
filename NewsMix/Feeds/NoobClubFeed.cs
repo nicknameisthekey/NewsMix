@@ -8,8 +8,8 @@ namespace NewsMix.Feeds;
 public class NoobClubFeed : Feed
 {
     #region publication types consts
-    const string overwatchFeedItemType = "overwatch";
-    const string wowFeedItemType = "wow";
+    public const string overwatchFeedItemType = "overwatch";
+    public const string wowFeedItemType = "wow";
     public const string wowClassicFeedItemType = "wow_classic";
     public const string hearthstoneFeedItemType = "hearthstone";
 
@@ -44,7 +44,7 @@ public class NoobClubFeed : Feed
             var page = await _dataDownloader.GetPage(url, DownloadMethod.HttpClient);
             if (page.FailedToLoad)
             {
-                _logger?.LogWarning("failed to load {url}");
+                _logger?.LogWarning("failed to load {url}", url);
                 continue;
             }
 
