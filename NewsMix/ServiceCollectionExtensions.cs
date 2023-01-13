@@ -18,11 +18,11 @@ public static class SerivceCollectionExtensions
         services.AddTransient<UserService>();
         services.AddSingleton<Feed, NoobClubFeed>();
         services.AddSingleton<UserInterface, TelegramUI>();
-        services.AddSingleton<TelegramUI>(); //todo
         services.AddSingleton<ITelegramApi, TelegramApi>();
         services.AddSingleton<UserRepository, FileRepository>();
         services.AddSingleton<PublicationRepository, FileRepository>();
-        services.AddSingleton<IFeedsInformationService, FeedsInformationService>();
+        services.AddSingleton<FeedsInformation, FeedsInformationService>();
+        services.AddSingleton<DataDownloader, DataDownloaderService>();
         services.AddHttpClient();
     }
 }

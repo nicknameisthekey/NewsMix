@@ -1,6 +1,6 @@
 using NewsMix.Abstractions;
 
-public class FeedsInformationService : IFeedsInformationService
+public class FeedsInformationService : FeedsInformation
 {
     public Dictionary<string, string[]> PublicationTypesByFeed { get; init; }
 

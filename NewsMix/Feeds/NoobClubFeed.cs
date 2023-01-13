@@ -1,48 +1,54 @@
-using System.Diagnostics;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
+using NewsMix.Models;
 
 namespace NewsMix.Feeds;
 
 public class NoobClubFeed : Feed
 {
+    #region publication types consts
     const string overwatchFeedItemType = "overwatch";
     const string wowFeedItemType = "wow";
     public const string wowClassicFeedItemType = "wow_classic";
     public const string hearthstoneFeedItemType = "hearthstone";
 
-    public string FeedName => "noob-club";
-
     public string[] AvaliablePublicationTypes => new[] { hearthstoneFeedItemType, overwatchFeedItemType, wowClassicFeedItemType, wowFeedItemType };
+    #endregion
 
+    public string FeedName => "noob-club";
     const string siteUrl = "https://www.noob-club.ru";
-    static readonly Dictionary<int, string> pagesUrls = new();
+    private static readonly Dictionary<int, string> pagesUrls = new();
+    private readonly DataDownloader _dataDownloader;
+    private readonly ILogger<NoobClubFeed>? _logger;
+
     static NoobClubFeed()
     {
         for (int i = 1; i <= 15; i++)
             pagesUrls.Add(i, $"{siteUrl}/index.php?frontpage;p={(i - 1) * 15}");
     }
 
+    public NoobClubFeed(DataDownloader dataDownloader, ILogger<NoobClubFeed>? logger = null)
+    {
+        _dataDownloader = dataDownloader;
+        _logger = logger;
+    }
+
     public async Task<IReadOnlyCollection<FeedItem>> GetItems()
     {
         var result = new List<FeedItem>();
-        using var httpClient = new HttpClient();
-        foreach (var (page, url) in pagesUrls)
+        foreach (var (pageNum, url) in pagesUrls)
         {
-            Debug.WriteLine($"loading page {page}");
-            var response = await httpClient.GetAsync(url);
-            if (response.IsSuccessStatusCode == false)
+            _logger?.LogInformation($"{FeedName}: loading page {pageNum}");
+
+            var page = await _dataDownloader.GetPage(url, DownloadMethod.HttpClient);
+            if (page.FailedToLoad)
             {
-                Debug.WriteLine($"got bad http code {response.StatusCode}");
-                return result;
+                _logger?.LogWarning("failed to load {url}");
+                continue;
             }
 
-            var html = await response.Content.ReadAsStringAsync();
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(html);
-
-            var nodes = htmlDocument.DocumentNode
-                .SelectNodes($"//*[@class=\"entry first\"]");
+            var nodes = page.HTMLRoot.SelectNodes($"//*[@class=\"entry first\"]");
             foreach (var node in nodes)
             {
                 var nodeData = ParseNode(node);

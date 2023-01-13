@@ -9,7 +9,7 @@ public class TelegramUI : UserInterface
 {
     private readonly UserService _userService;
     private readonly ITelegramApi _telegramApi;
-    private readonly IFeedsInformationService _feedInformationService;
+    private readonly FeedsInformation _feedInformation;
     public string UIType => "telegram";
 
     private ConcurrentDictionary<long, CallbackData[]> CallbackActions = new();
@@ -21,11 +21,11 @@ public class TelegramUI : UserInterface
 
     public TelegramUI(UserService userService,
     ITelegramApi telegramApi,
-    IFeedsInformationService feedInformationService)
+    FeedsInformation feedInformation)
     {
         _userService = userService;
         _telegramApi = telegramApi;
-        _feedInformationService = feedInformationService;
+        _feedInformation = feedInformation;
     }
 
     public async Task Start()
@@ -105,7 +105,7 @@ public class TelegramUI : UserInterface
 
     private async Task SendFeeds(long userId)
     {
-        var callbacks = _feedInformationService.Feeds
+        var callbacks = _feedInformation.Feeds
                     .Select(f => new CallbackData
                     {
                         ID = Guid.NewGuid().ToString(),
@@ -122,7 +122,7 @@ public class TelegramUI : UserInterface
     {
         var allUserSubs = await _userService.GetUserSubscriptions(userId.ToString());
         var userSubs = allUserSubs.ContainsKey(feed) ? allUserSubs[feed] : new();
-        var allFeedPubs = _feedInformationService.PublicationTypesByFeed[feed];
+        var allFeedPubs = _feedInformation.PublicationTypesByFeed[feed];
 
         var subscribePubs = allFeedPubs.Except(userSubs);
 
