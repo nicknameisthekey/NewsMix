@@ -12,13 +12,10 @@ public class UserService
         _logger = logger;
     }
 
-    public async Task<IReadOnlyCollection<User>> GetUsersToNotifyBy(string feedName, string publicationType)
+    public async Task<IReadOnlyCollection<User>> GetUsersToNotifyBy(Subscription sub)
     {
         var users = await _userRepository.GetUsers();
-        var result = users.Where(u => u.Subscriptions
-                .Any(s => s.FeedName == feedName && s.PublicationType == publicationType))
-                .ToList();
-        return result;
+        return users.Where(u => u.Subscriptions.Contains(sub)).ToList();
     }
 
     public async Task AddSubscription(string userId, string UIType, Subscription sub)
@@ -40,7 +37,7 @@ public class UserService
         await _userRepository.UpsertUser(user);
     }
 
-    public async Task<Dictionary<string, List<string>>> GetUserSubscriptions(string userId)
+    public async Task<Dictionary<string, List<string>>> GetUserSubscriptions(string userId) //todo refactor for <(list<sub> subbed and not subbed)>
     {
         var user = await GetUser(userId);
         return user switch
@@ -51,15 +48,6 @@ public class UserService
         };
     }
 
-    private async Task<User?> GetUser(string userId, bool throwIfNone = false)
-    {
-        var users = await _userRepository.GetUsers();
-        var user = users.SingleOrDefault(u => u.UserId == userId);
-        if (throwIfNone && user == null)
-            throw new Exception($"user is null by userId {userId}");
-        return user;
-    }
-
     public async Task<User> GetOrCreate(string userId, string UIType)
     {
         var user = await GetUser(userId, throwIfNone: false);
@@ -68,6 +56,15 @@ public class UserService
             null => await CreateUser(userId, UIType),
             not null => user
         };
+    }
+
+    private async Task<User?> GetUser(string userId, bool throwIfNone = false)
+    {
+        var users = await _userRepository.GetUsers();
+        var user = users.SingleOrDefault(u => u.UserId == userId);
+        if (throwIfNone && user == null)
+            throw new Exception($"user is null by userId {userId}");
+        return user;
     }
 
     private async Task<User> CreateUser(string userId, string UIType)

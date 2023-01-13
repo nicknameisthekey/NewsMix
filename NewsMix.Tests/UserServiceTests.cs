@@ -3,17 +3,49 @@ using NewsMix.Services;
 using NewsMix.Storage;
 using static TestHelpers;
 
-public class UserServiceTests
+public class UserServiceTests : IDisposable
 {
+    #region  Default values and helpers
     const string SomeUserID = "12345";
     const string SomeUIType = "telegram";
     Subscription SomeSubscription => new Subscription("feed", "pub");
     UserService NewUserService => new UserService(new FileRepository(MockIConfiguration));
+    #endregion
+
+    [Fact]
+    public async Task User_created_if_not_found()
+    {
+        var userService = NewUserService;
+        var user = await userService.GetOrCreate(SomeUserID, SomeUIType);
+        var fileRepo = new FileRepository(MockIConfiguration);
+        var users = await fileRepo.GetUsers();
+        Assert.Single(users);
+        Assert.Equal(SomeUserID, users[0].UserId);
+        Assert.Equal(SomeUIType, users[0].UIType);
+    }
+
+    [Fact]
+    public async Task User_can_be_received_if_found()
+    {
+        var fileRepo = new FileRepository(MockIConfiguration);
+        await fileRepo.UpsertUser(new User
+        {
+            UserId = SomeUserID,
+            UIType = SomeUIType,
+            Subscriptions = new() { SomeSubscription }
+        });
+
+        var userService = NewUserService;
+        var user = await userService.GetOrCreate(SomeUserID, SomeUIType);
+        Assert.Equal(SomeUserID, user.UserId);
+        Assert.Equal(SomeUIType, user.UIType);
+        Assert.Single(user.Subscriptions);
+        Assert.Contains(SomeSubscription, user.Subscriptions);
+    }
 
     [Fact]
     public async Task Adding_subscription_to_non_existing_user_creates_new_user()
     {
-        PrepareFileStorage();
         var userSerivce = NewUserService;
 
         await userSerivce.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
@@ -27,7 +59,6 @@ public class UserServiceTests
     [Fact]
     public async Task Duplication_of_subscriptions_prevented()
     {
-        PrepareFileStorage();
         var userSerivce = NewUserService;
 
         await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
@@ -42,7 +73,6 @@ public class UserServiceTests
     [Fact]
     public async Task Subscription_can_be_removed()
     {
-        PrepareFileStorage();
         var userSerivce = NewUserService;
 
         await userSerivce.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
@@ -56,7 +86,6 @@ public class UserServiceTests
     [Fact]
     public async Task Removing_not_existing_subscription_do_nothing()
     {
-        PrepareFileStorage();
         var userSerivce = NewUserService;
 
         await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
@@ -70,7 +99,6 @@ public class UserServiceTests
     [Fact]
     public async Task Removing_subscription_from_non_existing_user_throws()
     {
-        PrepareFileStorage();
         var userSerivce = NewUserService;
 
         var exception = await Assert.ThrowsAnyAsync<Exception>(
@@ -79,38 +107,32 @@ public class UserServiceTests
     }
 
     [Fact]
-    public async Task Users_can_be_found_by_feed_and_publication_type()
+    public async Task Users_can_be_found_for_notification_by_subscription()
     {
-        PrepareFileStorage();
-        var userSerivce = NewUserService;
-        const string userId1 = "1234";
-        const string userId2 = "4321";
-        const string userId3 = "1111";
-        const string feedName1 = "feed1";
-        const string feedName2 = "feed2";
-        const string pubType1 = "pub1";
-        const string pubType2 = "pub2";
+        var userService = NewUserService;
 
-        await userSerivce.GetOrCreate(userId1, SomeUIType);
-        await userSerivce.GetOrCreate(userId2, SomeUIType);
-        await userSerivce.GetOrCreate(userId3, SomeUIType);
-        await userSerivce.AddSubscription(userId1, SomeUIType, new(feedName1, pubType1));
-        await userSerivce.AddSubscription(userId2, SomeUIType, new(feedName1, pubType1));
-        await userSerivce.AddSubscription(userId3, SomeUIType, new(feedName1, pubType1));
-        await userSerivce.AddSubscription(userId2, SomeUIType, new(feedName2, pubType2));
-        await userSerivce.AddSubscription(userId3, SomeUIType, new(feedName2, pubType2));
-        await userSerivce.AddSubscription(userId3, SomeUIType, new("random", "random_random"));
+        var usersToNotify = await userService
+                        .GetUsersToNotifyBy(SomeSubscription);
+        Assert.Empty(usersToNotify);
+        const string user1 = "user1";
+        const string user2 = "user2";
+        const string user3 = "user3";
 
-        var users_f1_p1 = await userSerivce.GetUsersToNotifyBy(feedName1, pubType1);
-        Assert.Contains(users_f1_p1, u => u.UserId == userId1);
-        Assert.Contains(users_f1_p1, u => u.UserId == userId2);
-        Assert.Contains(users_f1_p1, u => u.UserId == userId3);
-        Assert.Equal(3, users_f1_p1.Count);
-        var users_f2_p2 = await userSerivce.GetUsersToNotifyBy(feedName2, pubType2);
-        Assert.Contains(users_f2_p2, u => u.UserId == userId3);
-        Assert.Contains(users_f2_p2, u => u.UserId == userId2);
-        Assert.Equal(2, users_f2_p2.Count);
-        var users_f1_p2 = await userSerivce.GetUsersToNotifyBy(feedName1, pubType2);
-        Assert.Empty(users_f1_p2);
+        await userService.AddSubscription(user1, SomeUIType, SomeSubscription);
+        await userService.AddSubscription(user2, SomeUIType, SomeSubscription);
+        await userService.AddSubscription(user2, SomeUIType, new("other feed", SomeSubscription.PublicationType));
+        await userService.AddSubscription(user3, SomeUIType, new("other feed", "other sub"));
+        await userService.AddSubscription(user3, SomeUIType, new(SomeSubscription.FeedName, "other sub"));
+
+        usersToNotify = await userService
+               .GetUsersToNotifyBy(SomeSubscription);
+        Assert.Equal(2, usersToNotify.Count);
+        Assert.Contains(usersToNotify, u => u.UserId == user1);
+        Assert.Contains(usersToNotify, u => u.UserId == user2);
+    }
+
+    public void Dispose()
+    {
+        EmptyTestFilesDirectory();
     }
 }

@@ -4,7 +4,7 @@ using static TestHelpers;
 
 namespace NewsMix.Tests;
 
-public class FileRepositoryTests
+public class FileRepositoryTests : IDisposable
 {
     FileRepository NewFileRepository => new FileRepository(MockIConfiguration);
     [Fact]
@@ -18,7 +18,6 @@ public class FileRepositoryTests
     [Fact]
     public async Task AddToPublicationNotifiedList_doesnt_add_duplicates()
     {
-        PrepareFileStorage();
         var repo = NewFileRepository;
         File.Create(repo._publicationNotifiedListTxtFile).Close();
 
@@ -33,7 +32,6 @@ public class FileRepositoryTests
     [Fact]
     public async Task IsPublicationNew_returns_true_if_publication_is_not_in_notified_list()
     {
-        PrepareFileStorage();
         var repo = NewFileRepository;
 
         const string someValue = "this is value";
@@ -48,7 +46,6 @@ public class FileRepositoryTests
     [Fact]
     public async Task UpserUser_adds_new_user_if_none_present_with_userId()
     {
-        PrepareFileStorage();
         var repo = NewFileRepository;
         const string u1Id = "1234";
         const string u2Id = "4321";
@@ -75,7 +72,6 @@ public class FileRepositoryTests
     [Fact]
     public async Task UpserUser_updates_new_user_if_user_with_userId_exists()
     {
-        PrepareFileStorage();
         var repo = NewFileRepository;
 
         User user = new Abstractions.User
@@ -99,6 +95,11 @@ public class FileRepositoryTests
         Assert.Single(users[0].Subscriptions);
         Assert.Equal(users[0].Subscriptions[0].FeedName, user.Subscriptions[0].FeedName);
         Assert.Equal(users[0].Subscriptions[0].PublicationType, user.Subscriptions[0].PublicationType);
+    }
+
+    public void Dispose()
+    {
+        EmptyTestFilesDirectory();
     }
 }
 

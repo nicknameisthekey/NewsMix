@@ -37,8 +37,7 @@ public class FeedService : IHostedService
                     if (await _publicationRepository.IsPublicationNew(item.Url))
                     {
                         var usersToNotify = await _userService
-                            .GetUsersToNotifyBy(feedName: feed.FeedName,
-                                            publicationType: item.PublicationType);
+                            .GetUsersToNotifyBy(new(feed.FeedName,item.PublicationType));
                         foreach (var user in usersToNotify)
                         {
                             var userInterface = _userInterfaces.FirstOrDefault(i => i.UIType == user.UIType);

@@ -3,27 +3,35 @@ using Microsoft.Extensions.Configuration;
 
 public static partial class TestHelpers
 {
-    public static readonly string fileStoragePath = PrepareFileStorage();
+    public static readonly string fileStoragePath = GetTestFilesDirectory();
 
     public static IConfiguration MockIConfiguration => new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
             {{"FileDbPath", fileStoragePath},}!).Build();
 
-    public static string PrepareFileStorage()
+    public static string EmptyTestFilesDirectory()
     {
-        var directory = Path.Combine(Assembly.GetExecutingAssembly()
-                     .Location.Replace("NewsMix.Tests.dll", ""), "file_repo_tests");
+        var directory = GetTestFilesDirectory();
 
         EmptyDirectory(directory);
 
         return directory;
     }
 
-    public static void EmptyDirectory(string directory)
+    private static string GetTestFilesDirectory()
     {
-        if (Directory.Exists(directory))
-            Directory.Delete(directory, true);
+        return Path.Combine(Assembly.GetExecutingAssembly()
+                             .Location.Replace("NewsMix.Tests.dll", ""), "file_repo_tests");
+    }
 
-        Directory.CreateDirectory(directory);
+    private static void EmptyDirectory(string directory)
+    {
+        if (Directory.Exists(directory) == false)
+            Directory.CreateDirectory(directory);
+
+        foreach (var file in Directory.EnumerateFiles(directory))
+        {
+            File.Delete(file);
+        }
     }
 }
