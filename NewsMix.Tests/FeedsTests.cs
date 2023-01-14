@@ -15,7 +15,13 @@ public class FeedsTests
 
         var items = await nk.GetItems();
         Assert.Equal(15, items.Count);
-        var wowItems = items.Where(i=>i.PublicationType == NoobClubFeed.wowFeedItemType);
-        Assert.Equal(10, wowItems.Count());
+        var wowItems = items.Where(i=>i.PublicationType == NoobClubFeed.wowPubType);
+        Assert.Equal(9, wowItems.Count());
+
+        var diabloItems = items.Where(i=>i.PublicationType == NoobClubFeed.diabloPubType);
+        Assert.Equal(3, diabloItems.Count());
+
+        var wc3Items = items.Where(i=>i.PublicationType == NoobClubFeed.wc3PubType);
+        Assert.Single(wc3Items);
     }
 }

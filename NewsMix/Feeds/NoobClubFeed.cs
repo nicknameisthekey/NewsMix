@@ -8,12 +8,15 @@ namespace NewsMix.Feeds;
 public class NoobClubFeed : Feed
 {
     #region publication types consts
-    public const string overwatchFeedItemType = "overwatch";
-    public const string wowFeedItemType = "wow";
-    public const string wowClassicFeedItemType = "wow_classic";
-    public const string hearthstoneFeedItemType = "hearthstone";
+    public const string overwatchPubType = "overwatch";
+    public const string wowPubType = "wow";
+    public const string wowClassicPubType = "wow_classic";
+    public const string hsPubType = "hearthstone";
+    public const string wc3PubType = "warcraft 3";
+    public const string blizzPubType = "blizzard";
+    public const string diabloPubType = "diablo";
 
-    public string[] AvaliablePublicationTypes => new[] { hearthstoneFeedItemType, overwatchFeedItemType, wowClassicFeedItemType, wowFeedItemType };
+    public string[] AvaliablePublicationTypes => new[] { hsPubType, overwatchPubType, wowClassicPubType, wowPubType, wc3PubType, blizzPubType, diabloPubType };
     #endregion
 
     public string FeedName => "noob-club";
@@ -83,10 +86,13 @@ public class NoobClubFeed : Feed
     {
         return gameImageClass switch
         {
-            "game-icon owch" => overwatchFeedItemType,
-            "game-icon wow" => wowFeedItemType,
-            "game-icon wowc" => wowClassicFeedItemType,
-            "game-icon hearthstone" => hearthstoneFeedItemType,
+            "game-icon owch" => overwatchPubType,
+            "game-icon wow" => wowPubType,
+            "game-icon wowc" => wowClassicPubType,
+            "game-icon hearthstone" => hsPubType,
+            "game-icon wc3" => wc3PubType,
+            "game-icon blizzard" => blizzPubType,
+            "game-icon diablo" => diabloPubType,
             _ => "unknown"
         };
     }
