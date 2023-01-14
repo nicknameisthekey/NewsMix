@@ -44,16 +44,14 @@ public class UserServiceTests : IDisposable
     }
 
     [Fact]
-    public async Task Adding_subscription_to_non_existing_user_creates_new_user()
+    public async Task Adding_subscription_to_non_existing_user_creates_new_user_with_subscription()
     {
         var userSerivce = NewUserService;
 
         await userSerivce.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
-        await userSerivce.RemoveSubscription(SomeUserID, SomeSubscription);
 
         var user = await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
-        Assert.NotNull(user);
-        Assert.Empty(user.Subscriptions);
+        Assert.Single(user.Subscriptions);
     }
 
     [Fact]
@@ -61,13 +59,26 @@ public class UserServiceTests : IDisposable
     {
         var userSerivce = NewUserService;
 
-        await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
         await userSerivce.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
         await userSerivce.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
 
         var user = await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
-        Assert.NotNull(user);
         Assert.Single(user.Subscriptions);
+    }
+
+    [Fact]
+    public async Task Adding_new_subscription_dont_remove_other_subscriptions()
+    {
+        var userService = NewUserService;
+
+        var someOtherSubscription = new Subscription("other sub", "other pub");
+        await userService.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
+        await userService.AddSubscription(SomeUserID, SomeUIType, someOtherSubscription);
+
+        var user = await userService.GetOrCreate(SomeUserID, SomeUIType);
+        Assert.Equal(2, user.Subscriptions.Count);
+        Assert.Contains(SomeSubscription, user.Subscriptions);
+        Assert.Contains(someOtherSubscription, user.Subscriptions);
     }
 
     [Fact]
@@ -75,12 +86,14 @@ public class UserServiceTests : IDisposable
     {
         var userSerivce = NewUserService;
 
+        var someOtherSubscription = new Subscription("other sub", "other pub");
         await userSerivce.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
-        await userSerivce.RemoveSubscription(SomeUserID, SomeSubscription);
+        await userSerivce.AddSubscription(SomeUserID, SomeUIType, someOtherSubscription);
+        await userSerivce.RemoveSubscription(SomeUserID, someOtherSubscription);
 
         var user = await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
-        Assert.NotNull(user);
-        Assert.Empty(user.Subscriptions);
+        Assert.Single(user.Subscriptions);
+        Assert.Equal(SomeSubscription, user.Subscriptions[0]);
     }
 
     [Fact]
@@ -92,7 +105,6 @@ public class UserServiceTests : IDisposable
         await userSerivce.RemoveSubscription(SomeUserID, SomeSubscription);
 
         var user = await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
-        Assert.NotNull(user);
         Assert.Empty(user.Subscriptions);
     }
 
