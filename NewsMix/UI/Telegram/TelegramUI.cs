@@ -1,64 +1,61 @@
 using System.Collections.Concurrent;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Services;
 using NewsMix.UI.Telegram.Models;
 using static CallbackActionType;
 
 namespace NewsMix.UI.Telegram;
-public class TelegramUI : UserInterface
+public class TelegramUI : UserInterface, IHostedService
 {
     private readonly UserService _userService;
     private readonly ITelegramApi _telegramApi;
     private readonly FeedsInformation _feedInformation;
+    private readonly ILogger<TelegramUI>? _logger;
     public string UIType => "telegram";
-
     private ConcurrentDictionary<long, CallbackData[]> CallbackActions = new();
     private ConcurrentDictionary<long, long> SentMessagesByUser = new();
 
-#if DEBUG
-    private readonly List<Update> updatesLog = new();
-#endif
-
     public TelegramUI(UserService userService,
     ITelegramApi telegramApi,
-    FeedsInformation feedInformation)
+    FeedsInformation feedInformation,
+    ILogger<TelegramUI>? logger = null)
     {
         _userService = userService;
         _telegramApi = telegramApi;
         _feedInformation = feedInformation;
+        _logger = logger;
     }
 
-    public async Task Start()
+    public async Task StartAsync(CancellationToken ct)
     {
-        while (true)
+        await foreach (var update in _telegramApi.GetUpdates(ct))
         {
-            var updates = await _telegramApi.GetUpdates();
-
-#if DEBUG
-            updatesLog.AddRange(updates);
-#endif    
-
-            foreach (var update in updates)
+            try
             {
-                if (update.CallBack?.CallbackData != null)
+                if (update.IsCallback)
                 {
-                    try
-                    {
-                        await ProcessCallback(update);
-                    }
-                    catch { }
+                    await ProcessCallback(update);
                 }
-                else if (update.Message != null && update.Message.Text != null)
+                else if (update.HasTextMessage)
                 {
-                    if (update.Message.Date < DateTime.Now.AddMinutes(-3))
+                    if (update.OlderThan(minutes: 3))
                         continue;
 
                     await ProcessTextMessage(update.Message);
                 }
             }
-
-            await Task.Delay(TimeSpan.FromSeconds(0.5));
+            catch (Exception e)
+            {
+                _logger?.LogError(e, "error on telegram update");
+            }
         }
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task ProcessCallback(Update update)
@@ -69,7 +66,7 @@ public class TelegramUI : UserInterface
         if (CallbackActions.TryGetValue
                 (userId, out var userCallbacks) == false)
         {
-            //todo fail, we ae waiting no callbacks
+            //todo fail, we are waiting no callbacks
         }
 
         CallbackActions.TryRemove(userId, out _);
@@ -100,7 +97,10 @@ public class TelegramUI : UserInterface
 
     public async Task ProcessTextMessage(Message message)
     {
-        await SendFeeds(message.Sender.Id);
+        if (message.Text == "/start")
+        {
+            await SendFeeds(message.Sender.Id);
+        }
     }
 
     private async Task SendFeeds(long userId)

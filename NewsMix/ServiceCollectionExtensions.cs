@@ -13,6 +13,7 @@ public static class SerivceCollectionExtensions
         if (addHosted)
         {
             services.AddHostedService<FeedService>();
+            services.AddHostedService<TelegramUI>();
         }
 
         services.AddTransient<UserService>();

@@ -19,14 +19,8 @@ public class FeedService : IHostedService
         _userInterfaces = userInterfaces;
     }
 
-
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        foreach (var ui in _userInterfaces)
-        {
-            ui.Start();
-        }
-
         while (cancellationToken.IsCancellationRequested == false)
         {
             foreach (var feed in _feeds)
