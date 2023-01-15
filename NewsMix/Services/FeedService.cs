@@ -2,7 +2,7 @@ using Microsoft.Extensions.Hosting;
 using NewsMix.Abstractions;
 
 namespace NewsMix.Services;
-public class FeedService : IHostedService
+public class FeedService : BackgroundService
 {
     private readonly IEnumerable<Feed> _feeds;
     private readonly PublicationRepository _publicationRepository;
@@ -19,7 +19,7 @@ public class FeedService : IHostedService
         _userInterfaces = userInterfaces;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         while (cancellationToken.IsCancellationRequested == false)
         {
@@ -44,10 +44,5 @@ public class FeedService : IHostedService
             }
             await Task.Delay(TimeSpan.FromMinutes(10));
         }
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
     }
 }

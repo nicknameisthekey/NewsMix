@@ -7,7 +7,7 @@ using NewsMix.UI.Telegram.Models;
 using static CallbackActionType;
 
 namespace NewsMix.UI.Telegram;
-public class TelegramUI : UserInterface, IHostedService
+public class TelegramUI : BackgroundService, UserInterface 
 {
     private readonly UserService _userService;
     private readonly ITelegramApi _telegramApi;
@@ -28,7 +28,7 @@ public class TelegramUI : UserInterface, IHostedService
         _logger = logger;
     }
 
-    public async Task StartAsync(CancellationToken ct)
+    protected override async Task ExecuteAsync(CancellationToken ct)
     {
         await foreach (var update in _telegramApi.GetUpdates(ct))
         {
@@ -51,11 +51,6 @@ public class TelegramUI : UserInterface, IHostedService
                 _logger?.LogError(e, "error on telegram update");
             }
         }
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task ProcessCallback(Update update)
@@ -115,7 +110,7 @@ public class TelegramUI : UserInterface, IHostedService
                     }).ToArray();
         CallbackActions.TryAdd(userId, callbacks);
 
-        await SendNewOrEdit(userId, callbacks, "Выбери источник данных");
+        await SendNewOrEdit(userId, callbacks, "На что подписываемся?");
     }
 
     private async Task SendFeedPublicationTypes(long userId, string feed)
@@ -148,7 +143,7 @@ public class TelegramUI : UserInterface, IHostedService
 
         CallbackActions.TryAdd(userId, allCallbacks);
 
-        await SendNewOrEdit(userId, allCallbacks, "Выбери тип публикаций данных");
+        await SendNewOrEdit(userId, allCallbacks, "Что интересует?");
     }
 
     private async Task SubscribeUser(long userId, Subscription sub)

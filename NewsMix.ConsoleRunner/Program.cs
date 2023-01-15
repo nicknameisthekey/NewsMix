@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NewsMix.Abstractions;
 
 namespace NewsMix.ConsoleRunner;
 public class Program
@@ -15,6 +14,11 @@ public class Program
                               s.AddLogging(b => b
                                   .AddDebug()
                                   .AddConsole());
+
+                              s.Configure<HostOptions>(options =>
+                                {
+                                    options.ShutdownTimeout = TimeSpan.FromSeconds(2);
+                                });
                           }).Build();
         var logger = host.Services.GetRequiredService<ILogger<Program>>();
         logger.LogInformation("Host created.");

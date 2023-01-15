@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using NewsMix.UI.Telegram.Models;
@@ -63,7 +64,7 @@ public class TelegramApi : ITelegramApi
         return responseDeserialized;
     }
 
-    public async IAsyncEnumerable<Update> GetUpdates(CancellationToken ct)
+    public async IAsyncEnumerable<Update> GetUpdates([EnumeratorCancellation] CancellationToken ct)
     {
         while (true)
         {

@@ -12,12 +12,13 @@ public static class SerivceCollectionExtensions
     {
         if (addHosted)
         {
-            services.AddHostedService<FeedService>();
             services.AddHostedService<TelegramUI>();
+            services.AddHostedService<FeedService>();
         }
 
         services.AddTransient<UserService>();
         services.AddSingleton<Feed, NoobClubFeed>();
+        services.AddSingleton<Feed, IcyVeinsFeed>();
         services.AddSingleton<UserInterface, TelegramUI>();
         services.AddSingleton<ITelegramApi, TelegramApi>();
         services.AddSingleton<UserRepository, FileRepository>();

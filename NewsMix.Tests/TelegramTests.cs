@@ -1,5 +1,4 @@
 using FakeItEasy;
-using NewsMix.Abstractions;
 using NewsMix.Services;
 using NewsMix.UI.Telegram;
 using NewsMix.UI.Telegram.Models;

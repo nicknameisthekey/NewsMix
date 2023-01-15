@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+function getCookie (name) {
+  var key = name + '='
+  var cookie = decodeURIComponent(document.cookie)
+  var arr = cookie.split(';')
+
+  for (var i = 0; i < arr.length; i++) {
+
+    var c = arr[i]
+
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1)
+    }
+
+    if (c.indexOf(key) == 0) {
+      return c.substring(key.length, c.length)
+    }
+  }
+
+  return null
+}
+
+function writeToLocalStorage(key, content) {
+  try {
+    window.localStorage.setItem(key, content);
+  } catch(e) {
+    for (var i = 0; i < window.localStorage.length; i++) {
+      current_key = window.localStorage.key(i);
+      if (current_key != 'premium_tracking' && current_key != 'premium_origin') {
+        window.localStorage.removeItem(current_key);
+      }
+    }
+    window.localStorage.setItem(key, content);
+  }
+}
+    </script>
+    <meta charset="UTF-8">
+    <title>Guides and News for WoW, Diablo, Heroes of the Storm, and more - Icy Veins</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" id="viewport-meta"/>
+    <script>
+var icy_veins_disable_minified_menu = false;
+    </script>
+
+        <!-- Google Tag Manager EG -->
+    <script>
+  if (!getCookie("ips4_member_premium")) {
+    !function(e){var s=new XMLHttpRequest;s.open("GET","https://api.enthusiastgaming.net/scripts/cdn.enthusiast.gg/script/eg-aps/release/eg-aps-bootstrap-v2.0.0.bundle.js?site=icy-veins.com",!0),s.onreadystatechange=function(){var t;4==s.readyState&&(200<=s.status&&s.status<300||304==s.status)&&((t=e.createElement("script")).type="text/javascript",t.text=s.responseText,e.head.appendChild(t))},s.send(null)}(document);
+     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-P2MJWW2');
+}
+</script>
+    <!-- End Google Tag Manager EG -->
+<script>
+  if (!getCookie("ips4_member_premium") && window.innerWidth >= 1070) {
+    var btScript = document.createElement('script');
+    btScript.src = "https://enthusiastgaming-com.videoplayerhub.com/videoplayer.js";
+    btScript.async = true;
+    document.head.insertBefore(btScript, document.head.getElementsByTagName('script')[0]);
+  }
+</script>
+
+    <script>
+  dataLayer = [{
+    'author': '-',
+    'page_type': 'homepage',
+    'page_game': '-',
+    'page_cat1': '-',
+    'page_cat2': '-',
+    'page_cat3': '-'
+  }];
+</script>
+
+    <!-- Google Tag Manager -->
+    <script>
+      //<![CDATA[
+  if (!getCookie("ips4_member_premium") || getCookie("ips4_member_premium_analytics")) {
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NF9Q7DV');
+      //]]>
+
+  }
+    </script>
+    <!-- End Google Tag Manager -->
+<style type="text/css">
+    html,body,div,span,object,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}html{overflow-y:scroll;font-family:'Open Sans',sans-serif}ol,ul{list-style:none}table{border-collapse:collapse;border-spacing:0}em{font-style:italic;}a{text-decoration:none;color:#78dcff}h2 a{color:white}a:hover{text-decoration:none;color:#bef0ff}a:active{text-decoration:none;color:white}b,strong{font-weight:700}.header,.shadowed_header{font-family:'Open Sans Condensed',sans-serif}.shadowed_header{text-shadow:-1px -1px 1px rgba(0,0,0,0.8);}.relative{position:relative}.text_color{color:#cccccc}body{background-color:black}#main{width:100%}.background{background-color:#162c44}.hide_on_mobile{display:none}#header{width:100%;min-height:50px;position:relative;z-index:9000;background-image:url('//static.icy-veins.com/images/common/header-background-mobile.jpg?v=3');background-repeat:no-repeat}#icy_veins_mobile_logo{display:block;position:absolute;left:10px;top:18px}#icy_veins_mobile_logo span{display:inline-block;width:114px;height:17px;background-image:url("//static.icy-veins.com/images/common/logo-mobile.png")}@media only screen and (-webkit-min-device-pixel-ratio:2),only screen and (min-resolution:2dppx){#icy_veins_mobile_logo span{background-image:url("//static.icy-veins.com/images/common/logo-mobile-2x.png");background-size:114px 17px;}}.mobile_menu_button{position:absolute;top:20px;right:16px}#mobile_menu_button_show{display:inline-block;width:16px;height:10px;background-image:url("//static.icy-veins.com/images/common/mobile-menu-button.png?v=3")}#mobile_menu_button_close{display:none;color:white;top:10px;font-size:20px}#footer{display:none}#nav{display:none;background-color:#1d364f;padding-top:10px;padding-bottom:10px}.leaderboard_container{padding-top:20px;width:100%;text-align:center}.bt_container_l>span{padding-top:20px;width:100%;text-align:center}.leaderboard{width:320px;height:auto;;position:relative;margin:0 auto}.bt_container_l{position:relative;margin:0 auto}#news_container .rectangle{margin-top:10px}@media only screen and (min-width:1070px){#div-gpt-ad-1498507813884-10{display:none;}#div-gpt-ad-1498507813884-5{display:none;}#div-gpt-ad-1498507813884-6{display:none;}#div-gpt-ad-1498507813884-7{display:none;}}@media only screen and (max-width:1069px){#div-gpt-ad-1498507813884-0{display:none;}}#div-gpt-ad-1498507813884-11,#div-gpt-ad-1498507813884-12{width:300px;margin:0 auto;}#center{width:auto;padding-top:20px;padding-bottom:20px}.page_breadcrumbs{display:none}#right{display:none;}#page_top_container{display:none}#user_bar{position:relative;font-size:13px;color:#ccc}#user_bar,#user_bar *{box-sizing:border-box}#user_bar #elUserNav{right:35px;position:absolute;height:42px}#user_bar .ipsList_inline{list-style:none;margin:0;padding:0}#user_bar #elUserNav > li{display:none;height:44px;margin-top:3px;margin-bottom:3px;line-height:44px}#user_bar #elUserNav > li#cUserLink{margin-right:10px}#elUserNav > li > div > a{color:#fff;font-size:13px;vertical-align:middle;line-height:1}#user_bar .ipsList_inline > li{vertical-align:middle;margin-right:8px}#user_bar #elUserNav > li#forums_link,#user_bar #elUserNav > li#search_link{display:inline-block}#user_bar #elUserNav > li#forums_link > div,#user_bar #elUserNav > li#search_link > div{display:flex;align-items:center;height:100%}#user_bar #elUserNav > li#forums_link > div > a{position:relative;top:-3px}#user_bar #elUserNav > li#search_link > div > a{position:relative;top:-1px}.user_bar_img{display:inline-block;margin-right:6px;position:relative}#forums_link .user_bar_img{background-image:url("//static.icy-veins.com/images/common/icon-forums.png?v=2");width:19px;height:18px;top:6px}#masterclass_link .user_bar_img{background-image:url("//static.icy-veins.com/images/common/icon-masterclass.svg");width:18px;height:18px;top:5px}#search_link .user_bar_img{background-image:url("//static.icy-veins.com/images/common/icon-search.png?v=2");width:14px;height:14px;top:3px}@media only screen and (-webkit-min-device-pixel-ratio:2),only screen and (min-resolution:2dppx){#forums_link .user_bar_img{background-image:url("//static.icy-veins.com/images/common/icon-forums-2x.png");background-size:19px 18px;}#search_link .user_bar_img{background-image:url("//static.icy-veins.com/images/common/icon-search-2x.png");background-size:14px 14px;}}.hidden_section_controls>span{display:inline-block;border:1px solid white;color:white;padding:5px 10px;font-size:14px;border-radius:3px;cursor:pointer}.hidden_section_controls>span.hidden_section_controls_hide{display:none}.hidden_section{display:none}.page_content_container+.internal_links_block{margin-top:20px}.link_buttons_flex_3,.link_buttons_flex_2{display:flex;flex-wrap:wrap;justify-content:space-evenly}.centered.link_buttons_flex_3,.centered.link_buttons_flex_2{display:flex}.link_buttons_flex_3 .link_button,.link_buttons_flex_2 .link_button{display:block;width:100%}.link_button{display:inline-block;padding-top:5px;padding-bottom:5px;margin-bottom:2px;margin-top:2px}div.centered>span.link_button{display:inline-block}.no_flex .link_button{display:inline-block;width:auto}@media only screen and (min-width:600px){.link_buttons_flex_3 .link_button{width:47%;}.link_buttons_flex_2 .link_button{width:47%;}}@media only screen and (min-width:768px){.link_buttons_flex_3 .link_button{width:31%;}}.link_button a,.link_button .link_button_coming_soon{display:block;height:calc(100% - 12px);border-width:1px;border-style:solid;padding:5px 10px;font-size:16px;border-radius:4px}.link_button .link_button_coming_soon{color:#78dcff;position:relative}.link_button .link_button_coming_soon>span{position:absolute;display:block;width:77px;top:-12px;right:-78px;font-size:10px;color:rgb(224,60,15);border:1px solid red;border-radius:2px;white-space:nowrap;background-color:#162c44;padding:1px 3px}.link_button a:hover{color:white !important;border-color:white !important}.link_button.dk a{color:#C41F3B;border-color:#C41F3B;}.link_button.dh a{color:#a330c9;border-color:#a330c9;}.link_button.druid a{color:#FF7D0A;border-color:#FF7D0A;}.link_button.hunter a{color:#ABD473;border-color:#ABD473;}.link_button.mage a{color:#69CCF0;border-color:#69CCF0;}.link_button.monk a{color:#008467;border-color:#008467;}.link_button.paladin a{color:#F58CBA;border-color:#F58CBA;}.link_button.priest a{color:white;border-color:white;}.link_button.rogue a{color:#FFF569;border-color:#FFF569;}.link_button.shaman a{color:#0070DE;border-color:#0070DE;}.link_button.warlock a{color:#9482C9;border-color:#9482C9;}.link_button.warrior a{color:#C79C6E;border-color:#C79C6E;}ul.classes_list_strengths,ul.classes_list_weaknesses{list-style-type:none;margin-left:10px}.page_content ul.classes_list_strengths,.page_content ul.classes_list_weaknesses{list-style-type:none}.classes_list_strengths li:before{content:"+ ";color:lime;font-weight:bold}.classes_list_weaknesses li:before{content:"- ";color:red;font-weight:bold}span.legend{display:block;font-style:italic}blockquote{margin-left:5px;margin-right:5px;margin-top:15px;margin-bottom:15px;font-style:italic}#main.design_new_toc .page_title{background-image:linear-gradient(to top,rgba(29,54,87,1),rgba(29,54,87,0) 32px,rgba(29,54,87,0));margin-bottom:0px}#main.design_new_toc .page_title h1{font-size:28px;padding-left:15px;padding-bottom:25px}#main.design_new_toc .page_breadcrumbs_new{margin-bottom:25px}#main.design_new_toc .page_content_header{height:auto}#main.design_new_toc .page_content_footer{border:1px solid #5a718e;height:auto}#main.design_new_toc .page_content_header{margin-top:0px}#main.design_new_toc .page_content_footer{position:relative;margin-top:20px;padding-top:13px;padding-bottom:13px}#main.design_new_toc .page_content_footer .page_comments{bottom:3px;}#main.design_new_toc .page_content_footer .page_forum{padding-left:19px;padding-right:90px}.page_content_header_meta{height:36px;padding-top:13px;padding-bottom:12px;position:relative;border:1px solid #5a718e;background-color:rgba(0,0,0,0.3)}#main.design_new_toc #bottom_leaderboard_container.leaderboard_container,#main.design_new_toc #bottom_bt.bt_container_l{padding-top:0px}.page_content_header_meta .page_author{position:absolute;left:19px;width:calc(100% - 150px)}.page_content_header_meta .page_author .local_date_date,.page_content_header_meta .page_author .local_date_hour{color:white;font-weight:bold}.page_content_header_meta .page_comments,.page_content_footer .page_comments{position:absolute;right:19px;bottom:12px}.page_content_header_intro{border:1px solid #5a718e;border-top:none;padding:29px;background-color:rgba(0,0,0,0.3)}.page_content_header_intro>span{color:white;font-size:20px;font-weight:600;margin-bottom:29px;display:block}.page_content_header_intro>p{font-size:16px;line-height:27px;margin-top:20px}.page_content_header_intro>p:first-child{margin-top:10px}.page_content_container_header_intro_no_right_padding .page_content_header_intro>p{max-width:initial;}.page_content_container_header_intro_no_right_padding .page_content_header_intro>ul{max-width:initial;}#main.design_new_toc .toc{border:1px solid #2f465d}.toc.toc_bottom_of_page{border:1px solid #2f465d;border-bottom:none;margin-bottom:30px;margin-top:30px}.toc_page_list{background-image:url('//static.icy-veins.com/images/common/toc-texture-light.jpg?v=3');border-bottom:1px solid #2f465d;padding:19px;background-position-y:top;padding-bottom:0px}.toc_page_list_header{position:relative}.toc_page_list_header span{display:block;padding-left:45px;font-size:20px;font-weight:600;color:white;padding-bottom:7px;padding-top:8px}.toc_page_list_header .toc_page_list_icon{position:absolute;left:0px;top:0px;display:inline-block;width:35px;height:35px;padding:0px;background-image:url("//static.icy-veins.com/images/common/toc-icon.svg")}.toc_page_center_item{text-align:center}.toc_page_list_items{padding-top:20px;padding-bottom:4px;display:flex;flex-wrap:wrap;justify-content:space-between}.toc_page_list_item{display:block;position:relative;font-weight:600;color:white;margin-bottom:19px;width:100%}.toc_page_center_item .toc_page_list_item{width:auto;display:inline-block;margin-bottom:0px}.toc_page_list_item>a{color:white;display:block}.toc_page_list_item>span{position:absolute;display:inline-block;background-image:url('//static.icy-veins.com/images/common/toc-inactive-page.svg');width:36px;height:41px;top:-4px;left:0px;font-size:20px;text-align:center;line-height:41px}.toc_page_list_item>a>span{display:block;height:31px;border:1px solid #a4d1ef;padding-left:33px;margin-left:15px;background-color:#233d58;font-size:14px;line-height:30px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px}.toc_page_center_item .toc_page_list_item>a>span{margin-left:0px;padding-left:15px;padding-right:15px}.toc_page_list_item.toc_page_list_item_padding{display:none;}.toc_page_list_item>a>span>a{color:white}.toc_page_list_item.selected>span{background-image:url('//static.icy-veins.com/images/common/toc-active-page.svg');width:37px;height:42px;top:-5px}.toc_page_list_item.selected>a>span{border-color:#ffff00;background-image:url('//static.icy-veins.com/images/common/toc-texture-active.jpg?v=3')}.toc_page_content{background-image:url('//static.icy-veins.com/images/common/toc-texture-dark.jpg?v=3');padding:19px}.toc_page_content_header{color:white;font-size:16px;font-weight:bold}.toc_page_content_items{padding-top:20px}.toc_two_columns{display:block;justify-content:space-between}.toc_two_columns>div{width:100%;display:block}.toc_two_columns>div:nth-child(2){margin-top:10px}.toc_two_columns li{border:1px solid #385575;border-radius:3px;font-weight:600;font-size:14px;height:27px;line-height:27px;padding-left:10px;padding-right:10px;margin-bottom:10px}.toc_two_columns>div li:last-child{margin-bottom:0px}.toc_two_columns>div:nth-child(1) li:last-child{margin-bottom:0px}.toc_two_columns>div li:last-child{margin-bottom:0px}.toc_two_columns li:hover{border-color:white}.toc_two_columns li>a:hover{color:white}.toc li>a{display:block;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;width:100%}.internal_links_block{}.internal_links_block h3{padding:11px 19px;font-weight:bold;font-size:18px;background-image:url('//static.icy-veins.com/images/common/toc-texture-light.jpg?v=3');border:1px solid #2f465d;color:white}.internal_links_block>div{margin-top:20px;display:flex;flex-wrap:wrap;justify-content:space-between}.internal_links_block>div>div{display:inline-block;width:160px;height:160px;border:1px solid #5a718e;margin-bottom:20px}.internal_links_block>div>div>a{font-family:'Open Sans Condensed',sans-serif;color:white;font-size:18px;font-weight:bold;display:block;width:160px;height:160px;position:relative;background-color:rgba(0,0,0,0.4)}.internal_links_block>div>div>a>span{position:absolute;bottom:10px;left:10px}#main.design_new_toc #bottom_rectangle_container{margin-top:20px;}#main.design_new_toc .changelog_wrapper{background-color:#0d1d32;border-top:1px solid #5a718e;border-bottom:1px solid #2f465e;position:relative}#main.design_new_toc .changelog_wrapper:after,.changelog_wrapper:before{content:"";width:1px;position:absolute;top:-1px;bottom:-1px;background-image:linear-gradient(#5a718e,#2f465e)}#main.design_new_toc .changelog_wrapper:after{right:-1px}#main.design_new_toc .changelog_wrapper:before{left:-1px}#main.design_new_toc .changelog_wrapper ul.changelog{list-style-type:none;padding:0px;margin:0px}#main.design_new_toc .changelog_wrapper ul.changelog>li{padding:8px 20px;border-bottom:1px solid #2f465d}#main.design_new_toc .changelog_wrapper>div{text-align:center;padding-top:10px;padding-bottom:10px;background-color:#13273c}#main.design_new_toc .changelog_wrapper div#changelog_show_all{color:#78dcff;}#main.design_new_toc .changelog_wrapper div#changelog_show_only_2{color:#78dcff;}.toc_top_right_extras{display:none}.internal_links_block_from_spec_to_boss_guide>span{font-size:16px;font-weight:bold}#slideshow_container{width:auto;height:250px}#slideshow{width:100%;margin:0 auto;position:relative}.slide{width:auto;height:250px;position:relative}.slide>a>span{overflow:hidden;width:auto;margin:0 auto;height:250px;text-align:center;display:block}.slide>a>span>img{margin:0 -9999% 0 -9999%}.slide>.slide_text{display:block;position:absolute;bottom:0px;left:0px;width:100%;background:-moz-linear-gradient(top,rgba(0,0,0,0.4) 00%,rgba(0,0,0,1) 100%);background:-webkit-gradient(linear,left top,left bottom,color-stop(00%,rgba(0,0,0,0.4)),color-stop(100%,rgba(0,0,0,1)));background:-webkit-linear-gradient(top,rgba(0,0,0,0.4) 00%,rgba(0,0,0,1) 100%);background:-o-linear-gradient(top,rgba(0,0,0,0.4) 00%,rgba(0,0,0,1) 100%);background:-ms-linear-gradient(top,rgba(0,0,0,0.4) 00%,rgba(0,0,0,1) 100%);background:linear-gradient(to bottom,rgba(0,0,0,0.4) 00%,rgba(0,0,0,1) 100%);filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#66000000',endColorstr='#000000',GradientType=0 );}.slide>.slide_text>span.slide_text_title{margin-top:10px;padding:5px 10px;font-size:24px;display:block;font-weight:700}.slide>.slide_text>span.slide_text_paragraph{display:block;font-size:14px;line-height:20px;padding-left:10px;padding-right:10px;padding-bottom:15px}.slide>.slide_text a{color:white}#slideshow_buttons{position:absolute;top:15px;right:15px}.slideshow_button{width:14px;height:14px;margin-right:4px;margin-left:4px;display:inline-block;background-color:#25282f;border-radius:8px;border:2px solid #373a41;cursor:pointer}.slideshow_button:hover{background-color:#bbbbbb}.slideshow_button.active{background-color:white}.slideshow_button.active:hover{background-color:white}.news{padding:13px;height:110px}.news>span{vertical-align:top}.news .image_container{display:inline-block;width:30%;overflow:hidden;height:110px;text-align:center;position:relative}.news .image_container a{display:inline-block;width:100%;height:110px;overflow:hidden;text-align:center}.news .image_container img{height:110px;margin:0 -9999% 0 -9999%}.news .text_container{display:inline-block;width:70%;height:110px;line-height:16px}.news .text_container .text_inner_container{display:inline-block;position:relative;width:100%;height:110px}.news .news_about{display:block;color:#787878;height:20px;position:absolute;bottom:0px;left:20px}.news_game{display:inline-block;height:20px;padding-left:5px;padding-right:5px;font-size:12px;line-height:20px;font-weight:bold;color:rgba(255,255,255,0.6);font-family:'Open Sans Condensed',sans-serif;border-radius:2px}.news .news_game_long{display:none}.news .news_game_iv{background-color:rgba(102,102,102,0.7);}.news .news_game_wow{background-color:rgba(180,139,16,0.7);}.news .news_game_wow-ptr{background-color:rgba(180,139,16,0.7);}.news .news_game_wow-classic{background-color:rgba(180,139,16,0.7);}.news .news_game_tbc-classic{background-color:rgba(180,139,16,0.7);}.news .news_game_wc-reforged{background-color:rgba(180,139,16,0.7);}.news .news_game_d3{background-color:rgba(237,86,45,0.7);}.news .news_game_d4{background-color:rgba(237,86,45,0.7);}.news .news_game_diablo-immortal{background-color:rgba(237,86,45,0.7);}.news .news_game_heroes{background-color:rgba(0,115,186,0.7);}.news .news_game_hearthstone{background-color:rgba(16,126,114,0.7);}.news .news_game_blizzcon{background-color:rgba(103,119,131,0.7);}.news .news_game_blizzard{background-color:rgba(13,84,112,0.7);}.news .news_game_bnet{background-color:rgba(13,84,112,0.7);}.news .news_game_overwatch{background-color:rgba(86,102,140,0.7);}.news .news_game_overwatch-2{background-color:rgba(86,102,140,0.7);}.news .news_game_sc2{background-color:rgba(87,109,131,0.7);}.news .news_game_bl3{background-color:rgba(154,139,20,0.7);}.news .news_game_poe{background-color:rgba(20,20,20,0.7);}.news .news_about_right{font-size:14px;font-weight:bold;color:#617C93;margin-left:15px;font-family:'Open Sans Condensed',sans-serif}.news_author{display:none;}.news .news_title{display:inline-block;max-width:calc(100% - 20px);font-size:21px !important;padding-bottom:3px;font-weight:600;white-space:nowrap;overflow:hidden;color:white;text-overflow:ellipsis;border-bottom:1px solid white;position:absolute;margin-right:20px;top:0px;left:20px}.news .news_title a{color:white}.news .news_subtitle_container{display:block;align-items:center;height:48px;margin-top:9px}.news .news_subtitle{display:block;display:-webkit-box;font-size:13px;line-height:16px;max-height:48px;vertical-align:bottom;overflow:hidden;text-overflow:ellipsis;-webkit-box-orient:vertical;-webkit-line-clamp:3;position:absolute;top:34px;left:20px}.news .news_comments{display:none;}#news_read_more{display:inline-block;width:100%;text-align:center;margin-top:30px;margin-bottom:30px;font-size:14px}#news_read_more a{padding:5px 20px;background-color:#78dcff;color:#162c44;font-weight:bold;font-family:'Open Sans Condensed',sans-serif;letter-spacing:0.5px;border-radius:7px}#news_read_more a:hover{color:white}#div-gpt-ad-1498507813884-5,#div-gpt-ad-1498507813884-6,#div-gpt-ad-1498507813884-7{text-align:center;margin-top:20px}.index_page_title{color:white;font-size:18px;margin-top:15px;font-weight:bold}@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(//static.icy-veins.com/fonts/Inter-VariableFont_slnt,wght.ttf) format('truetype');unicode-range:U+0000-007F}#df_psa_container{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;color:white;font-family:'Inter','Open Sans',sans-serif}#df_psa_container a{color:white}.df_psa_half_width{flex-basis:calc(50% - 2px)}@media only screen and (max-width:640px){.df_psa_half_width{flex-basis:100%;}}.df_psa_entry{border-radius:3px;display:block;margin-bottom:4px;font-size:12px;line-height:14px}.df_psa_header{font-weight:700;font-family:'Open Sans',sans-serif;line-height:22px;font-size:18px}.df_psa_new{color:#1CDA19;font-size:12px;line-height:16px;font-weight:400}.df_psa_dragonflight{color:#FF9B00;font-weight:400;font-size:12px;line-height:16px}#df_psa_evoker_block>*::after,#df_psa_banner::after{width:24px;height:24px;content:"";background:url("//static.icy-veins.com/images/common/arrow-right-s-fill.svg");display:inline-block;filter:invert(1);position:absolute;right:calc(15px + 1%);top:50%;translate:0 -50%}#df_psa_classes_block>.df_psa_entry:hover,#df_psa_reputation_block>.df_psa_entry:hover{background-color:#091420}.df_psa_tier_lists_block{background-color:#051728;padding:9px 0 11px 0;display:flex;justify-content:space-between;flex-wrap:wrap}.df_psa_tier_lists_block>.df_psa_header{flex-basis:100%;margin-left:8px;margin-bottom:9px;font-size:14px;font-weight:600}[class*="df_psa_tier_list_button_"]{display:inline-flex;align-items:center;height:40px;flex-basis:calc(33% - 7px);margin-right:4px;background:#1F3F60}[class*="df_psa_tier_list_button_"]:hover{background:#3C5C82}[class*="df_psa_tier_list_button_"]:first-of-type{margin-left:8px;}[class*="df_psa_tier_list_button_"]:last-of-type{margin-right:8px;}[class*="df_psa_tier_list_button_"]::before{display:inline-block;content:'';width:20px;height:20px;background-size:cover;margin-left:7px;margin-right:9px}.df_psa_tier_list_button_dps::before{background-image:url("//static.icy-veins.com/images/wow/dragonflight_psa/Icon-DPS.png");}.df_psa_tier_list_button_tank::before{background-image:url("//static.icy-veins.com/images/wow/dragonflight_psa/Icon-Tank.png");}.df_psa_tier_list_button_healer::before{background-image:url("//static.icy-veins.com/images/wow/dragonflight_psa/Icon-Heal.png");}@media only screen and (max-width:300px){[class*="df_psa_tier_list_button_"]{flex-basis:100%;margin:4px 8px 0px 8px;}}#df_psa_evoker_block{display:flex;flex-direction:column;height:100%}@media only screen and (max-width:432px){#df_psa_evoker_block{flex-basis:100%;}}.df_psa_button_bg{color:white;display:flex;flex-direction:column;justify-content:center;background-size:cover;background-repeat:no-repeat;padding-top:29px;padding-bottom:29px;padding-left:72px;position:relative;background-position-y:bottom}.df_psa_button_bg::before{content:"";height:38px;width:38px;display:inline-block;background-size:cover;position:absolute;left:18px;top:50%;translate:0 -50%;border-radius:50%}#df_psa_dragonriding{flex-basis:33%;background-image:linear-gradient(rgba(11,27,44,0.92) 0 0),url("//static.icy-veins.com/images/wow/dragonflight_psa/dragonriding.jpg");background-position-y:bottom}#df_psa_dragonriding::before{background-image:url("//static.icy-veins.com/images/wow/dragonflight_psa/dragonriding-glyph.png")}#df_psa_dungeons{flex-basis:34%;background-image:linear-gradient(rgba(11,27,44,0.85) 0 0),url("//static.icy-veins.com/images/wow/dragonflight_psa/dungeons.jpg");background-position-y:30%}#df_psa_dungeons::before{background-image:url("//static.icy-veins.com/images/wow/dragonflight_psa/dungeons-icon.jpg")}#df_psa_professions{flex-basis:33%;background-image:linear-gradient(90.22deg,rgba(11,27,44,0.85) 0.19%,rgba(11,27,44,0.85) 99.82%),url("//static.icy-veins.com/images/wow/dragonflight_psa/professions.jpg");background-position-y:40%}#df_psa_professions::before{background-image:url("//static.icy-veins.com/images/wow/dragonflight_psa/professions-icon.jpg")}@media only screen and (max-width:600px){.df_psa_button_bg{padding-top:0px;padding-bottom:0px;min-height:125px;}}#df_psa_classes_block{display:flex;justify-content:space-between;flex-wrap:wrap}@media only screen and (max-width:432px){#df_psa_classes_block{flex-basis:100%;}}#df_psa_classes_block>.df_psa_entry{flex-basis:calc(50% - 2px - 44px);background-color:#0B1B2C;line-height:34px;font-weight:600;font-size:14px;padding-left:44px;position:relative}#df_psa_classes_block>.df_psa_evoker{flex-basis:100%;text-align:center;padding-left:0}.df_psa_evoker>.df_psa_new{top:17px;left:50%;translate:100% -50%;position:absolute}#df_psa_classes_block>.df_psa_entry::before{width:32px;height:32px;background-image:url("//static.icy-veins.com/sprites/wow-classes-4a3bcbab5fc336363e13ca20f4e4c418.png");background-size:auto 100%;content:"";display:inline-block;position:absolute;left:12px}@media only screen and (-webkit-min-device-pixel-ratio:2),only screen and (min-resolution:2dppx){#df_psa_classes_block>.df_psa_entry::before{background-image:url("//static.icy-veins.com/sprites/wow-classes-retina-abf9ea985986792cd98a9bbd52997a2e.png");}}.df_psa_dk::before{background-position:-0px 0px;top:-4px;}.df_psa_druid::before{background-position:-32px 0px;top:-6px;}.df_psa_hunter::before{background-position:-64px 0px;top:-4px;left:17px !important;}.df_psa_mage::before{background-position:-96px 0px;top:1px;left:14px !important;}.df_psa_monk::before{background-position:-128px 0px;top:-1px;}.df_psa_paladin::before{background-position:-160px 0px;top:0;}.df_psa_priest::before{background-position:-192px 0px;top:-1px;}.df_psa_rogue::before{background-position:-224px 0px;top:-2px;}.df_psa_shaman::before{background-position:-256px 0px;top:-5px;}.df_psa_warlock::before{background-position:-288px 0px;top:-5px;}.df_psa_warrior::before{background-position:-320px 0px;top:-2px;}.df_psa_dh::before{background-position:-352px 0px;top:-4px;}.df_psa_evoker::before{background-position:-384px 0px;top:-2px;left:calc(50% - 52px) !important;}.dk,.death-knight{color:#C41F3B !important;}.dh,.demon-hunter{color:#a330c9 !important;}.druid{color:#FF7D0A !important;}.evoker{color:#33937F !important;}.hunter{color:#ABD473 !important;}.mage{color:#69CCF0 !important;}.monk{color:#008467 !important;}.paladin{color:#F58CBA !important;}.priest{color:white !important;}.rogue{color:#FFF569 !important;}.shaman{color:#0070DE !important;}.warlock{color:#9482C9 !important;}.warrior{color:#C79C6E !important;}#df_psa_reputation_block{display:flex;flex-wrap:wrap;justify-content:space-between}#df_psa_reputation_block>.df_psa_entry{flex-basis:calc(50% - 2px - 48px - 22px);background-color:#0B1B2C;line-height:16px;font-weight:400;font-size:12px;padding-left:48px;padding-right:22px;position:relative;color:white;height:60px;display:flex;align-items:center}#df_psa_reputation_block>.df_psa_entry::before{width:28px;height:28px;content:"";display:inline-block;position:absolute;left:8px;background-size:contain;border-radius:50%}#df_psa_dragonscale_expedition::before{background-image:url("//static.icy-veins.com/images/wow/dragonflight_psa/dragonscale-expedition.jpg");border:1px solid #C61E58}#df_psa_maruuk_centaur::before{background-image:url("//static.icy-veins.com/images/wow/dragonflight_psa/maruuk-centaur.jpg");border:1px solid #749710}#df_psa_iskaara_tuskarr::before{background-image:url("//static.icy-veins.com/images/wow/dragonflight_psa/iskaara-tuskarr.jpg");border:1px solid #165AC2}#df_psa_valdrakken_accord::before{background-image:url("//static.icy-veins.com/images/wow/dragonflight_psa/valdrakken-accord.jpg");border:1px solid #FF9B00}#df_psa_banner{flex-basis:100%;background:linear-gradient(90deg,#041727 0%,rgba(0,23,47,0.74) 100%),url("//static.icy-veins.com/images/wow/dragonflight_psa/banner-lvl70.jpg");background-size:cover;background-repeat:no-repeat;background-position-x:50%;color:white;position:relative;padding-left:72px;font-size:12px;min-height:72px;display:flex;align-items:flex-start;flex-wrap:wrap;flex-direction:column;justify-content:center}#df_psa_banner .df_psa_header{line-height:28px;font-size:20px}#df_psa_banner::before{content:"";width:38px;height:38px;border-radius:50%;position:absolute;top:50%;left:18px;translate:0 -50%;background-image:linear-gradient(rgba(255,155,0,0.4) 0 0),url("//static.icy-veins.com/images/wow/dragonflight_psa/lvl70.jpg")}
+</style>
+<link rel="stylesheet" type="text/css" href="//static.icy-veins.com/css/core-9a0e9dd2e4ca58f0d84a92ed0d7377e7.css" />
+
+    <link href="//www.icy-veins.com/feed.atom" type="application/atom+xml" rel="alternate" title="Icy Veins - Feed" />
+    <link rel="icon" type="image/png" href="//static.icy-veins.com/images/common/favicon-high-resolution.png" />
+    <link rel="apple-touch-icon-precomposed" href="//static.icy-veins.com/images/common/favicon-high-resolution.png" />
+    <meta name="description" content="Icy Veins provides news and detailed guides for World of Warcraft, WoW Classic, Hearthstone, Diablo III, Overwatch, Heroes of the Storm, and StarCraft 2." />
+    <meta name="robots" content="ALL" />
+    <meta name="author" content="Icy Veins 2020" />
+    <meta name="google-site-verification" content="vOHqu6UfhHWybU1OIwP8q01iUKojCv-1SGTvrCJ6qtk" />
+    <meta name="msvalidate.01" content="BBA2E69ADD6BD4A76395B2709092CCA6" />
+    <meta property="og:title" content="Guides and News for WoW, Diablo, Heroes of the Storm, and more"/>
+    <meta property="og:url" content="//www.icy-veins.com/"/>
+    <meta property="og:image" content="//static.icy-veins.com/images/common/icy-veins-icon-social.png" />
+    <meta property="og:description" content="Icy Veins provides news and detailed guides for World of Warcraft, WoW Classic, Hearthstone, Diablo III, Overwatch, Heroes of the Storm, and StarCraft 2."/>
+    <meta property="og:site_name" content="Icy Veins"/>
+    <meta property="og:type" content="website"/>
+    <meta property="fb:app_id" content="260815523933555"/>
+    <script src="//static.icy-veins.com/javascript/jquery-8101d596b2b8fa35fe3a634ea342d7c3.js"></script>
+    <script src="//static.icy-veins.com/javascript/icyveins-common-ff37e275048e28b38068d38e9bd7de5a.js"></script>
+    <script src="//static.icy-veins.com/javascript/icyveins-content-a2db50e76ea7472cc7e8ba69acc3f0a3.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "http://www.icy-veins.com/",
+  "logo": "https://static.icy-veins.com/images/common/icy-veins-logo.png",
+  "sameAs": [
+    "https://www.facebook.com/icyveinscom",
+    "https://twitter.com/icyveins",
+    "https://www.youtube.com/user/icyveinscom"
+  ]
+}
+</script>
+
+
+
+<link rel="canonical" href="https://www.icy-veins.com/" />
+<script type="application/ld+json">
+  {
+    "@context" : "https://schema.org/",
+    "@type" : "Organization",
+    "name" : "Icy Veins",
+    "url" : "https://www.icy-veins.com/",
+    "sameAs" : [
+      "https://www.facebook.com/icyveinscom",
+      "https://twitter.com/icyveins",
+      "https://www.youtube.com/user/icyveinscom",
+      "https://www.twitch.tv/icyveinscom"
+    ]
+  }
+</script>
+
+
+
+<script>
+<!-- Hotjar Tracking Code for icy-veins.com -->
+document.addEventListener("DOMContentLoaded", function(event) {
+  (function(h,o,t,j,a,r){
+    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+    h._hjSettings={hjid:3207955,hjsv:6};
+    a=o.getElementsByTagName('head')[0];
+    r=o.createElement('script');r.async=1;
+    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+    a.appendChild(r);
+  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+});
+</script>
+  </head>
+  <body class="iv_body">
+  <script>
+    var icy_veins_blocked = false;
+    if (!getCookie("ips4_member_premium")) {
+      var ad = document.createElement('ins');
+      ad.className = 'AdSense';
+      ad.style.display = 'block';
+      ad.style.position = 'absolute';
+      ad.style.top = '-1px';
+      ad.style.height = '1px';
+      document.body.appendChild(ad);
+      clientHeight = ad.clientHeight;
+      document.body.removeChild(ad);
+      if (clientHeight) {
+        var testURL = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+        var opts = { method: 'HEAD', mode: 'no-cors' };
+        var myRequest = new Request(testURL, opts);
+        fetch(myRequest).then(function(response) {
+          return response;
+        }).then(function(response) {
+          dataLayer.push({ 'adblock': "Unblocked" });
+        }).catch(function(e){
+          dataLayer.push({ 'adblock': "Blocked" });
+          icy_veins_blocked = true;
+        });
+      } else {
+        dataLayer.push({ 'adblock': "Blocked" });
+        icy_veins_blocked = true;
+      }
+    }
+  </script>
+   
+   <!-- #13326244#IV_1x1 -->
+<div id="div-gpt-ad-1498507813884-0" style="line-height:0px;"></div>
+
+    <!--[if lte IE 9]>
+    <div class="ie9">
+    <![endif]-->
+    <div id="main" class="design_new_toc">
+      <div id="header" class="background">
+        <div id="user_bar">
+          <ul id="elUserNav" class="ipsList_inline cSignedOut ipsClearfix ipsResponsive_hidePhone ipsResponsive_block">
+            <li id="social_media">
+              <div>
+                <a title="Twitch" href="https://www.twitch.tv/icyveinscom"><span class="sprite_social sprite_social_twitch"></span></a>
+                <a title="Discord" href="https://discord.gg/ZaufvyM"><span class="sprite_social sprite_social_discord"></span></a>
+                <a title="Facebook" href="https://www.facebook.com/icyveinscom"><span class="sprite_social sprite_social_facebook"></span></a>
+                <a title="Twitter" href="https://twitter.com/icyveins"><span class="sprite_social sprite_social_twitter"></span></a>
+                <a title="Youtube" href="https://www.youtube.com/channel/UCTs3du1OXMl0tTXiABbLbdA"><span class="sprite_social sprite_social_youtube"></span></a>
+                <a title="News Feed" href="//www.icy-veins.com/feed.atom"><span class="sprite_social sprite_social_feed"></span></a>
+                <a title="E-mail Us" href="/cdn-cgi/l/email-protection#a4c7cbcad0c5c7d0e4cdc7dd89d2c1cdcad78ac7cbc9"><span class="sprite_social sprite_social_email"></span></a>
+                <a title="TikTok" href="https://www.tiktok.com/@icy.veins"><span class="sprite_social sprite_social_tiktok"></span></a>
+              </div>
+            </li>
+
+            <li class="elUserNav_sep"></li>
+            <li id="go_premium">
+              <div>
+                <a title="Go premium" href="https://www.icy-veins.com/forums/premium"><span></span></a>
+              </div>
+            </li>
+
+            <li class="elUserNav_sep"></li>
+            <li id="forums_link" class="header">
+              <div>
+                <a href="https://www.icy-veins.com/forums/">
+                  <span class="user_bar_img"></span><span>FORUMS</span>
+                </a>
+              </div>
+            </li>
+            <li class="elUserNav_sep"></li>
+            <li id="masterclass_link" class="header">
+              <div>
+                <a href="//www.icy-veins.com/wow/masterclass">
+                  <span class="user_bar_img"></span><span>MASTERCLASS</span>
+                </a>
+              </div>
+            </li>
+            <li class="elUserNav_sep"></li>
+            <li id="search_link" class="header">
+              <div>
+                <a href="//www.icy-veins.com/search" class="header">
+                  <span class="user_bar_img"></span><span>SEARCH</span>
+                </a>
+              </div>
+            </li>
+            <li class="elUserNav_sep"></li>
+
+
+            <li id="elSignInLink">
+              <div>
+                <a href="https://www.icy-veins.com/forums/login/" data-ipsmenu-closeonclick="false" data-ipsmenu="" id="elUserSignIn">
+                  <span></span>
+                </a>
+
+                <div id="elUserSignIn_menu" class="ipsMenu ipsMenu_auto ipsHide">
+                  <form accept-charset="utf-8" method="post" action="https://www.icy-veins.com/forums/login/" data-controller="core.global.core.login">
+                    <input type="hidden" name="csrfKey" value="125985b7359919bd7c0eeba7bde3ad90">
+                    <input type="hidden" name="ref" value="aHR0cHM6Ly93d3ctZGV2LmljeS12ZWlucy5jb20vZm9ydW1zLz9hcHA9aWN5dmVpbnNwcyZtb2R1bGU9dGVzdCZjb250cm9sbGVyPXRvcGJhciZkbz12aWV3">
+                    <div data-role="loginForm">
+
+
+
+                      <div class="ipsColumns ipsColumns_noSpacing">
+                        <div class="ipsColumn ipsColumn_wide" id="elUserSignIn_internal">
+
+                          <div class="ipsPad ipsForm ipsForm_vertical">
+                            <h4 class="ipsType_sectionHead">Sign In</h4>
+                            <br><br>
+                            <ul class="ipsList_reset">
+                              <li class="ipsFieldRow ipsFieldRow_noLabel ipsFieldRow_fullWidth">
+
+
+                                <input type="text" placeholder="Display Name or Email Address" name="auth">
+
+                              </li>
+                              <li class="ipsFieldRow ipsFieldRow_noLabel ipsFieldRow_fullWidth">
+                                <input type="password" placeholder="Password" name="password">
+                              </li>
+                              <li class="ipsFieldRow ipsFieldRow_checkbox ipsClearfix">
+                                <span class="ipsCustomInput">
+                                  <input type="checkbox" name="remember_me" id="remember_me_checkbox" value="1" checked="" aria-checked="true">
+                                  <span></span>
+                                </span>
+                                <div class="ipsFieldRow_content">
+                                  <label class="ipsFieldRow_label" for="remember_me_checkbox">Remember me</label>
+                                  <span class="ipsFieldRow_desc">Not recommended on shared computers</span>
+                                </div>
+                              </li>
+
+                              <li class="ipsFieldRow ipsFieldRow_checkbox ipsClearfix">
+                                <span class="ipsCustomInput">
+                                  <input type="checkbox" name="anonymous" id="anonymous_checkbox" value="1" aria-checked="false">
+                                  <span></span>
+                                </span>
+                                <div class="ipsFieldRow_content">
+                                  <label class="ipsFieldRow_label" for="anonymous_checkbox">Sign in anonymously</label>
+                                </div>
+                              </li>
+
+                              <li class="ipsFieldRow ipsFieldRow_fullWidth">
+                                <br>
+                                <button type="submit" name="_processLogin" value="usernamepassword" class="ipsButton ipsButton_primary ipsButton_small" id="elSignIn_submit">Sign In</button>
+
+                                <br>
+                                <p class="ipsType_right ipsType_small">
+
+                                <a href="https://www.icy-veins.com/forums/lostpassword/" data-ipsdialog="" data-ipsdialog-title="Forgot your password?">
+
+                                  Forgot your password?</a>
+                                </p>
+
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="ipsColumn ipsColumn_wide">
+                          <div class="ipsPad" id="elUserSignIn_external">
+                            <div class="ipsAreaBackground_light ipsPad_half">
+
+
+                              <div class="ipsPad_half ipsType_center">
+
+
+                                <button type="submit" name="_processLogin" value="2" class="ipsButton ipsButton_verySmall ipsButton_fullWidth ipsSocial ipsSocial_facebook" style="background-color: #3a579a">
+
+                                  <span class="ipsSocial_icon">
+
+                                    <i class="fa fa-facebook-official"></i>
+
+                                  </span>
+                                  <span class="ipsSocial_text" style="line-height: 32px;">Sign in with Facebook</span>
+
+                                </button>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </li>
+
+            <li id="elRegisterLink">
+              <div>
+                <span id="new_to_icy_veins"></span>
+
+                <a href="https://www.icy-veins.com/forums/register/" data-ipsdialog="" data-ipsdialog-size="narrow" data-ipsdialog-title="Sign Up" id="elRegisterButton" class="ipsButton ipsButton_normal ipsButton_primary"><span></span></a>
+              </div>
+
+            </li>
+
+          </ul>
+        </div>
+        <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  jQuery.get('https://use.fontawesome.com/6cbc36349f.js', function() {});
+
+  jQuery.get('/forums/?app=icyveinsps&module=test&controller=topbar&do=view', { "_": jQuery.now() }, function (response) {
+    if (typeof response === "object" && response.hasOwnProperty('redirect')) {
+      window.location = response.redirect;
+      return;
+    }
+    // jQuery('#user_bar').replaceWith('<div id="user_bar">' + response + '</div>');
+    jQuery('#user_bar').html(response);
+    document.querySelectorAll("#go_premium a, #go_premium a span").forEach(function(item, index) {
+      item.addEventListener("click", function(event) {
+        writeToLocalStorage('premium_origin', JSON.stringify({'type': 'top-link', 'date': new Date()}));
+      });
+    });
+    jQuery('span.ipsSocial_text').css('line-height', '32px');
+    jQuery('#elUserNav').show();
+    jQuery("#elSignInLink>a").click(function(e) {
+      if (jQuery("#elUserSignIn_menu").is(":visible")) {
+        jQuery("#elUserSignIn_menu").hide();
+      } else {
+        jQuery("#elUserSignIn_menu").show();
+      }
+      e.preventDefault();
+      return false;
+    });
+    jQuery("body").click(function(e) {
+      if (jQuery("#elUserSignIn_menu").is(":visible") && e.target.getAttribute("id") != "elSignInLink") {
+        element = e.target;
+        while (element.getAttribute("id") != "elUserSignIn_menu" && element.nodeName.toLowerCase() != "body") {
+          element = element.parentElement;
+        }
+        if (element.getAttribute("id") != "elUserSignIn_menu") {
+          jQuery("#elUserSignIn_menu").hide();
+        }
+      }
+    });
+
+    var currenturl = btoa(window.location.href);
+    jQuery("#elSignInLink>a").attr('href',jQuery("#elSignInLink>a").attr('href') + '?ref=' + currenturl);
+
+    var _ipsMenuList = ["elUserLink", "elCreateNew", "elFullNotifications", "elFullInbox", "elFullReports"];
+
+    _ipsMenuList.forEach(function(el) {
+      jQuery(document).click( function (e) {
+        if (jQuery("#" + el + "_menu").is(":visible") && e.target.getAttribute("id") != el) {
+          element = e.target;
+          while (element.getAttribute("id") != el + "_menu" && element.nodeName.toLowerCase() != "body") {
+            element = element.parentElement;
+          }
+          if (element.getAttribute("id") != el + "_menu") {
+            jQuery("#" + el + "_menu").hide();
+          }
+        }
+      });
+      jQuery(document).on('click', "#" + el, function () {
+        console.log(jQuery(this).find('.ipsDataList'));
+        if (jQuery("#" + el + "_menu").is(":visible")) {
+          jQuery("#" + el + "_menu").hide();
+        } else {
+          if (jQuery('#user_bar .ipsMenu').is(":visible")) {
+            jQuery('#user_bar .ipsMenu').hide();
+          }
+
+          if (jQuery("#" + el + "_menu").find('.ipsDataList').length && !jQuery("#" + el + "_menu").find('.ipsDataList').hasClass('loaded')) {
+            jQuery("#" + el + "_menu").find('.ipsDataList').addClass('loaded');
+            var url = null;
+            switch (el) {
+              case 'elFullNotifications':
+                url = '/forums/index.php?app=core&module=system&controller=notifications';
+                break;
+              case 'elFullInbox':
+                url = '/forums/index.php?app=core&module=messaging&controller=messenger&overview=1&_fromMenu=1';
+                break;
+              case 'elFullReports':
+                url = '/forums/index.php?app=core&module=modcp&controller=modcp&tab=reports&overview=1';
+                break;
+            }
+            if (url) {
+              jQuery.get(url, function (content) {
+                console.log(content);
+                jQuery("#" + el + "_menu").find('.ipsDataList').html(content.data);
+              });
+            }
+          }
+
+          jQuery("#" + el + "_menu").show();
+        }
+        return false;
+      });
+    });
+
+    return false;
+  })
+        </script>
+        <span class="mobile_menu_button" id="mobile_menu_button_show"></span>
+        <span class="mobile_menu_button" id="mobile_menu_button_close">x</span>
+        <div id="icy_veins_logo">
+          <a href="//www.icy-veins.com/"><span></span></a>
+        </div>
+        <div id="icy_veins_mobile_logo">
+          <a href="//www.icy-veins.com/"><span></span></a>
+        </div>
+        <span id="tagline" class="shadowed_header">NEWS &amp; GUIDES</span>
+        <div id="games" class="shadowed_header">
+          <div id="game_wow" class="not_selected"><a href="//www.icy-veins.com/wow/" title="Icy Veins - World of Warcraft guides"><span class="sprite_games sprite_games_wow"></span><span class="game_name">WoW</span></a>
+          </div><div id="game_lost_ark" class="not_selected"><a href="//www.icy-veins.com/lost-ark/"  title="Icy Veins - Lost Ark guides"><span class="sprite_games sprite_games_lost_ark"></span><span class="game_name">Lost Ark</span></a>
+          </div><div id="game_d3" class="not_selected"><a href="//www.icy-veins.com/d3/" title="Icy Veins - Diablo 3 guides"><span class="sprite_games sprite_games_d3"></span><span class="game_name">Diablo III</span></a>
+          </div><div id="game_ffxiv" class="not_selected"><a href="//www.icy-veins.com/ffxiv/"  title="Icy Veins - Final Fantasy XIV guides"><span class="sprite_games sprite_games_ffxiv"></span><span class="game_name">FFXIV</span></a>
+          </div><div id="game_wotlk_classic" class="not_selected"><a href="//www.icy-veins.com/wotlk-classic/"  title="Icy Veins - WotLK Classic guides"><span class="sprite_games sprite_games_wotlk_classic"></span><span class="game_name">WotLK Classic</span></a>
+          </div><div id="game_d2" class="not_selected"><a href="//www.icy-veins.com/d2/"  title="Icy Veins - Diablo 2 guides"><span class="sprite_games sprite_games_d2"></span><span class="game_name">Diablo II</span></a>
+          </div><div id="game_poe" class="not_selected"><a href="https://www.poe-vault.com/"  title="PoE Vault - Path of Exile guides"><span class="sprite_games sprite_games_poe"></span><span class="game_name">Path of Exile</span></a>
+          </div><div id="game_plus"><span class="sprite_games sprite_games_plus"></span><span class="game_name">More Games</span>
+            <div>
+              <div id="game_tbc_classic" class="not_selected"><a href="//www.icy-veins.com/tbc-classic/"  title="Icy Veins - TBC Classic guides"><span class="sprite_games sprite_games_tbc_classic"></span><span class="game_name">TBC Classic</span></a></div>
+              <div id="game_heroes" class="not_selected"><a href="//www.icy-veins.com/heroes/"  title="Icy Veins - Heroes of the Storm guides"><span class="sprite_games sprite_games_heroes"></span><span class="game_name">Heroes</span></a></div>
+              <div id="game_diablo_immortal" class="not_selected"><a href="//www.icy-veins.com/diablo-immortal/" title="Icy Veins - Diablo Immortal guides"><span class="sprite_games sprite_games_diablo_immortal"></span><span class="game_name">Diablo Immortal</span></a></div>
+              <div id="game_wow_classic" class="not_selected"><a href="//www.icy-veins.com/wow-classic/"  title="Icy Veins - WoW Classic guides"><span class="sprite_games sprite_games_wow_classic"></span><span class="game_name">WoW Classic</span></a></div>
+              <div id="game_d4"><a href="//www.icy-veins.com/d4/" title="Icy Veins - Diablo IV guides"><span class="sprite_games sprite_games_d4"></span><span class="game_name">Diablo IV</span></a></div>
+              <div id="game_nw" class="not_selected"><a href="//www.icy-veins.com/new-world/" title="Icy Veins - New World guides"><span class="sprite_games sprite_games_nw"></span><span class="game_name">New World</span></a></div>
+              <div id="game_hearthstone"><a href="//www.icy-veins.com/hearthstone/" title="Icy Veins - Hearthstone guides"><span class="sprite_games sprite_games_hearthstone"></span><span class="game_name">Hearthstone</span></a></div>
+              <div id="game_starcraft"><a href="//www.icy-veins.com/sc2/" title="Icy Veins - Starcraft 2 guides"><span class="sprite_games sprite_games_starcraft"></span><span class="game_name">Starcraft</span></a></div>
+              <div id="game_overwatch"><a href="//www.icy-veins.com/overwatch/" title="Icy Veins - Overwatch guides"><span class="sprite_games sprite_games_overwatch"></span><span class="game_name">Overwatch</span></a></div>
+              <div id="game_ow2"><a href="//www.icy-veins.com/overwatch-2/" title="Icy Veins - Overwatch 2 guides"><span class="sprite_games sprite_games_ow2"></span><span class="game_name">Overwatch 2</span></a></div>
+              <div id="game_bl3"><a href="//www.icy-veins.com/borderlands-3/" title="Icy Veins - Borderlands 3 guides"><span class="sprite_games sprite_games_bl3"></span><span class="game_name">Borderlands 3</span></a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+      //<![CDATA[
+
+  if (jQuery(".mobile_menu_button").css('display') != 'none') {
+    jQuery(".mobile_menu_button").click(function () {
+      jQuery(this).siblings(".mobile_menu_button").show();
+      jQuery(this).hide();
+      if (jQuery("#games").css("display") == "none") {
+        jQuery("#games").css("display", "flex");
+      } else {
+        jQuery("#games").css("display", "none");
+      }
+      jQuery("#nav").toggle();
+      jQuery("#nav_classes").toggleClass("nav_classes_not_visible");
+      jQuery("#game_plus>div>div").each(function(index, element) {
+        jQuery(element).detach().appendTo('#games');
+      });
+    });
+    jQuery(".nav_entry_with_content>a").click(function(e) {
+      e.preventDefault();
+      jQuery(this).siblings(".nav_content").toggle();
+    });
+  }
+
+  if (jQuery("#mobile_menu_button_show").css('display') == 'none' && !navigator.userAgent.match(/Android.*Chrome/)) {
+    var minified = false;
+    var scroll_distance = 86;
+    jQuery(window).scroll(function (event) {
+      if (window.icy_veins_disable_minified_menu) {
+        jQuery("#header").removeClass("minified");
+        jQuery("#nav").removeClass("minified");
+        if (window.location.pathname.match(/^\/hearthstone/)) {
+          jQuery("#nav_classes").removeClass("minified");
+        }
+        jQuery("#padding_for_minified_menu").css("height", "auto");
+        minified = false;
+      } else if (jQuery("#nav").length > 0) {
+        if (jQuery(this).scrollTop() > scroll_distance && minified == false) {
+        jQuery("#header").addClass("minified");
+        jQuery("#nav").addClass("minified");
+        if (window.location.pathname.match(/^\/hearthstone/)) {
+          jQuery("#nav_classes").addClass("minified");
+        }
+        jQuery("#padding_for_minified_menu").css("height", "172px");
+        minified = true;
+        } else if (jQuery(this).scrollTop() <= scroll_distance && minified == true) {
+          jQuery("#header").removeClass("minified");
+          jQuery("#nav").removeClass("minified");
+          if (window.location.pathname.match(/^\/hearthstone/)) {
+            jQuery("#nav_classes").removeClass("minified");
+          }
+          jQuery("#padding_for_minified_menu").css("height", "auto");
+          minified = false;
+        }
+      } else {
+        if (jQuery(this).scrollTop() > 80 && minified == false) {
+        jQuery("#header").addClass("minified");
+        jQuery("#nav").addClass("minified");
+        if (window.location.pathname.match(/^\/hearthstone/)) {
+          jQuery("#nav_classes").addClass("minified");
+        }
+        jQuery("#padding_for_minified_menu").css("height", "130px");
+        minified = true;
+        } else if (jQuery(this).scrollTop() <= 80 && minified == true) {
+          jQuery("#header").removeClass("minified");
+          jQuery("#nav").removeClass("minified");
+          if (window.location.pathname.match(/^\/hearthstone/)) {
+            jQuery("#nav_classes").removeClass("minified");
+          }
+          jQuery("#padding_for_minified_menu").css("height", "auto");
+          minified = false;
+        }
+      }
+    });
+  }
+      //]]>
+      </script>
+      <div id="padding_for_minified_menu"></div>
+      <div id="top_leaderboard_container" class="leaderboard_container background">
+  <!-- #13326244#ICV0728x0090_1_N -->
+  <div id="div-gpt-ad-1498507813884-1"></div>
+</div>
+<div id="top_bt" class="bt_container_l background">
+  <span class='bt-uid-tg' data-uid='5b90563ea0-12' style='display: none !important'></span>
+</div>
+
+      <div id="content" class="background">
+        <div id="center">
+  
+<div id="df_psa_container">
+  <a id="df_psa_banner" class="df_psa_entry" href="//www.icy-veins.com/wow/what-to-do-as-a-fresh-level-70-in-dragonflight">
+    <div class="df_psa_header">Level 70 Guide</div>
+    <div>Things to do after you hit Level 70</div>
+  </a>
+  <div class="df_psa_half_width df_psa_tier_lists_block df_psa_entry">
+    <div class="df_psa_header">Mythic+ Tier Lists</div>
+    <a class="df_psa_entry df_psa_tier_list_button_dps" href="//www.icy-veins.com/wow/mythic-dps-tier-list">DPS</a>
+    <a class="df_psa_entry df_psa_tier_list_button_tank" href="//www.icy-veins.com/wow/mythic-tank-tier-list">Tank</a>
+    <a class="df_psa_entry df_psa_tier_list_button_healer" href="//www.icy-veins.com/wow/mythic-healer-tier-list">Healer</a>
+  </div>
+  <div class="df_psa_half_width df_psa_tier_lists_block df_psa_entry">
+    <div class="df_psa_header">Raiding Tier Lists</div>
+    <a class="df_psa_entry df_psa_tier_list_button_dps" href="//www.icy-veins.com/wow/dps-rankings-tier-list">DPS</a>
+    <a class="df_psa_entry df_psa_tier_list_button_tank" href="//www.icy-veins.com/wow/tank-rankings-tier-list">Tank</a>
+    <a class="df_psa_entry df_psa_tier_list_button_healer" href="//www.icy-veins.com/wow/healer-rankings-tier-list">Healer</a>
+  </div>
+</div>
+
+  <h1 class="index_page_title header">News and Guides for World of Warcraft, Diablo, Heroes of the Storm, and more</h1>
+      <div id="news_container">
+      <div id="news_1" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70873-how-to-hide-profession-equipment-in-dragonflight/">
+            <img alt="How to Hide Profession Equipment in Dragonflight" src="https://static.icy-veins.com/forum-files/news/70872-how-to-hide-profession-equipment-in-dragonflight-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70873-how-to-hide-profession-equipment-in-dragonflight/">How to Hide Profession Equipment in Dragonflight</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	If you're not a fan of the look of <a href="https://www.icy-veins.com/wow/professions-stats-and-gear" rel="">Profession Equipment</a>, you can hide it by talking to an NPC in Valdrakken.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673809452" class="local_date"><span class="local_date_date">Today</span> at <span class="local_date_hour">19:04</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_2" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70871-an-overview-of-class-changes-in-patch-1005-build-47621/">
+            <img alt="An Overview of Class Changes in Patch 10.0.5 Build 47621" src="https://static.icy-veins.com/forum-files/news/70834-an-overview-of-class-changes-in-patch-1005-build-47621-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70871-an-overview-of-class-changes-in-patch-1005-build-47621/">An Overview of Class Changes in Patch 10.0.5 Build 47621</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	We've recapped all class changes that went live in Dragonflight Patch 10.0.5 Build 47621.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673808332" class="local_date"><span class="local_date_date">Today</span> at <span class="local_date_hour">18:45</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_3" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70870-the-most-popular-specializations-for-mythic-in-dragonflight-season-1-week-5/">
+            <img alt="The Most Popular Specializations for Mythic+ in Dragonflight Season 1 (Week 5)" src="https://static.icy-veins.com/forum-files/news/70864-the-most-popular-specializations-for-mythic-in-dragonflight-season-1-week-5-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70870-the-most-popular-specializations-for-mythic-in-dragonflight-season-1-week-5/">The Most Popular Specializations for Mythic+ in Dragonflight Season 1 (Week 5)</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	We're looking at the most popular specializations for Mythic+ based on this week's affixes.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673803994" class="local_date"><span class="local_date_date">Today</span> at <span class="local_date_hour">17:33</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_4" class="news news_tag_diablo-immortal">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70869-diablo-immortal-content-update-january-16th/">
+            <img alt="Diablo Immortal Content Update: January 16th" src="https://static.icy-veins.com/forum-files/news/70868-diablo-immortal-content-update-january-16th-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70869-diablo-immortal-content-update-january-16th/">Diablo Immortal Content Update: January 16th</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	The latest content update for Diablo Immortal adds Tong-Shi's Renewal Lunar New Year event, 36 new Legendary Items, Red Bags, Lineage of Beasts Cosmetic Sets, and more.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_diablo-immortal">Diablo Immortal</span>
+              <span class="news_game header news_game_short news_game_diablo-immortal">DI</span>
+              <span class="news_comments news_comments_many">
+                <a href="https://www.icy-veins.com/forums/topic/70869-diablo-immortal-content-update-january-16th/">2 comments</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673798417" class="local_date"><span class="local_date_date">Today</span> at <span class="local_date_hour">16:00</span></span>
+                <span class="news_author">by <span>Staff</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_5" class="news news_tag_wc-reforged">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70867-warcraft-3-reforged-ptr-patch-135-notes/">
+            <img alt="Warcraft 3: Reforged PTR: Patch 1.3.5 Notes" src="https://static.icy-veins.com/forum-files/news/70866-warcraft-3-reforged-ptr-patch-135-notes-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70867-warcraft-3-reforged-ptr-patch-135-notes/">Warcraft 3: Reforged PTR: Patch 1.3.5 Notes</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Blizzard is currently testing Patch 1.3.5 for Warcraft 3: Reforged on the PTR and here are the official patch notes.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wc-reforged">Warcraft Reforged</span>
+              <span class="news_game header news_game_short news_game_wc-reforged">WC Reforged</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673798024" class="local_date"><span class="local_date_date">Today</span> at <span class="local_date_hour">15:53</span></span>
+                <span class="news_author">by <span>Staff</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+<!-- #13326244#ICVHP0300x0250_1_M -->
+<div id="div-gpt-ad-1498507813884-5"></div>
+
+      <div id="news_6" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70863-priest-class-changes-in-patch-1005-build-47621/">
+            <img alt="Priest Class Changes in Patch 10.0.5 Build 47621" src="https://static.icy-veins.com/forum-files/news/70862-priest-class-changes-in-patch-1005-build-47621-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70863-priest-class-changes-in-patch-1005-build-47621/">Priest Class Changes in Patch 10.0.5 Build 47621</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	The latest Patch 10.0.5 build includes some minor Priest changes.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673720665" class="local_date"><span class="local_date_date">Yesterday</span> at <span class="local_date_hour">18:24</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_7" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70861-paladin-class-changes-in-patch-1005-build-47621/">
+            <img alt="Paladin Class Changes in Patch 10.0.5 Build 47621" src="https://static.icy-veins.com/forum-files/news/70851-paladin-class-changes-in-patch-1005-build-47621-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70861-paladin-class-changes-in-patch-1005-build-47621/">Paladin Class Changes in Patch 10.0.5 Build 47621</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Paladins also received some changes in the latest Patch 10.0.5 Build 47621.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_single">
+                <a href="https://www.icy-veins.com/forums/topic/70861-paladin-class-changes-in-patch-1005-build-47621/">1 comment</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673712690" class="local_date"><span class="local_date_date">Yesterday</span> at <span class="local_date_hour">16:11</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_8" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70858-interesting-patch-1005-tidbits/">
+            <img alt="Interesting Patch 10.0.5 Tidbits" src="https://static.icy-veins.com/forum-files/news/70857-patch-1005-tidbits-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70858-interesting-patch-1005-tidbits/">Interesting Patch 10.0.5 Tidbits</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	In our latest post, we've summarized some interesting tidbits found in Patch 10.0.5.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_single">
+                <a href="https://www.icy-veins.com/forums/topic/70858-interesting-patch-1005-tidbits/">1 comment</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673708138" class="local_date"><span class="local_date_date">Yesterday</span> at <span class="local_date_hour">14:55</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_9" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70856-a-first-look-at-dragonriding-motion-sickness-options-in-patch-1005/">
+            <img alt="A First Look at Dragonriding Motion Sickness Options in Patch 10.0.5" src="https://static.icy-veins.com/forum-files/news/70854-a-first-look-at-dragonriding-motion-sickness-options-in-patch-1005-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70856-a-first-look-at-dragonriding-motion-sickness-options-in-patch-1005/">A First Look at Dragonriding Motion Sickness Options in Patch 10.0.5</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Blizzard added new Motion Sickness options for <a href="https://www.icy-veins.com/wow/dragonriding-guide-for-world-of-warcraft-dragonflight" rel="">Dragonriding </a>in Patch 10.0.5.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_single">
+                <a href="https://www.icy-veins.com/forums/topic/70856-a-first-look-at-dragonriding-motion-sickness-options-in-patch-1005/">1 comment</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673700883" class="local_date"><span class="local_date_date">Yesterday</span> at <span class="local_date_hour">12:54</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_10" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70855-monk-class-changes-in-patch-1005-build-47621/">
+            <img alt="Monk Class Changes in Patch 10.0.5 Build 47621" src="https://static.icy-veins.com/forum-files/news/70850-monk-class-changes-in-patch-1005-build-47621-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70855-monk-class-changes-in-patch-1005-build-47621/">Monk Class Changes in Patch 10.0.5 Build 47621</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Here is an overview of the latest Monk changes from the 10.0.5 PTR.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673698547" class="local_date"><span class="local_date_date">Yesterday</span> at <span class="local_date_hour">12:15</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+<!-- #13326244#ICVHP0300x0250_2_M -->
+<div id="div-gpt-ad-1498507813884-6"></div>
+
+      <div id="news_11" class="news news_tag_diablo">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70853-diablo-2-and-3-season-update/">
+            <img alt="Diablo 2 and 3 Season Update" src="https://static.icy-veins.com/forum-files/news/70852-diablo-2-and-3-season-update-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70853-diablo-2-and-3-season-update/">Diablo 2 and 3 Season Update</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Global Community Lead Adam "Pezradar" Fletcher shared an update regarding the timing for upcoming Seasons in Diablo 2: Resurrected and Diablo 3.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_diablo">Diablo</span>
+              <span class="news_game header news_game_short news_game_diablo">Diablo</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673693153" class="local_date"><span class="local_date_date">Yesterday</span> at <span class="local_date_hour">10:45</span></span>
+                <span class="news_author">by <span>Staff</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_12" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70849-dragonflight-patch-1002-hotfixes-january-13th/">
+            <img alt="Dragonflight Patch 10.0.2 Hotfixes: January 13th" src="https://static.icy-veins.com/forum-files/news/70703-dragonflight-patch-1002-hotfixes-january-13th-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70849-dragonflight-patch-1002-hotfixes-january-13th/">Dragonflight Patch 10.0.2 Hotfixes: January 13th</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Another batch of hotfixes arrives, featuring dungeon and PvP changes.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673664561" class="local_date"><span class="local_date_date">Yesterday</span> at <span class="local_date_hour">02:49</span></span>
+                <span class="news_author">by <span>Starym</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_13" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70848-hunter-class-changes-in-patch-1005-build-47621/">
+            <img alt="Hunter Class Changes in Patch 10.0.5 Build 47621" src="https://static.icy-veins.com/forum-files/news/70846-hunter-class-changes-in-patch-1005-build-47921-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70848-hunter-class-changes-in-patch-1005-build-47621/">Hunter Class Changes in Patch 10.0.5 Build 47621</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Check out the latest Hunter changes from the 10.0.5 PTR!</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673638046" class="local_date"><span class="local_date_date">Jan 13, 2023</span> at <span class="local_date_hour">19:27</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_14" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70845-druid-class-changes-in-patch-1005-build-47621/">
+            <img alt="Druid Class Changes in Patch 10.0.5 Build 47621" src="https://static.icy-veins.com/forum-files/news/70844-druid-class-changes-in-patch-1005-build-47921-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70845-druid-class-changes-in-patch-1005-build-47621/">Druid Class Changes in Patch 10.0.5 Build 47621</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Here are the Druid changes that went live in the latest Patch 10.0.5 build!</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673634053" class="local_date"><span class="local_date_date">Jan 13, 2023</span> at <span class="local_date_hour">18:20</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_15" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70843-polearm-sheathing-changes-in-patch-1005/">
+            <img alt="Polearm Sheathing Changes in Patch 10.0.5" src="https://static.icy-veins.com/forum-files/news/70842-polearm-sheathing-changes-in-patch-1005-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70843-polearm-sheathing-changes-in-patch-1005/">Polearm Sheathing Changes in Patch 10.0.5</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	In Patch 10.0.5, Blizzard fixed polearms to sit higher on your back when sheathed.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_single">
+                <a href="https://www.icy-veins.com/forums/topic/70843-polearm-sheathing-changes-in-patch-1005/">1 comment</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673617156" class="local_date"><span class="local_date_date">Jan 13, 2023</span> at <span class="local_date_hour">13:39</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+<!-- #13326244#ICVHP0300x0250_3_M -->
+<div id="div-gpt-ad-1498507813884-7"></div>
+
+      <div id="news_16" class="news news_tag_diablo">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70840-diablo-2-resurrected-ladder-and-diablo-3-season-end-windows/">
+            <img alt="Diablo 2: Resurrected Ladder and Diablo 3 Season End Windows" src="https://static.icy-veins.com/forum-files/news/70839-diablo-2-resurrected-ladder-and-diablo-3-season-end-windows-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70840-diablo-2-resurrected-ladder-and-diablo-3-season-end-windows/">Diablo 2: Resurrected Ladder and Diablo 3 Season End Windows</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Blizzard have announced the approximate schedule for the next ladder season for D2R and Diablo 3 season 28 hitting the PTR, as they are coming mid-February and the end of January, respectively.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_diablo">Diablo</span>
+              <span class="news_game header news_game_short news_game_diablo">Diablo</span>
+              <span class="news_comments news_comments_many">
+                <a href="https://www.icy-veins.com/forums/topic/70840-diablo-2-resurrected-ladder-and-diablo-3-season-end-windows/">2 comments</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673582798" class="local_date"><span class="local_date_date">Jan 13, 2023</span> at <span class="local_date_hour">04:06</span></span>
+                <span class="news_author">by <span>Staff</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_17" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70837-dragonflight-patch-1005-ptr-development-notes-january-12th/">
+            <img alt="Dragonflight Patch 10.0.5 PTR Development Notes: January 12th" src="https://static.icy-veins.com/forum-files/news/70836-dragonflight-patch-1005-ptr-development-notes-january-12th-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70837-dragonflight-patch-1005-ptr-development-notes-january-12th/">Dragonflight Patch 10.0.5 PTR Development Notes: January 12th</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Today's PTR dev notes bring a lot of class tuning, as well as profession, UI, item, Dragonriding changes and more. </span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_many">
+                <a href="https://www.icy-veins.com/forums/topic/70837-dragonflight-patch-1005-ptr-development-notes-january-12th/">3 comments</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673570275" class="local_date"><span class="local_date_date">Jan 13, 2023</span> at <span class="local_date_hour">00:37</span></span>
+                <span class="news_author">by <span>Staff</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_18" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70833-mythic-tier-list-in-dragonflight-season-1-week-5/">
+            <img alt="Mythic+ Tier List in Dragonflight Season 1 (Week 5)" src="https://static.icy-veins.com/forum-files/news/70832-mythic-tier-list-in-dragonflight-season-1-week-5-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70833-mythic-tier-list-in-dragonflight-season-1-week-5/">Mythic+ Tier List in Dragonflight Season 1 (Week 5)</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Check out the Mythic+ Tier List for the fifth week of <a href="https://www.icy-veins.com/wow/dragonflight-mythic-plus-season-1-guide" rel="">Dragonflight Season 1</a> based on the weekly affixes.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673549407" class="local_date"><span class="local_date_date">Jan 12, 2023</span> at <span class="local_date_hour">18:50</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_19" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70831-receive-bonus-traders-tender-with-dragonflight/">
+            <img alt="Receive Bonus Traders Tender with Dragonflight" src="https://static.icy-veins.com/forum-files/news/70828-receive-bonus-traders-tender-with-dragonflight-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70831-receive-bonus-traders-tender-with-dragonflight/">Receive Bonus Trader's Tender with Dragonflight</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Trader's Tender is a new currency used to buy goods in the Trading Post. As a "Thank you" to the community, Blizzard is awarding a bonus 500 Trader's Tender to players who purchase(d) Dragonflight.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673546938" class="local_date"><span class="local_date_date">Jan 12, 2023</span> at <span class="local_date_hour">18:08</span></span>
+                <span class="news_author">by <span>Staff</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_20" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70830-patch-1005-update-going-live-on-january-24th/">
+            <img alt="Patch 10.0.5 Update Going Live on January 24th" src="https://static.icy-veins.com/forum-files/news/70829-patch-1005-update-going-live-on-january-24th-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70830-patch-1005-update-going-live-on-january-24th/">Patch 10.0.5 Update Going Live on January 24th</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Blizzard just revealed that Patch 10.0.5 is going live on January 24. The Trading Post will be available starting February 1.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_many">
+                <a href="https://www.icy-veins.com/forums/topic/70830-patch-1005-update-going-live-on-january-24th/">2 comments</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673546644" class="local_date"><span class="local_date_date">Jan 12, 2023</span> at <span class="local_date_hour">18:04</span></span>
+                <span class="news_author">by <span>Staff</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_21" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70827-10-hilarious-bugs-in-dragonflight/">
+            <img alt="10 Hilarious Bugs in Dragonflight" src="https://static.icy-veins.com/forum-files/news/70826-10-bugs-in-dragonflight-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70827-10-hilarious-bugs-in-dragonflight/">10 Hilarious Bugs in Dragonflight</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	In the latest video, <a href="https://twitter.com/Rextroy3" rel="external nofollow">Rextroy </a>showcases 10 hilarious bugs he discovered in Dragonflight.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_many">
+                <a href="https://www.icy-veins.com/forums/topic/70827-10-hilarious-bugs-in-dragonflight/">3 comments</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673540480" class="local_date"><span class="local_date_date">Jan 12, 2023</span> at <span class="local_date_hour">16:21</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_22" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70825-raids-and-mythic-groups-randomly-disbanding-on-live-servers/">
+            <img alt="Raids and Mythic+ Groups Randomly Disbanding on Live Servers?" src="https://static.icy-veins.com/forum-files/news/70824-raids-and-mythic-groups-randomly-disbanding-on-live-servers-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70825-raids-and-mythic-groups-randomly-disbanding-on-live-servers/">Raids and Mythic+ Groups Randomly Disbanding on Live Servers?</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Players report a bug on live servers that causes raid and Mythic+ groups to disband randomly in the middle of runs.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_many">
+                <a href="https://www.icy-veins.com/forums/topic/70825-raids-and-mythic-groups-randomly-disbanding-on-live-servers/">10 comments</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673518424" class="local_date"><span class="local_date_date">Jan 12, 2023</span> at <span class="local_date_hour">10:13</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_23" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70821-workaround-for-spark-of-innovation-quests-not-showing-up/">
+            <img alt="Workaround for Spark of Innovation Quests Not Showing Up" src="https://static.icy-veins.com/forum-files/news/70820-workaround-for-spark-of-innovation-quests-not-showing-up-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70821-workaround-for-spark-of-innovation-quests-not-showing-up/">Workaround for Spark of Innovation Quests Not Showing Up</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Many players are currently having an issue with starting the fourth Spark quest on live servers and here's a potential fix for the problem.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673509198" class="local_date"><span class="local_date_date">Jan 12, 2023</span> at <span class="local_date_hour">07:39</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_24" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70819-dragonflight-patch-1002-hotfixes-january-11h/">
+            <img alt="Dragonflight Patch 10.0.2 Hotfixes: January 11h" src="https://static.icy-veins.com/forum-files/news/70703-dragonflight-patch-1002-hotfixes-january-11h-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70819-dragonflight-patch-1002-hotfixes-january-11h/">Dragonflight Patch 10.0.2 Hotfixes: January 11h</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	After the little brek we had from hotfixes yesterday and Monday's giant-sized batch, today's are just normal and feature more dungeon/Mythic+ tuning, a big Dragonrider's Cultivation change and more.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_many">
+                <a href="https://www.icy-veins.com/forums/topic/70819-dragonflight-patch-1002-hotfixes-january-11h/">5 comments</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673491083" class="local_date"><span class="local_date_date">Jan 12, 2023</span> at <span class="local_date_hour">02:38</span></span>
+                <span class="news_author">by <span>Starym</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_25" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70817-group-loot-hotfix-and-1005-improvements/">
+            <img alt="Group Loot Hotfix and 10.0.5 Improvements" src="https://static.icy-veins.com/forum-files/news/70816-group-loot-hotfix-and-1005-improvements-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70817-group-loot-hotfix-and-1005-improvements/">Group Loot Hotfix and 10.0.5 Improvements</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Blizzard have detailed a hotfix coming later this week as well as several improvements coming to the Group Loot system in patch 10.0.5</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_many">
+                <a href="https://www.icy-veins.com/forums/topic/70817-group-loot-hotfix-and-1005-improvements/">5 comments</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673475017" class="local_date"><span class="local_date_date">Jan 11, 2023</span> at <span class="local_date_hour">22:10</span></span>
+                <span class="news_author">by <span>Staff</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_26" class="news news_tag_lost-ark">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70815-lost-ark-bot-banwave-and-witcher-crossover-event/">
+            <img alt="Lost Ark Bot Banwave and Witcher Crossover Event" src="https://static.icy-veins.com/forum-files/news/70814-lost-ark-bot-banwave-and-witcher-crossover-event-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70815-lost-ark-bot-banwave-and-witcher-crossover-event/">Lost Ark Bot Banwave and Witcher Crossover Event</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	There's a lot going on in January, as Amazon just announced a huge bot banwave which affected the game's concurrent player stats, and next week brings the Witcher crossover event, featuring a brand new island with quests and characters from the franchise, not to mention the cosmetics (including free ones, Twitch drops, and store items)!</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_lost-ark">Lost Ark</span>
+              <span class="news_game header news_game_short news_game_lost-ark">Lost Ark</span>
+              <span class="news_comments news_comments_many">
+                <a href="https://www.icy-veins.com/forums/topic/70815-lost-ark-bot-banwave-and-witcher-crossover-event/">2 comments</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673465710" class="local_date"><span class="local_date_date">Jan 11, 2023</span> at <span class="local_date_hour">19:35</span></span>
+                <span class="news_author">by <span>Starym</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_27" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70813-dragonflight-mythic-dps-log-rangkings-for-season-1-week-4/">
+            <img alt="Dragonflight Mythic+ DPS Log Rangkings for Season 1: Week 4" src="https://static.icy-veins.com/forum-files/news/70812-dragonflight-mythic-dps-log-rangkings-for-season-1-week-4-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70813-dragonflight-mythic-dps-log-rangkings-for-season-1-week-4/">Dragonflight Mythic+ DPS Log Rangkings for Season 1: Week 4</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	It was a very consistent week in <a href="https://www.icy-veins.com/wow/dragonflight-mythic-plus-season-1-guide" rel="">Mythic+</a> as the specs awaited the reset's tuning, and while Rogues are being dethroned over in the raid, they are very much staying put in the dungeons!</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_single">
+                <a href="https://www.icy-veins.com/forums/topic/70813-dragonflight-mythic-dps-log-rangkings-for-season-1-week-4/">1 comment</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673464321" class="local_date"><span class="local_date_date">Jan 11, 2023</span> at <span class="local_date_hour">19:12</span></span>
+                <span class="news_author">by <span>Starym</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_28" class="news news_tag_wotlk-classic">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70811-wrath-classic-phase-2-launching-on-january-17th/">
+            <img alt="Wrath Classic Phase 2 Launching on January 17th" src="https://static.icy-veins.com/forum-files/news/70810-wrath-classic-secrets-of-ulduar-launching-january-19th-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70811-wrath-classic-phase-2-launching-on-january-17th/">Wrath Classic Phase 2 Launching on January 17th</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Wrath Classic Phase 2 begins on January 17 with Ulduar opening on January 19.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wotlk-classic">WotLK Classic</span>
+              <span class="news_game header news_game_short news_game_wotlk-classic">WotLK Classic</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673460797" class="local_date"><span class="local_date_date">Jan 11, 2023</span> at <span class="local_date_hour">18:13</span></span>
+                <span class="news_author">by <span>Staff</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_29" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70800-blizzard-clarify-elite-pvp-class-set-and-gleaming-thunderstone-visual-bug/">
+            <img alt="Blizzard Clarify Elite PvP, Class Set and Gleaming Thunderstone Visual Bug" src="https://static.icy-veins.com/forum-files/news/70799-blizzard-clarify-elite-pvp-class-set-and-gleaming-thunderstone-visual-bug-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70800-blizzard-clarify-elite-pvp-class-set-and-gleaming-thunderstone-visual-bug/">Blizzard Clarify Elite PvP, Class Set and Gleaming Thunderstone Visual Bug</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	Blizzard have confirmed that there is indeed a bug with item glows for class sets and elite PvP appearances (as well as the <span class="spell_icon_span"><a class="q4" href="https://www.wowdb.com/items/202047" rel="external nofollow">Gleaming Incarnate Thunderstone</a></span>) which will be addressed in patch 10.0.5.</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+              <span class="news_comments news_comments_many">
+                <a href="https://www.icy-veins.com/forums/topic/70800-blizzard-clarify-elite-pvp-class-set-and-gleaming-thunderstone-visual-bug/">9 comments</a>
+              </span>
+              <span class="news_about_right">
+                <span data-time="1673389830" class="local_date"><span class="local_date_date">Jan 10, 2023</span> at <span class="local_date_hour">22:30</span></span>
+                <span class="news_author">by <span>Staff</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+      <div id="news_30" class="news news_tag_wow">
+        <span class="image_container">
+          <a href="https://www.icy-veins.com/forums/topic/70797-where-to-buy-marks-of-honor-in-valdrakken/">
+            <img alt="Where to Buy Marks of Honor in Valdrakken?" src="https://static.icy-veins.com/forum-files/news/70796-buy-marks-of-honor-with-honor-in-valdrakken-308x110.jpg" />
+          </a>
+        </span><span class="text_container">
+          <span class="text_inner_container">
+            <span class="news_title header">
+              <a href="https://www.icy-veins.com/forums/topic/70797-where-to-buy-marks-of-honor-in-valdrakken/">Where to Buy Marks of Honor in Valdrakken?</a>
+            </span>
+            <span class="news_subtitle_container">
+              <span class="news_subtitle text_color">	You no longer need to go back to Oribos to buy Marks of Honor in Dragonflight!</span>
+            </span>
+            <span class="news_about">
+              <span class="news_game header news_game_long news_game_wow">World of Warcraft</span>
+              <span class="news_game header news_game_short news_game_wow">WoW</span>
+
+
+
+              <span class="news_about_right">
+                <span data-time="1673382016" class="local_date"><span class="local_date_date">Jan 10, 2023</span> at <span class="local_date_hour">20:20</span></span>
+                <span class="news_author">by <span>Stan</span></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+
+        <span class="header" id="news_read_more">
+          <a href="https://www.icy-veins.com/forums/forum/9-news/">READ MORE NEWS</a>
+        </span>
+      </div>
+
+</div><div id="right">
+  <div id="right_top">
+    <div id="top_rectangle_container" class="rectangle_container">
+  <!-- #13326244#ICVHP0300x0250_1_D -->
+  <div id="div-gpt-ad-1498507813884-3"></div>
+</div>
+<div id="right_bt_1" class="bt_container_r background">
+  <span class='bt-uid-tg' data-uid='5b90562cc5-12' style='display: none !important'></span>
+</div>
+
+    <div id="icyveins_twitch_embed">
+</div>
+<script>
+if (window.innerWidth >= 1070 && !getCookie("ips4_member_premium")) {
+  script = document.createElement("script");
+  script.src = "//static.icy-veins.com/javascript/twitch-cbc6fc0985905f7efa52e39580030cd6.js";
+  document.getElementById("icyveins_twitch_embed").appendChild(script);
+}
+</script>
+
+    <div class="box text_color" id="box_icy_veins">
+  <div class="box_title header">
+    <span class="box_img"></span>
+    <span>WELCOME TO ICY VEINS!</span>
+  </div>
+  <p>On Icy Veins, you will find news and guides about your favorite Blizzard games:</p>
+  <ul>
+    <li><a href="//www.icy-veins.com/wow/class-guides">class guides</a>
+    for World of Warcraft reviewed by top players and theorycrafters, as well
+    as guides for
+    <a href="//www.icy-veins.com/wow/shadowlands-wow-expansion-changes-zones-dungeons-raids-mechanics-systems-etc">Shadowlands</a>,
+    <a href="//www.icy-veins.com/wow/pvp-class-guides">PvP</a>,
+    <a href="//www.icy-veins.com/wow/shadowlands-mythic-plus-season-1-guide">Mythic+</a>,
+    <a href="//www.icy-veins.com/wow/shadowlands-dungeons-and-raids-hub">raids</a>,
+    etc.;</li>
+    <li>Guides for FFXIV written by theorycrafters from
+    The Balance Discord server: <a href="//www.icy-veins.com/ffxiv/dark-knight-guide">Dark
+    Knight</a>, <a href="//www.icy-veins.com/ffxiv/ninja-guide">Ninja job guide</a>, <a
+    href="//www.icy-veins.com/ffxiv/summoner-guide">Summoner job guide</a>, and more.</li>
+    <li><a href="//www.icy-veins.com/d3/barbarian-builds">barbarian builds</a>,
+    <a href="//www.icy-veins.com/d3/crusader-builds">crusader builds</a>,
+    <a href="//www.icy-veins.com/d3/demon-hunter-builds">demon hunter builds</a>,
+    <a href="//www.icy-veins.com/d3/monk-builds">monk builds</a>,
+    <a href="//www.icy-veins.com/d3/witch-doctor-builds">witch doctor builds</a>,
+    <a href="//www.icy-veins.com/d3/wizard-builds">wizard builds</a>,
+    and
+    <a href="//www.icy-veins.com/d3/farming-guides">crafting/farming guides</a>
+    for Diablo 3 written by Deadset;</li>
+    <li>build guides for
+    <a href="//www.icy-veins.com/heroes/tank-hero-guides">tank</a>,
+    <a href="//www.icy-veins.com/heroes/bruiser-hero-guides">bruiser</a>,
+    <a href="//www.icy-veins.com/heroes/melee-assassin-hero-guides">melee assassin</a>,
+    <a href="//www.icy-veins.com/heroes/ranged-assassin-hero-guides">ranged assassin</a>,
+    <a href="//www.icy-veins.com/heroes/healer-hero-guides">healer</a>, and
+    <a href="//www.icy-veins.com/heroes/support-hero-guides">support</a>
+    build guides for Heroes of the Storm written by Derenash, Elitesparkle, Outofmilk, and Oxygen;</li>
+    <li><a href="//www.icy-veins.com/wow-classic/class-guides">class guides</a> for WoW Classic,
+	as well as guides for
+	<a href="//www.icy-veins.com/wow-classic/raids-and-dungeons-guide">dungeons</a> and
+	<a href="//www.icy-veins.com/wow-classic/professions-guide">professions</a>.</li>
+  </ul>
+  <span class="box_divider"></span>
+</div>
+
+    
+    <div class="box text_color" id="box_changelog">
+  <div class="box_title header">
+    <span class="box_img"></span>
+    <span>CHANGELOG</span>
+  </div>
+  <ul class="changelog">
+<li><strong>12 Jan. 2023:</strong> <a href="//www.icy-veins.com/wow/dragonriding-talents-guide-for-world-of-warcraft-dragonflight">Dragonriding Talents Guide</a><ul><li>Dragonrider's Cultivation buffed.</li></ul></li>
+<li><strong>12 Jan. 2023:</strong> <a href="//www.icy-veins.com/ffxiv/gunbreaker-pve-tank-gear-best-in-slot">Gunbreaker Gear and Best in Slot</a><ul><li>Updated for Patch 6.3</li></ul></li>
+<li><strong>11 Jan. 2023:</strong> <a href="//www.icy-veins.com/wow/affliction-warlock-pve-dps-rotation-cooldowns-abilities">Affliction Warlock Rotation, Cooldowns, and Abilities</a><ul><li>Updated opener and Darkglare sections.</li></ul></li>
+<li><strong>11 Jan. 2023:</strong> <a href="//www.icy-veins.com/wow/shadow-priest-pve-dps-spec-builds-talents">Shadow Priest Builds and Talents</a><ul><li>Update Mythic+ talent builds from the recent changes.</li></ul></li>
+<li><strong>11 Jan. 2023:</strong> <a href="//www.icy-veins.com/wow/shadow-priest-pve-dps-mythic-plus-tips">Shadow Priest Mythic+ Tips</a><ul><li>Add new talent builds from the recent buffs.</li></ul></li>
+  </ul>
+  <span class="header visit_forums"><a href="//www.icy-veins.com/changelog" title="See More">SEE MORE <span class="sprite_box_arrow"></span></a></span>
+  <span class="box_divider"></span>
+</div>
+
+    <!-- RECENT POSTS START -->
+<div class="box text_color" id="box_recent_posts">
+  <div class="box_title header">
+    <span class="box_img"></span>
+    <span>RECENT FORUM POSTS</span>
+  </div>
+  <ul>
+    <li><a href="https://www.icy-veins.com/forums/topic/70833-mythic-tier-list-in-dragonflight-season-1-week-5/" title="Mythic+ Tier List in Dragonflight Season 1 (Week 5)">Mythic+ Tier List in Dragonflight Season 1 (Week 5)</a></li>
+    <li><a href="https://www.icy-veins.com/forums/topic/68718-inspirational-catalyst-guide/" title="Inspirational Catalyst Guide">Inspirational Catalyst Guide</a></li>
+    <li><a href="https://www.icy-veins.com/forums/topic/70831-receive-bonus-traders-tender-with-dragonflight/" title="Receive Bonus Traders Tender with Dragonflight">Receive Bonus Trader's Tender with Dragonflight</a></li>
+    <li><a href="https://www.icy-veins.com/forums/topic/70830-patch-1005-update-going-live-on-january-24th/" title="Patch 10.0.5 Update Going Live on January 24th">Patch 10.0.5 Update Going Live on January 24th</a></li>
+    <li><a href="https://www.icy-veins.com/forums/topic/70827-10-hilarious-bugs-in-dragonflight/" title="10 Hilarious Bugs in Dragonflight">10 Hilarious Bugs in Dragonflight</a></li>
+  </ul>
+  <span class="header visit_forums"><a href="https://www.icy-veins.com/forums/" title="Visit Forums"><span>VISIT FORUMS</span> <span class="sprite_box_arrow"></span></a></span>
+  <span class="box_divider"></span>
+</div>
+<!-- RECENT POSTS END -->
+
+    <!-- POPULAR THREADS LENGTH: 15 -->
+<div class="box text_color" id="box_popular_threads">
+  <div class="box_title header">
+    <span class="box_img"></span>
+    <span>POPULAR FORUM THREADS</span>
+  </div>
+  <ul>
+    <li><a href="https://www.icy-veins.com/forums/topic/70785-blizzard-on-the-crafting-order-system/" title="Blizzard on the Crafting Order System">Blizzard on the Crafting Order System</a></li>
+    <li><a href="https://www.icy-veins.com/forums/topic/70794-quest-for-the-fourth-spark-of-ingenuity-now-available-on-live-servers/" title="Quest for the Fourth Spark of Ingenuity Now Available on Live Servers">Quest for the Fourth Spark of Ingenuity Now Available on Live Servers</a></li>
+    <li><a href="https://www.icy-veins.com/forums/topic/70825-raids-and-mythic-groups-randomly-disbanding-on-live-servers/" title="Raids and Mythic+ Groups Randomly Disbanding on Live Servers?">Raids and Mythic+ Groups Randomly Disbanding on Live Servers?</a></li>
+    <li><a href="https://www.icy-veins.com/forums/topic/70800-blizzard-clarify-elite-pvp-class-set-and-gleaming-thunderstone-visual-bug/" title="Blizzard Clarify Elite PvP, Class Set and Gleaming Thunderstone Visual Bug">Blizzard Clarify Elite PvP, Class Set and Gleaming Thunderstone Visual Bug</a></li>
+    <li><a href="https://www.icy-veins.com/forums/topic/70817-group-loot-hotfix-and-1005-improvements/" title="Group Loot Hotfix and 10.0.5 Improvements">Group Loot Hotfix and 10.0.5 Improvements</a></li>
+  </ul>
+  <span class="header visit_forums"><a href="https://www.icy-veins.com/forums/" title="Visit Forums"><span>VISIT FORUMS</span> <span class="sprite_box_arrow"></span></a></span>
+  <span class="box_divider"></span>
+</div>
+
+
+    
+  </div><div id="right_middle"></div><div id="right_bottom">
+    <div id="bottom_rectangle_container" class="rectangle_container">
+  <!-- #13326244#ICVHP0300x0250_2_D -->
+  <div id="div-gpt-ad-1498507813884-4"></div>
+</div>
+<div id="video_display"></div>
+
+<div id="right_bt_2" class="bt_container_r background">
+  <span class='bt-uid-tg' data-uid='5b905632b1-12' style='display: none !important'></span>
+</div>
+
+    <span class='bt-uid-tg' data-uid='5b905632b1-12' style='display: none !important'></span>
+  </div>
+</div>
+
+      </div>
+      <div id="bottom_leaderboard_container" class="leaderboard_container background">
+  <!-- #13326244#ICV0728x0090_2_N -->
+  <div id="div-gpt-ad-1498507813884-2"></div>
+</div>
+<div id="bottom_bt" class="bt_container_l background">
+  <span class='bt-uid-tg' data-uid='5b905645ee-12' style='display: none !important'></span>
+</div>
+
+      <div id="footer">
+        <div id="footer_content_links">
+          <div>
+            <span class="header"><a href="https://www.poe-vault.com">PATH OF EXILE</a></span>
+            <ul>
+              <li><a href="https://www.poe-vault.com/guides/builds-for-path-of-exile">Path of Exile Build Guides</a></li>
+              <li><a href="https://www.poe-vault.com/guides">Path of Exile Guides</a></li>
+              <li><a href="https://www.poe-vault.com/guides/tag/league-starter-builds-for-path-of-exile">Path of Exile League Starters</a></li>
+              <li><a href="https://www.poe-vault.com/guides/quick-reference-leveling-guide-for-path-of-exile">Path of Exile Leveling Guide</a></li>
+              <li><a href="https://www.poe-vault.com/guides/gameplay-guide-hub">Path of Exile Gameplay Hub</a></li>
+              <li><a href="https://www.poe-vault.com/guides/the-forbidden-sanctum-league-patch-3-30">The Forbidden Sanctum Hub</a></li>
+            </ul>
+          </div><div>
+            <span class="header">WOW GUIDES</span>
+            <ul>
+              <li><a href="//www.icy-veins.com/wow/class-guides">Class guides</a></li>
+              <li><a href="//www.icy-veins.com/wow/mythic-overview-and-class-guides-updated-for-bfa-season-4">Mythic+ guides</a></li>
+              <li><a href="//www.icy-veins.com/wow/pvp-class-guides">PvP guides</a></li>
+              <li><a href="//www.icy-veins.com/wow/shadowlands-wow-expansion-changes-zones-dungeons-raids-mechanics-systems-etc">Shadowlands guides</a></li>
+              <li><a href="//www.icy-veins.com/wow/shadowlands-dungeons-and-raids-hub">Dungeon &amp; Raid guides</a></li>
+              <li><a href="//www.icy-veins.com/wow/a-guide-to-leveling-in-world-of-warcraft">Leveling guides</a></li>
+            </ul>
+          </div><div>
+            <span class="header">DIABLO III GUIDES</span>
+            <ul>
+              <li><a href="//www.icy-veins.com/d3/barbarian-builds">Barbarian builds</a></li>
+              <li><a href="//www.icy-veins.com/d3/crusader-builds">Crusader builds</a></li>
+              <li><a href="//www.icy-veins.com/d3/demon-hunter-builds">Demon Hunter builds</a></li>
+              <li><a href="//www.icy-veins.com/d3/monk-builds">Monk builds</a></li>
+              <li><a href="//www.icy-veins.com/d3/necromancer-builds">Necromancer builds</a></li>
+              <li><a href="//www.icy-veins.com/d3/witch-doctor-builds">Witch Doctor builds</a></li>
+              <li><a href="//www.icy-veins.com/d3/wizard-builds">Wizard builds</a></li>
+            </ul>
+          </div><div>
+            <span class="header">HEROES GUIDES</span>
+            <ul>
+              <li><a href="//www.icy-veins.com/heroes/tank-hero-guides">Tank builds</a></li>
+              <li><a href="//www.icy-veins.com/heroes/bruiser-hero-guides">Bruiser builds</a></li>
+              <li><a href="//www.icy-veins.com/heroes/ranged-assassin-hero-guides">Ranged Assassin builds</a></li>
+              <li><a href="//www.icy-veins.com/heroes/melee-assassin-hero-guides">Melee Assassin builds</a></li>
+              <li><a href="//www.icy-veins.com/heroes/healer-hero-guides">Healer builds</a></li>
+              <li><a href="//www.icy-veins.com/heroes/support-hero-guides">Support builds</a></li>
+              <li><a href="//www.icy-veins.com/heroes/heroes-of-the-storm-tier-list-hub">Tier lists</a></li>
+            </ul>
+          </div><div>
+            <span class="header">WOW CLASSIC GUIDES</span>
+            <ul>
+              <li><a href="//www.icy-veins.com/wow-classic/leveling-guide">Leveling guides</a></li>
+              <li><a href="//www.icy-veins.com/wow-classic/class-guides">Class guides</a></li>
+              <li><a href="//www.icy-veins.com/wow-classic/raids-and-dungeons-guide">Raids &amp; Dungeon guides</a></li>
+              <li><a href="//www.icy-veins.com/wow-classic/professions-guide">Profession guides</a></li>
+              <li><a href="//www.icy-veins.com/wow-classic/reputation-guides">Reputation guides</a></li>
+            </ul>
+          </div>
+        </div>
+        <div id="footer_divider"></div>
+        <div class="header" id="footer_static_links_social_media">
+          <span><a href="//www.icy-veins.com/about">ABOUT</a></span>
+          <span><a href="//www.icy-veins.com/contact">CONTACT</a></span>
+          <span><a href="//www.icy-veins.com/advertise">ADVERTISE</a></span>
+          <span><a href="//www.icy-veins.com/faq">FAQ</a></span>
+          <span><a href="//www.icy-veins.com/privacy">PRIVACY</a></span>
+          <span><a href="//www.icy-veins.com/terms">TERMS OF USE</a></span>
+          <span><a href="//www.icy-veins.com/acknowledgements">ACKNOWLEDGEMENTS</a></span>
+          <span><a href="//www.icy-veins.com/jobs">JOBS</a></span>
+          <div id="footer_social_media">
+            <a title="Facebook" href="https://www.facebook.com/icyveinscom"><span class="sprite_social sprite_social_facebook"></span></a>
+            <a title="Twitter" href="https://twitter.com/icyveins"><span class="sprite_social sprite_social_twitter"></span></a>
+            <a title="Youtube" href="https://www.youtube.com/user/icyveinscom"><span class="sprite_social sprite_social_youtube"></span></a>
+            <a title="News Feed" href="//www.icy-veins.com/feed.atom"><span class="sprite_social sprite_social_feed"></span></a>
+            <a title="E-mail Us" href="/cdn-cgi/l/email-protection#95f6fafbe1f4f6e1d5fcf6ecb8e3f0fcfbe6bbf6faf8"><span class="sprite_social sprite_social_email"></span></a>
+          </div>
+        </div>
+        <span class="text_color" id="copyright">&copy; 2011-2022 VEDATIS S.A.S.</span>
+      </div>
+    </div>
+    <div id="fb-root"></div>
+    <!--[if lte IE 9]>
+    </div>
+    <![endif]-->
+    
+    <div id="premium_information"></div>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    if (window.innerWidth >= 1070) {
+      if (document.getElementsByClassName("highslide").length > 0) {
+        f = document.getElementsByTagName("script")[0];
+        e = document.createElement("script");
+        e.async = true;
+        e.src = '//static.icy-veins.com/javascript/highslide-3e1f2b42798a8ec5675760439c8ef9b6.js';
+        f.parentNode.insertBefore(e, f);
+        init_highslide = function(tries) {
+          if (tries < 10) {
+            if (typeof hs === 'undefined') {
+              setTimeout(function() { init_highslide(tries+1) }, 500);
+            } else {
+              // Highslide configuration
+              hs.graphicsDir = '//' + window.location.hostname.replace("www", "static") + "/images/highslide/";
+              hs.outlineStartOffset = 3;
+              hs.outlineType = 'rounded-white';
+              hs.showCredits = false;
+            }
+          }
+        };
+        init_highslide(0);
+      }
+      f = document.getElementsByTagName("script")[0];
+      if (document.querySelectorAll('a[href*="wowdb.com"]').length > 0) {
+        e = document.createElement("script");
+        e.async = true;
+        e.src = '//www.wowdb.com/current/js/syndication/tt.js';
+        f.parentNode.insertBefore(e, f);
+        wowdb_log = []
+        init_wowdb_tooltips = function(tries) {
+          if (tries < 10) {
+            if (typeof CurseTips === 'undefined') {
+              setTimeout(function() { init_wowdb_tooltips(tries+1) }, 500);
+            } else {
+              CurseTips['wowdb-tooltip'].watchElements(jQuery('a[href*="wowdb.com"]'));
+            }
+          }
+        };
+        init_wowdb_tooltips(0);
+      }
+      document.addEventListener("DOMContentLoaded", function(event) {
+        f = document.getElementsByTagName("script")[0];
+        e = document.createElement("script");
+        e.async = true;
+        e.src = '//static.icy-veins.com/javascript/premium-2d6d2bd0fca7d45ace509bc415524be2.js';
+        f.parentNode.insertBefore(e, f);
+      });
+      if (!getCookie("ips4_member_premium")) {
+        target = document.querySelector(".page_content_header");
+        if (target) {
+          fetch('https://tools.icy-veins.com/country/index.rb.fcgi') .then(response => response.text()) .then(data => {
+            switch(data) {
+              case "BE":
+              case "EL":
+              case "LT":
+              case "PT":
+              case "BG":
+              case "ES":
+              case "LU":
+              case "RO":
+              case "CZ":
+              case "FR":
+              case "HU":
+              case "SI":
+              case "DK":
+              case "HR":
+              case "MT":
+              case "SK":
+              case "DE":
+              case "IT":
+              case "NL":
+              case "FI":
+              case "EE":
+              case "CY":
+              case "AT":
+              case "SE":
+              case "IE":
+              case "LV":
+              case "PL":
+              case "IS":
+              case "NO":
+              case "LI":
+              case "CH":
+              case "ME":
+              case "MK":
+              case "AL":
+              case "RS":
+              case "TR":
+              case "BA":
+              case "XK":
+                currency = "EUR";
+                break;
+              default:
+                currency = "USD";
+            }
+            if (window.devicePixelRatio >= 2) {
+              image_name = "premium-banner-" + currency + "-2x.png";
+            } else {
+              image_name = "premium-banner-" + currency + ".png";
+            }
+            image_url = '//' + window.location.hostname.replace("www", "static") + "/images/common/" + image_name;
+            i = document.createElement("img");
+            i.src = image_url;
+            i.style.width = "710px";
+            a = document.createElement("a");
+            a.href = "https://www.icy-veins.com/forums/premium";
+            a.appendChild(i)
+            d = document.createElement("div");
+            d.classList.add("premium_banners_limited");
+            d.id = "premium_banners_limited_" + currency;
+            d.appendChild(a);
+            d.style.marginBottom = "20px";
+            target.parentNode.insertBefore(d, target.nextSibling);
+          });
+        }
+      }
+    }
+    </script>
+
+  </body>
+</html>
