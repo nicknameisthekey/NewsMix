@@ -14,6 +14,7 @@ public static class SerivceCollectionExtensions
         {
             services.AddHostedService<TelegramUI>();
             services.AddHostedService<FeedService>();
+            services.AddHostedService<BotChangesNotifier>();
         }
 
         services.AddTransient<UserService>();
