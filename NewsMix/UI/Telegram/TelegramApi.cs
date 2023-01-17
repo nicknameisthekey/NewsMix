@@ -66,11 +66,8 @@ public class TelegramApi : ITelegramApi
 
     public async IAsyncEnumerable<Update> GetUpdates([EnumeratorCancellation] CancellationToken ct)
     {
-        while (true)
+        while (ct.IsCancellationRequested == false)
         {
-            if (ct.IsCancellationRequested)
-                break;
-
             var updates = await FetchUpdates();
 
             if (updates.Count > 0)

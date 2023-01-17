@@ -13,9 +13,9 @@ public class BotChangesNotifier : BackgroundService
         _userRepo = userRepo;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken ct)
     {
-        while (true)
+        while (ct.IsCancellationRequested == false)
         {
             await Task.Delay(10000);
 

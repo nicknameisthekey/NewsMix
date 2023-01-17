@@ -1,3 +1,5 @@
+using System.ServiceModel.Syndication;
+using System.Xml;
 using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Models;
@@ -76,6 +78,13 @@ public class DataDownloaderService : DataDownloader
             return Page.FailedToLoadPage;
         }
         return new Page(content);
+    }
+
+    public async Task<IEnumerable<SyndicationItem>> GetFromRSS(string url)
+    {
+        XmlReader reader = XmlReader.Create(url);
+        SyndicationFeed feed = SyndicationFeed.Load(reader);
+        return feed.Items;
     }
 
     public async Task<byte[]?> DownloadFile(string url)

@@ -20,6 +20,7 @@ public static class SerivceCollectionExtensions
         services.AddTransient<UserService>();
         services.AddSingleton<Feed, NoobClubFeed>();
         services.AddSingleton<Feed, IcyVeinsFeed>();
+        services.AddSingleton<Feed, HabrFeed>();
         services.AddSingleton<UserInterface, TelegramUI>();
         services.AddSingleton<ITelegramApi, TelegramApi>();
         services.AddSingleton<UserRepository, FileRepository>();
