@@ -5,11 +5,6 @@ public class CallbackData
     public string Feed { get; init; } = null!;
     public string? PublicationType { get; init; }
     public string Text { get; init; } = null!;
-
-    public string ToCallback() => (int)CallbackActionType + ID;
-
-    public static (CallbackActionType ActionType, string ID) FromCallback(string callback)
-        => ((CallbackActionType)int.Parse(callback[0].ToString()), callback[1..]);
 }
 
 public enum CallbackActionType

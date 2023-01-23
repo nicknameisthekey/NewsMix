@@ -8,6 +8,13 @@ public partial class TelegramTests
     UserService NewUserSerivceMock => A.Fake<UserService>();
     const long SomeUserID = 1234;
 
+    private (TelegramUI TUI, FakeTelegramApi TAPI) NewTelegramUI
+        (FakeFeedsInformation? feedsInfo = null, params object[] updates)
+    {
+        var tApiMock = new FakeTelegramApi(updates);
+        return (new TelegramUI(NewUserSerivceMock, tApiMock, feedsInfo ?? new FakeFeedsInformation()), tApiMock);
+    }
+
     [Fact]
     public async Task Old_text_messages_ignored()
     {
@@ -31,26 +38,53 @@ public partial class TelegramTests
     }
 
     [Fact]
-    public async Task Feed_options_send_if_start_command_received()
+    public async Task Start_command_sends_greeting_message()
     {
-        var tApiMock = new FakeTelegramApi(NewValidTextUpdate("/start"));
-        var feedInformation = new FakeFeedsInformation();
-        var tUI = new TelegramUI(NewUserSerivceMock, tApiMock, feedInformation);
+        var (TUI, TAPI) = NewTelegramUI(new(), ValidTextUpdate("/start"));
 
-        await tUI.StartAsync(CancellationToken.None);
+        await TUI.StartAsync(CancellationToken.None);
 
-        Assert.Single(tApiMock.SentRequests);
-        var sentRequest = tApiMock.SentRequests[0];
-        Assert.Equal(feedInformation.Feeds.Length, sentRequest.Keyboard.Keyboard.Length);
+        Assert.Single(TAPI.SentRequests);
+        var sentRequest = TAPI.SentRequests[0];
+        Assert.Equal(TelegramUI.GreetinMessage, sentRequest.Text);
     }
 
-    private Update NewValidTextUpdate(string text, long userId = SomeUserID)
+    [Fact]
+    public async Task Publication_types_send_in_response_on_feed_command()
+    {
+        var feedsInfo = new FakeFeedsInformation();
+        string sentFeed = feedsInfo.Feeds[0];
+        var (TUI, TAPI) = NewTelegramUI(feedsInfo,
+        ValidTextUpdate($"/{sentFeed}"));
+
+        await TUI.StartAsync(CancellationToken.None);
+
+        Assert.Single(TAPI.SentRequests);
+        var sentRequest = TAPI.SentRequests[0];
+        Assert.Equal(feedsInfo.PublicationTypesByFeed[sentFeed].Length, sentRequest.Keyboard.Keyboard.Length);
+    }
+
+    [Fact]
+    public async Task User_can_subscribe()
+    {
+        var feedsInfo = new FakeFeedsInformation();
+        string sentFeed = feedsInfo.Feeds[0];
+        var (TUI, TAPI) = NewTelegramUI(feedsInfo,
+         ValidTextUpdate($"/{sentFeed}"),
+          new CallBackUpdate
+          {
+              ButtonNumber = (0, 0)
+          });
+
+        await TUI.StartAsync(CancellationToken.None);
+    }
+    private Update ValidTextUpdate(string text, long userId = SomeUserID)
     {
         return new Update
         {
             Message = new Message
             {
-                Text =text,
+                Text = text,
                 Sender = new NewsMix.UI.Telegram.Models.User
                 {
                     Id = 123
