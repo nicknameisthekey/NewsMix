@@ -1,4 +1,5 @@
 using NewsMix.Abstractions;
+using NewsMix.Models;
 using NewsMix.Storage;
 using static TestHelpers;
 
@@ -7,8 +8,8 @@ public class UserServiceTests : IDisposable
     #region  Default values and helpers
     const string SomeUserID = "12345";
     const string SomeUIType = "telegram";
-    Subscription SomeSubscription => new Subscription("feed", "pub");
-    
+    Subscription SomeSubscription => new Subscription("source", "topic");
+
     #endregion
 
     [Fact]
@@ -123,7 +124,7 @@ public class UserServiceTests : IDisposable
         var userService = NewUserService;
 
         var usersToNotify = await userService
-                        .GetUsersToNotifyBy(SomeSubscription);
+                        .UsersToNotify(SomeSubscription);
         Assert.Empty(usersToNotify);
         const string user1 = "user1";
         const string user2 = "user2";
@@ -131,12 +132,12 @@ public class UserServiceTests : IDisposable
 
         await userService.AddSubscription(user1, SomeUIType, SomeSubscription);
         await userService.AddSubscription(user2, SomeUIType, SomeSubscription);
-        await userService.AddSubscription(user2, SomeUIType, new("other feed", SomeSubscription.PublicationType));
-        await userService.AddSubscription(user3, SomeUIType, new("other feed", "other sub"));
-        await userService.AddSubscription(user3, SomeUIType, new(SomeSubscription.FeedName, "other sub"));
+        await userService.AddSubscription(user2, SomeUIType, new("other source", SomeSubscription.Topic));
+        await userService.AddSubscription(user3, SomeUIType, new("other source", "other topic"));
+        await userService.AddSubscription(user3, SomeUIType, new(SomeSubscription.Source, "other topic"));
 
         usersToNotify = await userService
-               .GetUsersToNotifyBy(SomeSubscription);
+               .UsersToNotify(SomeSubscription);
         Assert.Equal(2, usersToNotify.Count);
         Assert.Contains(usersToNotify, u => u.UserId == user1);
         Assert.Contains(usersToNotify, u => u.UserId == user2);

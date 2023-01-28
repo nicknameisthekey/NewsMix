@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
+using NewsMix.Models;
 using NewsMix.Services;
 using NewsMix.UI.Telegram.Models;
 using static CallbackActionType;
@@ -11,21 +12,21 @@ public class TelegramUI : BackgroundService, UserInterface
 {
     internal readonly UserService _userService;
     internal readonly ITelegramApi _telegramApi;
-    internal readonly FeedsInformation _feedInformation;
+    internal readonly SourcesInformation _sourcesInformation;
     private readonly ILogger<TelegramUI>? _logger;
     public string UIType => "telegram";
     private ConcurrentDictionary<long, CallbackData[]> CallbackActions = new();
     private ConcurrentDictionary<long, long> SentMessagesByUser = new();
-    public const string GreetinMessage = "Привет! Я умею присылать новости из разнызх источников. Посмотреть варианты можно по кнопке \"Меню\"."; //todo
+    public const string GreetinMessage = "Привет! Я умею присылать новости из разных источников. Посмотреть варианты можно по кнопке \"Меню\".";
 
     public TelegramUI(UserService userService,
     ITelegramApi telegramApi,
-    FeedsInformation feedInformation,
+    SourcesInformation sourcesInformation,
     ILogger<TelegramUI>? logger = null)
     {
         _userService = userService;
         _telegramApi = telegramApi;
-        _feedInformation = feedInformation;
+        _sourcesInformation = sourcesInformation;
         _logger = logger;
     }
 
@@ -66,23 +67,19 @@ public class TelegramUI : BackgroundService, UserInterface
         CallbackActions.TryRemove(userId, out _);
 
         var selectedCallback = userCallbacks!.FirstOrDefault(c => c.ID == update.CallBack.CallbackData);
-        if (selectedCallback == null)
-        {
-            //fail fast
-        }
+        ArgumentNullException.ThrowIfNull(selectedCallback);
 
-        await (selectedCallback!.CallbackActionType switch
+        await (selectedCallback.CallbackActionType switch
         {
-            SendPublicationTypes => SendFeedPublicationTypes(userId, selectedCallback.Feed),
-            Subscribe => SubscribeUser(userId, new(selectedCallback.Feed, selectedCallback.PublicationType!)),
-            Unsubscribe => UnsubscribeUser(userId, new(selectedCallback.Feed, selectedCallback.PublicationType!)),
+            CallbackActionType.SendTopics => SendTopics(userId, selectedCallback.Source),
+            Subscribe => SubscribeUser(userId, new(selectedCallback.Source, selectedCallback.Topic)),
+            Unsubscribe => UnsubscribeUser(userId, new(selectedCallback.Source, selectedCallback.Topic)),
             _ => throw new Exception()
         });
     }
 
     public async Task NotifyUser(string user, string message)
     {
-        _logger?.LogWarning("Notified user {userId}, message {message}", user, message);
         await _telegramApi.SendMessage(new SendMessageRequest
         {
             Conversation = user,
@@ -98,9 +95,9 @@ public class TelegramUI : BackgroundService, UserInterface
         }
 
         string command = message.Text!.Replace("/", "");
-        if (_feedInformation.Feeds.Any(f => f == command))
+        if (_sourcesInformation.Sources.Any(f => f == command))
         {
-            await SendFeedPublicationTypes(message.Sender!.Id, command);
+            await SendTopics(message.Sender!.Id, command);
         }
     }
 
@@ -113,38 +110,24 @@ public class TelegramUI : BackgroundService, UserInterface
         });
     }
 
-    private async Task SendFeedPublicationTypes(long userId, string feed)
+    private async Task SendTopics(long userId, string source)
     {
-        var allUserSubs = await _userService.GetUserSubscriptions(userId.ToString());
-        var userSubs = allUserSubs.ContainsKey(feed) ? allUserSubs[feed] : new();
-        var allFeedPubs = _feedInformation.PublicationTypesByFeed[feed];
-
-        var subscribePubs = allFeedPubs.Except(userSubs);
-
-        var subscibeCallbacks = subscribePubs.Select(p => new CallbackData
-        {
-            ID = Guid.NewGuid().ToString(),
-            CallbackActionType = Subscribe,
-            Feed = feed,
-            PublicationType = p,
-            Text = p
-        });
-
-        var unsubsribeCallbacks = userSubs.Select(p => new CallbackData
-        {
-            ID = Guid.NewGuid().ToString(),
-            CallbackActionType = Unsubscribe,
-            Feed = feed,
-            PublicationType = p,
-            Text = p
-        });
-
-        var allCallbacks = subscibeCallbacks.Concat(unsubsribeCallbacks).ToArray();
+        var userSubs = await _userService.Subscriptions(userId.ToString(), source);
+        
+        var callbacks = _sourcesInformation.TopicsBySources[source]
+            .Select(topics => new CallbackData
+            {
+                ID = Guid.NewGuid().ToString(),
+                CallbackActionType = userSubs.Any(s => s.Topic == topics) ? Unsubscribe : Subscribe,
+                Source = source,
+                Topic = topics,
+                Text = topics
+            }).ToArray();
 
         CallbackActions.TryRemove(userId, out var _);
-        CallbackActions.TryAdd(userId, allCallbacks);
+        CallbackActions.TryAdd(userId, callbacks);
 
-        await SendNewOrEdit(userId, allCallbacks, "Что интересует?");
+        await SendNewOrEdit(userId, callbacks, "Что интересует?");
     }
 
     private async Task SubscribeUser(long userId, Subscription sub)

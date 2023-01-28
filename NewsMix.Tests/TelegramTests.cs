@@ -1,4 +1,4 @@
-using NewsMix.Abstractions;
+using NewsMix.Models;
 using NewsMix.UI.Telegram;
 using NewsMix.UI.Telegram.Models;
 
@@ -7,7 +7,7 @@ public partial class TelegramTests : IDisposable
     const long SomeUserID = 1234;
 
     private TelegramUI NewTelegramUI()
-        => new TelegramUI(TestHelpers.NewUserService, new FakeTelegramApi(), new FakeFeedsInformation());
+        => new TelegramUI(TestHelpers.NewUserService, new FakeTelegramApi(), new FakeSourcesInformation());
 
     [Fact]
     public async Task Old_text_messages_ignored()
@@ -25,7 +25,7 @@ public partial class TelegramTests : IDisposable
                 Date_Unix = 0
             },
         });
-        var tUI = new TelegramUI(TestHelpers.NewUserService, tApiMock, new FakeFeedsInformation());
+        var tUI = new TelegramUI(TestHelpers.NewUserService, tApiMock, new FakeSourcesInformation());
 
         await tUI.StartAsync(CancellationToken.None);
 
@@ -46,33 +46,32 @@ public partial class TelegramTests : IDisposable
     }
 
     [Fact]
-    public async Task Publication_types_send_in_response_on_feed_command()
+    public async Task Topics_send_in_response_on_source_command()
     {
         var TUI = NewTelegramUI();
-        var userChosenFeed = TUI._feedInformation.Feeds[0];
+        var userChosenSource = TUI._sourcesInformation.Sources[0];
 
-        var userId = TUI._telegramApi.SendTextFromUser($"/{userChosenFeed}");
+        var userId = TUI._telegramApi.SendTextFromUser($"/{userChosenSource}");
         await TUI.StartAsync(CancellationToken.None);
 
         var sentRequests = TUI._telegramApi.GetSentRequests();
         Assert.Single(sentRequests);
-        Assert.Equal(TUI._feedInformation.PublicationTypesByFeed[userChosenFeed].Length,
-                     sentRequests[0].Keyboard.Keyboard.Length);
+        Assert.Equal(TUI._sourcesInformation.TopicsBySources[userChosenSource].Length,
+                     sentRequests[0]?.Keyboard?.Keyboard.Length);
     }
 
     [Fact]
     public async Task User_can_subscribe()
     {
         var TUI = NewTelegramUI();
-        var userChosenFeed = TUI._feedInformation.Feeds[0];
+        var userChosenSource = TUI._sourcesInformation.Sources[0];
 
-        var userId = TUI._telegramApi.SendTextFromUser($"/{userChosenFeed}");
+        var userId = TUI._telegramApi.SendTextFromUser($"/{userChosenSource}");
         TUI._telegramApi.SendButtonPress(0, 0);
         await TUI.StartAsync(CancellationToken.None);
 
-        var userSubs = await TUI._userService.GetUserSubscriptions(userId);
+        var userSubs = await TUI._userService.Subscriptions(userId);
         Assert.Single(userSubs);
-        Assert.Single(userSubs[userChosenFeed]);
         var editRequests = TUI._telegramApi.GetEditRequests();
         Assert.Single(editRequests);
         Assert.Null(editRequests[0].Keyboard);   //keyboard removed after sub
@@ -82,37 +81,21 @@ public partial class TelegramTests : IDisposable
     public async Task User_can_unsubscribe()
     {
         var TUI = NewTelegramUI();
-        var userChosenFeed = TUI._feedInformation.Feeds[0];
+        var userChosenSource = TUI._sourcesInformation.Sources[0];
 
-        var userId = TUI._telegramApi.SendTextFromUser($"/{userChosenFeed}");
-        var userSub = new Subscription(userChosenFeed,
-                        TUI._feedInformation.PublicationTypesByFeed[userChosenFeed][0]);
+        var userId = TUI._telegramApi.SendTextFromUser($"/{userChosenSource}");
+        var userSub = new Subscription(userChosenSource,
+                        TUI._sourcesInformation.TopicsBySources[userChosenSource][0]);
         await TUI._userService.AddSubscription(userId, TUI.UIType, userSub);
 
-        TUI._telegramApi.SendButtonPress(userSub.PublicationType);
+        TUI._telegramApi.SendButtonPress(userSub.Topic);
         await TUI.StartAsync(CancellationToken.None);
 
-        var userSubs = await TUI._userService.GetUserSubscriptions(userId);
+        var userSubs = await TUI._userService.Subscriptions(userId);
         Assert.Empty(userSubs);
         var editRequests = TUI._telegramApi.GetEditRequests();
         Assert.Single(editRequests);
         Assert.Null(editRequests[0].Keyboard);
-    }
-
-    private Update ValidTextUpdate(string text, long userId = SomeUserID)
-    {
-        return new Update
-        {
-            Message = new Message
-            {
-                Text = text,
-                Sender = new NewsMix.UI.Telegram.Models.User
-                {
-                    Id = 123
-                },
-                Date_Unix = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds()
-            },
-        };
     }
 
     public void Dispose()

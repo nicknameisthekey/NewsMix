@@ -40,7 +40,7 @@ public class FakeTelegramApi : ITelegramApi
             Success = true
         });
     }
-
+#pragma warning disable CS8425,CS1998 //async + ct
     public async IAsyncEnumerable<Update> GetUpdates(CancellationToken ct)
     {
         foreach (var update in _updates)
@@ -54,12 +54,12 @@ public class FakeTelegramApi : ITelegramApi
                 InlineKeyboardButton? button = null;
                 if (cu.ButtonWithText == null)
                 {
-                    button = SentRequests.Last().Keyboard
+                    button = SentRequests.Last().Keyboard!
                        .Keyboard[cu.ButtonNumber.Col, cu.ButtonNumber.Row] as InlineKeyboardButton;
                 }
                 else
                 {
-                    button = SentRequests.Last().Keyboard.Keyboard
+                    button = SentRequests.Last().Keyboard!.Keyboard
                     .Cast<InlineKeyboardButton>()
                     .First(k => k.Text.Contains(cu.ButtonWithText));
                 }

@@ -3,46 +3,46 @@ using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Models;
 
-namespace NewsMix.Feeds;
+namespace NewsMix.Sources;
 
-public class NoobClubFeed : Feed
+public class NoobClub : Source
 {
-    #region publication types consts
-    public const string overwatchPubType = "overwatch";
-    public const string wowPubType = "wow";
-    public const string wowClassicPubType = "wow_classic";
-    public const string hsPubType = "hearthstone";
-    public const string wc3PubType = "warcraft 3";
-    public const string blizzPubType = "blizzard";
-    public const string diabloPubType = "diablo";
+    #region topics
+    public const string Topic_overwatch = "overwatch";
+    public const string Topic_wow = "wow";
+    public const string Topic_wow_classic = "wow_classic";
+    public const string Topic_hs = "hearthstone";
+    public const string Topic_w3 = "warcraft 3";
+    public const string Topic_blizzard = "blizzard";
+    public const string Topic_diablo = "diablo";
 
-    public string[] AvaliablePublicationTypes => new[] { hsPubType, overwatchPubType, wowClassicPubType, wowPubType, wc3PubType, blizzPubType, diabloPubType };
+    public string[] Topics => new[] { Topic_hs, Topic_overwatch, Topic_wow_classic, Topic_wow, Topic_w3, Topic_blizzard, Topic_diablo };
     #endregion
 
-    public string FeedName => "noobclub";
+    public string SourceName => "noobclub";
     const string siteUrl = "https://www.noob-club.ru";
     private static readonly Dictionary<int, string> pagesUrls = new();
     private readonly DataDownloader _dataDownloader;
-    private readonly ILogger<NoobClubFeed>? _logger;
+    private readonly ILogger<NoobClub>? _logger;
 
-    static NoobClubFeed()
+    static NoobClub()
     {
         for (int i = 1; i <= 15; i++)
             pagesUrls.Add(i, $"{siteUrl}/index.php?frontpage;p={(i - 1) * 15}");
     }
 
-    public NoobClubFeed(DataDownloader dataDownloader, ILogger<NoobClubFeed>? logger = null)
+    public NoobClub(DataDownloader dataDownloader, ILogger<NoobClub>? logger = null)
     {
         _dataDownloader = dataDownloader;
         _logger = logger;
     }
 
-    public async Task<IReadOnlyCollection<FeedItem>> GetItems()
+    public async Task<IReadOnlyCollection<Publication>> GetPublications()
     {
-        var result = new List<FeedItem>();
+        var result = new List<Publication>();
         foreach (var (pageNum, url) in pagesUrls)
         {
-            _logger?.LogInformation($"{FeedName}: loading page {pageNum}");
+            _logger?.LogInformation("{SourceName}: loading page {pageNum}", SourceName, pageNum);
 
             var page = await _dataDownloader.GetPage(url, DownloadMethod.HttpClient);
             if (page.FailedToLoad)
@@ -59,11 +59,10 @@ public class NoobClubFeed : Feed
             }
         }
 
-        _logger.LogItemsFetched(result.Count, FeedName);
         return result;
     }
 
-    private FeedItem ParseNode(HtmlNode node)
+    private Publication ParseNode(HtmlNode node)
     {
         var titleNode = node.SelectSingleNode($"span[1]/h1/a");
 
@@ -73,13 +72,13 @@ public class NoobClubFeed : Feed
         var gameImageNodeClasses = node.SelectSingleNode("span[1]/span[2]")?
             .GetClasses() ?? Array.Empty<string>();
 
-        var gameType = GameImageClassToArticleType(string.Join(" ", gameImageNodeClasses));
+        var topic = GameImageClassToArticleType(string.Join(" ", gameImageNodeClasses));
 
-        return new FeedItem
+        return new Publication
         {
             Text = title,
             Url = siteUrl + aritcleUrl,
-            PublicationType = gameType
+            Topic = topic
         };
     }
 
@@ -87,13 +86,13 @@ public class NoobClubFeed : Feed
     {
         return gameImageClass switch
         {
-            "game-icon owch" => overwatchPubType,
-            "game-icon wow" => wowPubType,
-            "game-icon wowc" => wowClassicPubType,
-            "game-icon hearthstone" => hsPubType,
-            "game-icon wc3" => wc3PubType,
-            "game-icon blizzard" => blizzPubType,
-            "game-icon diablo" => diabloPubType,
+            "game-icon owch" => Topic_overwatch,
+            "game-icon wow" => Topic_wow,
+            "game-icon wowc" => Topic_wow_classic,
+            "game-icon hearthstone" => Topic_hs,
+            "game-icon wc3" => Topic_w3,
+            "game-icon blizzard" => Topic_blizzard,
+            "game-icon diablo" => Topic_diablo,
             _ => "unknown"
         };
     }

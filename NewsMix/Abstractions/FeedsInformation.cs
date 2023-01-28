@@ -1,7 +1,7 @@
 namespace NewsMix.Abstractions;
 
-public interface FeedsInformation
+public interface SourcesInformation
 {
-    Dictionary<string, string[]> PublicationTypesByFeed { get; init; }
-    string[] Feeds { get; init; }
+    Dictionary<string, string[]> TopicsBySources { get; init; }
+    string[] Sources { get; init; }
 }

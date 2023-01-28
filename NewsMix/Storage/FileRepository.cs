@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using NewsMix.Abstractions;
+using NewsMix.Models;
 using Newtonsoft.Json;
 
 namespace NewsMix.Storage;
@@ -24,7 +25,7 @@ public class FileRepository : UserRepository, PublicationRepository
             File.Create(filePath).Close();
     }
 
-    public async Task AddToPublicationNotifiedList(string publicationUniqeID)
+    public async Task SetPublicationNotified(string publicationUniqeID)
     {
         if (await IsPublicationNew(publicationUniqeID))
             File.AppendAllText(_publicationNotifiedListTxtFile, publicationUniqeID + Environment.NewLine);
@@ -37,13 +38,13 @@ public class FileRepository : UserRepository, PublicationRepository
         return Task.FromResult(publications.Any(p => p == publicationUniqeID) == false);
     }
 
-    public async Task<List<User>> GetUsers()
+    public Task<List<User>> GetUsers()
     {
         var usersJson = File.ReadAllText(_usersJsonFile);
         if (usersJson.Length == 0)
-            return new();
+            return Task.FromResult(new List<User>());
         else
-            return JsonConvert.DeserializeObject<List<User>>(usersJson)!;
+            return Task.FromResult(JsonConvert.DeserializeObject<List<User>>(usersJson)!);
     }
 
     public async Task UpsertUser(User u)

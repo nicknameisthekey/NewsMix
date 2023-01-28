@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
+using NewsMix.Models;
 
 namespace NewsMix.Services;
 public class UserService
@@ -12,7 +13,7 @@ public class UserService
         _logger = logger;
     }
 
-    public async Task<IReadOnlyCollection<User>> GetUsersToNotifyBy(Subscription sub)
+    public async Task<IReadOnlyCollection<User>> UsersToNotify(Subscription sub)
     {
         var users = await _userRepository.GetUsers();
         return users.Where(u => u.Subscriptions.Contains(sub)).ToList();
@@ -37,14 +38,14 @@ public class UserService
         await _userRepository.UpsertUser(user);
     }
 
-    public async Task<Dictionary<string, List<string>>> GetUserSubscriptions(string userId) //todo refactor for <(list<sub> subbed and not subbed)>
+    public async Task<List<Subscription>> Subscriptions(string userId, string? source = null)
     {
         var user = await GetUser(userId);
-        return user switch
+        var subs = user?.Subscriptions ?? new();
+        return source switch
         {
-            null => new(),
-            not null => user.Subscriptions.GroupBy(s => s.FeedName)
-                .ToDictionary(g => g.Key, g => g.Select(s => s.PublicationType).ToList())
+            null => subs,
+            not null => subs.Where(s => s.Source == source).ToList()
         };
     }
 

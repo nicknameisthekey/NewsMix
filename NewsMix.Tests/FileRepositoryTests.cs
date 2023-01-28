@@ -1,4 +1,4 @@
-using NewsMix.Abstractions;
+using NewsMix.Models;
 using NewsMix.Storage;
 using static TestHelpers;
 
@@ -22,8 +22,8 @@ public class FileRepositoryTests : IDisposable
         File.Create(repo._publicationNotifiedListTxtFile).Close();
 
         const string someValue = "this is value";
-        await repo.AddToPublicationNotifiedList(someValue);
-        await repo.AddToPublicationNotifiedList(someValue);
+        await repo.SetPublicationNotified(someValue);
+        await repo.SetPublicationNotified(someValue);
 
         var fileLines = File.ReadAllLines(repo._publicationNotifiedListTxtFile);
         Assert.Single(fileLines);
@@ -38,7 +38,7 @@ public class FileRepositoryTests : IDisposable
         var result = await repo.IsPublicationNew(someValue);
         Assert.True(result);
 
-        await repo.AddToPublicationNotifiedList(someValue);
+        await repo.SetPublicationNotified(someValue);
         result = await repo.IsPublicationNew(someValue);
         Assert.False(result);
     }
@@ -50,13 +50,13 @@ public class FileRepositoryTests : IDisposable
         const string u1Id = "1234";
         const string u2Id = "4321";
 
-        await repo.UpsertUser(new Abstractions.User
+        await repo.UpsertUser(new User
         {
             UserId = u1Id,
             UIType = "Telegram",
         });
 
-        await repo.UpsertUser(new Abstractions.User
+        await repo.UpsertUser(new User
         {
             UserId = u2Id,
             UIType = "Telegram",
@@ -74,27 +74,27 @@ public class FileRepositoryTests : IDisposable
     {
         var repo = NewFileRepository;
 
-        User user = new Abstractions.User
+        User user = new User
         {
             UserId = "1234",
             UIType = "Telegram",
-            Subscriptions = new List<Subscription> { new("feed1", "pub1") }
+            Subscriptions = new List<Subscription> { new("source1", "topic1") }
         };
         await repo.UpsertUser(user);
         var users = await repo.GetUsers();
         Assert.Single(users);
         Assert.Single(users[0].Subscriptions);
-        Assert.Equal(users[0].Subscriptions[0].FeedName, user.Subscriptions[0].FeedName);
-        Assert.Equal(users[0].Subscriptions[0].PublicationType, user.Subscriptions[0].PublicationType);
+        Assert.Equal(users[0].Subscriptions[0].Source, user.Subscriptions[0].Source);
+        Assert.Equal(users[0].Subscriptions[0].Topic, user.Subscriptions[0].Topic);
 
-        user.Subscriptions[0] = new("feed2", "pub2");
+        user.Subscriptions[0] = new("source2", "topic2");
 
         await repo.UpsertUser(user);
         users = await repo.GetUsers();
         Assert.Single(users);
         Assert.Single(users[0].Subscriptions);
-        Assert.Equal(users[0].Subscriptions[0].FeedName, user.Subscriptions[0].FeedName);
-        Assert.Equal(users[0].Subscriptions[0].PublicationType, user.Subscriptions[0].PublicationType);
+        Assert.Equal(users[0].Subscriptions[0].Source, user.Subscriptions[0].Source);
+        Assert.Equal(users[0].Subscriptions[0].Topic, user.Subscriptions[0].Topic);
     }
 
     public void Dispose()

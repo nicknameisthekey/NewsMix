@@ -28,6 +28,6 @@
 
   <ItemGroup>
     <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="FeedsPages\*" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="SourcePages\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

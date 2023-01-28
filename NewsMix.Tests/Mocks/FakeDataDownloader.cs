@@ -15,7 +15,7 @@ public class FakeDataDownloader : DataDownloader
         if (_filesByUrl.ContainsKey(uri) == false)
             return Task.FromResult(Page.FailedToLoadPage);
 
-        string filePath = Path.Combine("FeedsPages", _filesByUrl[uri]);
+        string filePath = Path.Combine("SourcePages", _filesByUrl[uri]);
         string rawHTML = File.ReadAllText(filePath);
         return Task.FromResult(new Page(rawHTML));
     }

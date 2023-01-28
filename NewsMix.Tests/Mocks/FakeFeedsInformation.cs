@@ -2,17 +2,17 @@ using NewsMix.Abstractions;
 
 public partial class TelegramTests
 {
-    class FakeFeedsInformation : FeedsInformation
+    class FakeSourcesInformation : SourcesInformation
     {
-        public Dictionary<string, string[]> PublicationTypesByFeed { get; init; }
-        public string[] Feeds { get; init; }
+        public Dictionary<string, string[]> TopicsBySources { get; init; }
+        public string[] Sources { get; init; }
 
-        public FakeFeedsInformation()
+        public FakeSourcesInformation()
         {
-            Feeds = new[] { "feed1", "feed2" };
-            PublicationTypesByFeed = new Dictionary<string, string[]>
+            Sources = new[] { "source1", "source2" };
+            TopicsBySources = new Dictionary<string, string[]>
             {
-                ["feed1"] = new[] { "pub1", "pub2" }
+                ["source1"] = new[] { "topic1", "topic2" }
             };
         }
     }
