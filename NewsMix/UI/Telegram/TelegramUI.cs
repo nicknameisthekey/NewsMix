@@ -140,6 +140,7 @@ public class TelegramUI : BackgroundService, UserInterface
 
         var allCallbacks = subscibeCallbacks.Concat(unsubsribeCallbacks).ToArray();
 
+        CallbackActions.TryRemove(userId, out var _);
         CallbackActions.TryAdd(userId, allCallbacks);
 
         await SendNewOrEdit(userId, allCallbacks, "Что интересует?");
