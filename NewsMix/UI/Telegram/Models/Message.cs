@@ -6,11 +6,11 @@ public class Message
     [JsonProperty("message_id")]
     public long Id { get; set; }
     [JsonProperty("text")]
-    public string Text { get; set; }
+    public string? Text { get; set; }
     [JsonProperty("from")]
-    public User Sender { get; set; }
+    public User? Sender { get; set; }
     [JsonProperty("chat")]
-    public Chat Chat { get; set; }
+    public Chat? Chat { get; set; }
     [JsonProperty("date")]
     public long Date_Unix { get; set; }
     public bool IsChat => Chat.Type == "private";

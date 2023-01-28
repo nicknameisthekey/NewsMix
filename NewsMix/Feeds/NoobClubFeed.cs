@@ -71,7 +71,7 @@ public class NoobClubFeed : Feed
             .SingleOrDefault(a => a.Name == "href")?.Value;
         var title = titleNode.InnerText;
         var gameImageNodeClasses = node.SelectSingleNode("span[1]/span[2]")?
-            .GetClasses();
+            .GetClasses() ?? Array.Empty<string>();
 
         var gameType = GameImageClassToArticleType(string.Join(" ", gameImageNodeClasses));
 

@@ -6,5 +6,5 @@ public class Chat
     [JsonProperty("id")]
     public long Id { get; set; }
     [JsonProperty("type")]
-    public string Type { get; set; }
+    public string? Type { get; set; }
 }

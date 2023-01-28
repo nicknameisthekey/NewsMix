@@ -33,11 +33,19 @@ public class TelegramApi : ITelegramApi
 
     private async Task<List<Update>> FetchUpdates()
     {
-        var request = new GetUpdatesRequest { Offset = lastUpdateId + 1 };
-        var response = await PostAsync<GetUpdatesResponse>(request, getUpdatesUrl);
-        var result = response.Updates.OrderBy(u => u.Id).ToList();
-        lastUpdateId = result.LastOrDefault()?.Id ?? lastUpdateId;
-        return result;
+        try
+        {
+            var request = new GetUpdatesRequest { Offset = lastUpdateId + 1 };
+            var response = await PostAsync<GetUpdatesResponse>(request, getUpdatesUrl);
+            var result = response.Updates.OrderBy(u => u.Id).ToList();
+            lastUpdateId = result.LastOrDefault()?.Id ?? lastUpdateId;
+            return result;
+        }
+        catch (Exception e)
+        {
+            _logger?.LogError(e, "Erorr on fetching updates");
+            return new();
+        }
     }
 
     public async Task<SendMessageResponse> SendMessage(SendMessageRequest message)

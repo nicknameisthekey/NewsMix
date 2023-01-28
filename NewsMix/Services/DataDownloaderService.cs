@@ -80,11 +80,11 @@ public class DataDownloaderService : DataDownloader
         return new Page(content);
     }
 
-    public async Task<IEnumerable<SyndicationItem>> GetFromRSS(string url)
+    public Task<IEnumerable<SyndicationItem>> GetFromRSS(string url)
     {
         XmlReader reader = XmlReader.Create(url);
         SyndicationFeed feed = SyndicationFeed.Load(reader);
-        return feed.Items;
+        return Task.FromResult(feed.Items);
     }
 
     public async Task<byte[]?> DownloadFile(string url)

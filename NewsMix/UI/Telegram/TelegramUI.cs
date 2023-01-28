@@ -44,7 +44,7 @@ public class TelegramUI : BackgroundService, UserInterface
                     if (update.OlderThan(minutes: 3))
                         continue;
 
-                    await ProcessTextMessage(update.Message);
+                    await ProcessTextMessage(update.Message!);
                 }
             }
             catch (Exception e)
@@ -56,7 +56,7 @@ public class TelegramUI : BackgroundService, UserInterface
 
     public async Task ProcessCallback(Update update)
     {
-        var userId = update.CallBack.Sender.Id;
+        var userId = update.CallBack!.Sender.Id;
         if (CallbackActions.TryGetValue
                 (userId, out var userCallbacks) == false)
         {
@@ -82,6 +82,7 @@ public class TelegramUI : BackgroundService, UserInterface
 
     public async Task NotifyUser(string user, string message)
     {
+        _logger?.LogWarning("Notified user {userId}, message {message}", user, message);
         await _telegramApi.SendMessage(new SendMessageRequest
         {
             Conversation = user,
@@ -93,13 +94,13 @@ public class TelegramUI : BackgroundService, UserInterface
     {
         if (message.Text == "/start")
         {
-            await SendGreetings(message.Sender.Id);
+            await SendGreetings(message.Sender!.Id);
         }
 
-        string command = message.Text.Replace("/", "");
+        string command = message.Text!.Replace("/", "");
         if (_feedInformation.Feeds.Any(f => f == command))
         {
-            await SendFeedPublicationTypes(message.Sender.Id, command);
+            await SendFeedPublicationTypes(message.Sender!.Id, command);
         }
     }
 
@@ -148,12 +149,14 @@ public class TelegramUI : BackgroundService, UserInterface
 
     private async Task SubscribeUser(long userId, Subscription sub)
     {
+        _logger?.LogWarning("User {userId} subscribed to {subscription}", userId, sub);
         await _userService.AddSubscription(userId.ToString(), UIType, sub);
         await ReplaceKeyboardWithSuccessMessage(userId);
     }
 
     private async Task UnsubscribeUser(long userId, Subscription sub)
     {
+        _logger?.LogWarning("User {userId} unsubscribed from {subscription}", userId, sub);
         await _userService.RemoveSubscription(userId.ToString(), sub);
         await ReplaceKeyboardWithSuccessMessage(userId);
     }

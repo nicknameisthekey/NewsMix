@@ -35,5 +35,7 @@ namespace NewsMix.Abstractions
 
             return base.Equals(obj);
         }
+
+        public override string ToString() => $"feed: {FeedName}, pubType: {PublicationType}";
     }
 }

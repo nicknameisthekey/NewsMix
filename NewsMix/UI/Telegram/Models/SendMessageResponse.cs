@@ -6,5 +6,5 @@ public class SendMessageResponse
     [JsonProperty("ok")]
     public bool Success { get; set; }
     [JsonProperty("result")]
-    public Result Result { get; set; }
+    public Result? Result { get; set; }
 }
