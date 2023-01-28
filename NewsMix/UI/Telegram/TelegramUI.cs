@@ -7,15 +7,16 @@ using NewsMix.UI.Telegram.Models;
 using static CallbackActionType;
 
 namespace NewsMix.UI.Telegram;
-public class TelegramUI : BackgroundService, UserInterface 
+public class TelegramUI : BackgroundService, UserInterface
 {
-    private readonly UserService _userService;
-    private readonly ITelegramApi _telegramApi;
-    private readonly FeedsInformation _feedInformation;
+    internal readonly UserService _userService;
+    internal readonly ITelegramApi _telegramApi;
+    internal readonly FeedsInformation _feedInformation;
     private readonly ILogger<TelegramUI>? _logger;
     public string UIType => "telegram";
     private ConcurrentDictionary<long, CallbackData[]> CallbackActions = new();
     private ConcurrentDictionary<long, long> SentMessagesByUser = new();
+    public const string GreetinMessage = "Привет! Я умею присылать новости из разнызх источников. Посмотреть варианты можно по кнопке \"Меню\"."; //todo
 
     public TelegramUI(UserService userService,
     ITelegramApi telegramApi,
@@ -55,8 +56,6 @@ public class TelegramUI : BackgroundService, UserInterface
 
     public async Task ProcessCallback(Update update)
     {
-        var callbackData = CallbackData.FromCallback(update.CallBack.CallbackData);
-
         var userId = update.CallBack.Sender.Id;
         if (CallbackActions.TryGetValue
                 (userId, out var userCallbacks) == false)
@@ -66,7 +65,7 @@ public class TelegramUI : BackgroundService, UserInterface
 
         CallbackActions.TryRemove(userId, out _);
 
-        var selectedCallback = userCallbacks!.FirstOrDefault(c => c.ID == callbackData.ID);
+        var selectedCallback = userCallbacks!.FirstOrDefault(c => c.ID == update.CallBack.CallbackData);
         if (selectedCallback == null)
         {
             //fail fast
@@ -90,27 +89,27 @@ public class TelegramUI : BackgroundService, UserInterface
         });
     }
 
-    public async Task ProcessTextMessage(Message message)
+    private async Task ProcessTextMessage(Message message)
     {
         if (message.Text == "/start")
         {
-            await SendFeeds(message.Sender.Id);
+            await SendGreetings(message.Sender.Id);
+        }
+
+        string command = message.Text.Replace("/", "");
+        if (_feedInformation.Feeds.Any(f => f == command))
+        {
+            await SendFeedPublicationTypes(message.Sender.Id, command);
         }
     }
 
-    private async Task SendFeeds(long userId)
+    private async Task SendGreetings(long userId)
     {
-        var callbacks = _feedInformation.Feeds
-                    .Select(f => new CallbackData
-                    {
-                        ID = Guid.NewGuid().ToString(),
-                        CallbackActionType = SendPublicationTypes,
-                        Feed = f,
-                        Text = f
-                    }).ToArray();
-        CallbackActions.TryAdd(userId, callbacks);
-
-        await SendNewOrEdit(userId, callbacks, "На что подписываемся?");
+        await _telegramApi.SendMessage(new SendMessageRequest
+        {
+            Text = GreetinMessage,
+            Conversation = userId.ToString()
+        });
     }
 
     private async Task SendFeedPublicationTypes(long userId, string feed)
@@ -149,13 +148,27 @@ public class TelegramUI : BackgroundService, UserInterface
     private async Task SubscribeUser(long userId, Subscription sub)
     {
         await _userService.AddSubscription(userId.ToString(), UIType, sub);
-        await SendFeeds(userId);
+        await ReplaceKeyboardWithSuccessMessage(userId);
     }
 
     private async Task UnsubscribeUser(long userId, Subscription sub)
     {
         await _userService.RemoveSubscription(userId.ToString(), sub);
-        await SendFeeds(userId);
+        await ReplaceKeyboardWithSuccessMessage(userId);
+    }
+
+    private async Task ReplaceKeyboardWithSuccessMessage(long userId)
+    {
+        if (SentMessagesByUser.TryRemove(userId, out var messageId))
+        {
+            await _telegramApi.EditMessage(new EditMessageText
+            {
+                MessageId = messageId,
+                ChatId = userId,
+                Text = "Успешно"
+            });
+        }
+        //todo else case
     }
 
     private InlineKeyboard CreateKeyboard(CallbackData[] buttons)
@@ -175,7 +188,7 @@ public class TelegramUI : BackgroundService, UserInterface
 
             keyboard.Keyboard[i, 0] = new InlineKeyboardButton
             {
-                CallBackData = buttons[i].ToCallback(),
+                CallBackData = buttons[i].ID,
                 Text = buttons[i].Text + additionalText
             };
         }
