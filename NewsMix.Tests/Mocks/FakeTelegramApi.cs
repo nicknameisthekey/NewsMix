@@ -1,25 +1,44 @@
 using NewsMix.UI.Telegram.Models;
-
-public class CallBackUpdate
+using System.Linq;
+public class ButtonPress
 {
     public (int Row, int Col) ButtonNumber { get; init; }
+    public string? ButtonWithText { get; init; }
+
+    public ButtonPress(string buttonWithText)
+    {
+        ButtonWithText = buttonWithText;
+    }
+
+    public ButtonPress(int Row, int Col) => ButtonNumber = (Row, Col);
 }
 
 public class FakeTelegramApi : ITelegramApi
 {
-    private readonly object[] _updates;
+    private readonly List<object> _updates = new();
 
     public List<SendMessageRequest> SentRequests = new();
+    public List<EditMessageText> EditedMessages = new();
     private int currentResultMessageId = 0;
 
-    public FakeTelegramApi(params object[] updates)
+    public FakeTelegramApi AddUpdate(object update)
     {
-        _updates = updates;
+        _updates.Add(update);
+        return this;
     }
 
     public Task<SendMessageResponse> EditMessage(EditMessageText message)
     {
-        throw new NotImplementedException();
+        EditedMessages.Add(message);
+        currentResultMessageId++;
+        return Task.FromResult(new SendMessageResponse
+        {
+            Result = new Result
+            {
+                MessageId = currentResultMessageId
+            },
+            Success = true
+        });
     }
 
     public async IAsyncEnumerable<Update> GetUpdates(CancellationToken ct)
@@ -30,10 +49,21 @@ public class FakeTelegramApi : ITelegramApi
             {
                 yield return u;
             }
-            else if (update is CallBackUpdate cu)
+            else if (update is ButtonPress cu)
             {
-                var button = SentRequests.Last().Keyboard
-                    .Keyboard[cu.ButtonNumber.Col, cu.ButtonNumber.Row] as InlineKeyboardButton;
+                InlineKeyboardButton? button = null;
+                if (cu.ButtonWithText == null)
+                {
+                    button = SentRequests.Last().Keyboard
+                       .Keyboard[cu.ButtonNumber.Col, cu.ButtonNumber.Row] as InlineKeyboardButton;
+                }
+                else
+                {
+                    button = SentRequests.Last().Keyboard.Keyboard
+                    .Cast<InlineKeyboardButton>()
+                    .First(k => k.Text.Contains(cu.ButtonWithText));
+                }
+
                 yield return new Update
                 {
                     CallBack = new CallbackQuery
@@ -49,17 +79,17 @@ public class FakeTelegramApi : ITelegramApi
         }
     }
 
-    public async Task<SendMessageResponse> SendMessage(SendMessageRequest message)
+    public Task<SendMessageResponse> SendMessage(SendMessageRequest message)
     {
         SentRequests.Add(message);
         currentResultMessageId++;
-        return new SendMessageResponse
+        return Task.FromResult(new SendMessageResponse
         {
             Result = new Result
             {
                 MessageId = currentResultMessageId
             },
             Success = true
-        };
+        });
     }
 }

@@ -1,5 +1,4 @@
 using NewsMix.Abstractions;
-using NewsMix.Services;
 using NewsMix.Storage;
 using static TestHelpers;
 
@@ -9,7 +8,7 @@ public class UserServiceTests : IDisposable
     const string SomeUserID = "12345";
     const string SomeUIType = "telegram";
     Subscription SomeSubscription => new Subscription("feed", "pub");
-    UserService NewUserService => new UserService(new FileRepository(MockIConfiguration));
+    
     #endregion
 
     [Fact]

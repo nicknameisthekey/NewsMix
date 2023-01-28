@@ -9,9 +9,9 @@ using static CallbackActionType;
 namespace NewsMix.UI.Telegram;
 public class TelegramUI : BackgroundService, UserInterface
 {
-    private readonly UserService _userService;
-    private readonly ITelegramApi _telegramApi;
-    private readonly FeedsInformation _feedInformation;
+    internal readonly UserService _userService;
+    internal readonly ITelegramApi _telegramApi;
+    internal readonly FeedsInformation _feedInformation;
     private readonly ILogger<TelegramUI>? _logger;
     public string UIType => "telegram";
     private ConcurrentDictionary<long, CallbackData[]> CallbackActions = new();
@@ -148,13 +148,27 @@ public class TelegramUI : BackgroundService, UserInterface
     private async Task SubscribeUser(long userId, Subscription sub)
     {
         await _userService.AddSubscription(userId.ToString(), UIType, sub);
-        await SendGreetings(userId);
+        await ReplaceKeyboardWithSuccessMessage(userId);
     }
 
     private async Task UnsubscribeUser(long userId, Subscription sub)
     {
         await _userService.RemoveSubscription(userId.ToString(), sub);
-        await SendGreetings(userId);
+        await ReplaceKeyboardWithSuccessMessage(userId);
+    }
+
+    private async Task ReplaceKeyboardWithSuccessMessage(long userId)
+    {
+        if (SentMessagesByUser.TryRemove(userId, out var messageId))
+        {
+            await _telegramApi.EditMessage(new EditMessageText
+            {
+                MessageId = messageId,
+                ChatId = userId,
+                Text = "Успешно"
+            });
+        }
+        //todo else case
     }
 
     private InlineKeyboard CreateKeyboard(CallbackData[] buttons)
