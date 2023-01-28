@@ -19,7 +19,7 @@ public class NoobClubFeed : Feed
     public string[] AvaliablePublicationTypes => new[] { hsPubType, overwatchPubType, wowClassicPubType, wowPubType, wc3PubType, blizzPubType, diabloPubType };
     #endregion
 
-    public string FeedName => "noob-club";
+    public string FeedName => "noobclub";
     const string siteUrl = "https://www.noob-club.ru";
     private static readonly Dictionary<int, string> pagesUrls = new();
     private readonly DataDownloader _dataDownloader;

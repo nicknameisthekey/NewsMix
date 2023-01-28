@@ -11,6 +11,7 @@ Gives users an ability to create inidividual news feed via subscription to difff
 # Users can use it via
 - [Telegram bot](https://t.me/news_mix_bot) ([Description](/NewsMix/UI/Telegram/Doc.md))
 
+# Commands to add to botfather via /set
 
 #TODO 
 - Add Telegram bot description

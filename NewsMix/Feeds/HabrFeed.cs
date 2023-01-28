@@ -5,7 +5,7 @@ public class HabrFeed : Feed
     const string rssUrl = "https://habr.com/en/rss/all/top25/?fl=en%2Cru";
     private const string rating25PubType = "Rating > 25";
 
-    public string FeedName => "Habr";
+    public string FeedName => "habr";
 
     public string[] AvaliablePublicationTypes => new[] { rating25PubType };
 

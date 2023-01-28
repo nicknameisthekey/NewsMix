@@ -14,7 +14,7 @@ public class IcyVeinsFeed : Feed
     public string[] AvaliablePublicationTypes => new[] { wowClassicPubType, wowPubType, diabloPubType, warcraftPubType, lostArcPubType };
     #endregion
 
-    public string FeedName => "icy-veins";
+    public string FeedName => "icyveins";
     const string siteUrl = "https://www.icy-veins.com";
     private readonly DataDownloader _dataDownloader;
     private readonly ILogger<IcyVeinsFeed>? _logger;
