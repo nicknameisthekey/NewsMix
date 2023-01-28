@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using NewsMix.UI.Telegram.Models;
 using Newtonsoft.Json;
 
@@ -15,17 +16,19 @@ public class TelegramApi : ITelegramApi
     private readonly string editMessageTextUrl;
     private long lastUpdateId = 0;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<TelegramApi>? _logger;
 
 #if DEBUG
     private readonly List<Update> updatesLog = new();
 #endif
-    public TelegramApi(IConfiguration configuration, IHttpClientFactory httpClientFactory)
+    public TelegramApi(IConfiguration configuration, IHttpClientFactory httpClientFactory, ILogger<TelegramApi>? logger)
     {
         var token = configuration["TelegramBotToken"] ?? throw new ArgumentNullException();
         getUpdatesUrl = apiBaseUrl + token + "/getUpdates";
         sendMessageUrl = apiBaseUrl + token + "/sendMessage";
         editMessageTextUrl = apiBaseUrl + token + "/editMessageText";
         _httpClientFactory = httpClientFactory;
+        _logger = logger;
     }
 
     private async Task<List<Update>> FetchUpdates()
@@ -53,15 +56,16 @@ public class TelegramApi : ITelegramApi
         {
             NullValueHandling = NullValueHandling.Ignore
         };
-        string requestSerialized = JsonConvert.SerializeObject(requestContent, jsonSettings);
-        Console.WriteLine(requestSerialized);
-        var data = new StringContent(requestSerialized, Encoding.UTF8, "application/json");
+        string requestString = JsonConvert.SerializeObject(requestContent, jsonSettings);
+        _logger?.LogInformation("Telegram request {requestString}", requestString);
+        var data = new StringContent(requestString, Encoding.UTF8, "application/json");
         using var client = _httpClientFactory.CreateClient();
         var response = await client.PostAsync(url, data);
         var responseString = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(responseString);
+
+        _logger?.LogInformation("Telegram response {responseString}", responseString);
         var responseDeserialized = JsonConvert.DeserializeObject<T>(responseString);
-        return responseDeserialized;
+        return responseDeserialized!;
     }
 
     public async IAsyncEnumerable<Update> GetUpdates([EnumeratorCancellation] CancellationToken ct)
@@ -76,7 +80,10 @@ public class TelegramApi : ITelegramApi
                 updatesLog.AddRange(updates);
 #endif
                 foreach (var update in updates)
+                {
+                    _logger?.LogWarning("Got update {update}", JsonConvert.SerializeObject(update));
                     yield return update;
+                }
             }
 
             await Task.Delay(TimeSpan.FromSeconds(0.5));

@@ -59,6 +59,7 @@ public class NoobClubFeed : Feed
             }
         }
 
+        _logger.LogItemsFetched(result.Count, FeedName);
         return result;
     }
 

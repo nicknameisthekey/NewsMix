@@ -21,7 +21,7 @@ public class Program
                                 });
                           }).Build();
         var logger = host.Services.GetRequiredService<ILogger<Program>>();
-        logger.LogInformation("Host created.");
+        logger.LogInformation("Service started");
 
         await host.RunAsync();
     }

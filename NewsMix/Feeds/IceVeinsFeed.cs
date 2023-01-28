@@ -40,18 +40,21 @@ public class IcyVeinsFeed : Feed
         {
             var node = page.HTMLRoot.SelectSingleNode($"//*[@id=\"news_{i}\"]");
             var nodeData = ParseNode(node);
-            result.Add(nodeData);
+            if (nodeData != null)
+                result.Add(nodeData);
         }
-
+        _logger.LogItemsFetched(result.Count, FeedName);
         return result;
     }
 
-    private FeedItem ParseNode(HtmlNode node)
+    private FeedItem? ParseNode(HtmlNode node)
     {
         var titleNode = node.SelectSingleNode($"span[2]/span/span[1]/a");
 
         var aritcleUrl = titleNode.Attributes
             .SingleOrDefault(a => a.Name == "href")?.Value;
+        if (string.IsNullOrEmpty(aritcleUrl))
+            return null;
 
         var title = titleNode.InnerText;
         var gameText = node.SelectSingleNode("span[2]/span/span[3]/span[1]")?.InnerText;
