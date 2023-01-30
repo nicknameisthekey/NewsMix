@@ -5,6 +5,7 @@
 
 appsettings.Development.json
 botfather-commands.txt
+SourcePages/
 # User-specific files
 *.rsuser
 *.suo

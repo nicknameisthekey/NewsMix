@@ -20,6 +20,7 @@ public static class SerivceCollectionExtensions
         services.AddTransient<UserService>();
         services.AddSingleton<Source, NoobClub>();
         services.AddSingleton<Source, IcyVeins>();
+        services.AddSingleton<Source, EaApex>();
         services.AddSingleton<Source, Habr>();
         services.AddSingleton<UserInterface, TelegramUI>();
         services.AddSingleton<ITelegramApi, TelegramApi>();

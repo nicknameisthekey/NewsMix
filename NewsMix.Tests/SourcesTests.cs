@@ -52,4 +52,18 @@ public class SourcesTests
         var lostArkItems = items.Where(i => i.Topic == IcyVeins.Topic_lost_arc);
         Assert.Single(lostArkItems);
     }
+
+    [Fact]
+    public async Task EaApex_parsing()
+    {
+        var ea = new EaApex(new FakeDataDownloader(new Dictionary<string, string>
+        {
+            ["https://www.ea.com/ru-ru/games/apex-legends/news#news"] = "ea_apex.html"
+
+        }));
+
+        var items = await ea.GetPublications();
+        Assert.Equal(35, items.Count);
+        Assert.Contains(items, i=>i.Url == "https://www.ea.com/ru-ru/games/apex-legends/news/olympus-map-update");
+    }
 }
