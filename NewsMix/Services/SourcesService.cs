@@ -46,7 +46,7 @@ public class SourcesService : BackgroundService
                             if (userInterface != null)
                             {
                                 await userInterface.NotifyUser(user: user.UserId, publication.Url);
-                                _logger?.LogWarning("Notified user {userId}, publication {publication}", user, publication);
+                                _logger?.LogWarning("Notified user {userId}, publication {publication}", user.UserId, publication);
                             }
                         }
                     }

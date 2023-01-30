@@ -94,11 +94,26 @@ public class TelegramUI : BackgroundService, UserInterface
             await SendGreetings(message.Sender!.Id);
         }
 
+        if (message.Text == "/stats")
+        {
+            await SendUsersCount(message.Sender!.Id);
+        }
+
         string command = message.Text!.Replace("/", "");
         if (_sourcesInformation.Sources.Any(f => f == command))
         {
             await SendTopics(message.Sender!.Id, command);
         }
+    }
+
+    private async Task SendUsersCount(long userId)
+    {
+        var count = await _userService.UsersCount();
+        await _telegramApi.SendMessage(new SendMessageRequest
+        {
+            Text = $"🎉🎉🎉 Нас уже {count}! 🎉🎉🎉",
+            Conversation = userId.ToString()
+        });
     }
 
     private async Task SendGreetings(long userId)
@@ -113,7 +128,7 @@ public class TelegramUI : BackgroundService, UserInterface
     private async Task SendTopics(long userId, string source)
     {
         var userSubs = await _userService.Subscriptions(userId.ToString(), source);
-        
+
         var callbacks = _sourcesInformation.TopicsBySources[source]
             .Select(topics => new CallbackData
             {
