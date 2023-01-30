@@ -54,4 +54,10 @@ public class FileRepository : UserRepository, PublicationRepository
         users.Add(u);
         File.WriteAllText(_usersJsonFile, JsonConvert.SerializeObject(users));
     }
+
+    public async Task<int> NotificationCount()
+    {
+       var file = await File.ReadAllLinesAsync(_publicationNotifiedListTxtFile);
+       return file.Length;
+    }
 }

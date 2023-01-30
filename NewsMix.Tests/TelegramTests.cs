@@ -1,3 +1,5 @@
+using FakeItEasy;
+using NewsMix.Abstractions;
 using NewsMix.Models;
 using NewsMix.UI.Telegram;
 using NewsMix.UI.Telegram.Models;
@@ -7,7 +9,7 @@ public partial class TelegramTests : IDisposable
     const long SomeUserID = 1234;
 
     private TelegramUI NewTelegramUI()
-        => new TelegramUI(TestHelpers.NewUserService, new FakeTelegramApi(), new FakeSourcesInformation());
+        => new TelegramUI(TestHelpers.NewUserService, new FakeTelegramApi(), new FakeSourcesInformation(), A.Fake<IStatsService>());
 
     [Fact]
     public async Task Old_text_messages_ignored()
@@ -25,7 +27,7 @@ public partial class TelegramTests : IDisposable
                 Date_Unix = 0
             },
         });
-        var tUI = new TelegramUI(TestHelpers.NewUserService, tApiMock, new FakeSourcesInformation());
+        var tUI = new TelegramUI(TestHelpers.NewUserService, tApiMock, new FakeSourcesInformation(), A.Fake<IStatsService>());
 
         await tUI.StartAsync(CancellationToken.None);
 

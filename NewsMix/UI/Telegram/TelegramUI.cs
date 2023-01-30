@@ -12,6 +12,7 @@ public class TelegramUI : BackgroundService, UserInterface
 {
     internal readonly UserService _userService;
     internal readonly ITelegramApi _telegramApi;
+    internal readonly IStatsService _statsService;
     internal readonly SourcesInformation _sourcesInformation;
     private readonly ILogger<TelegramUI>? _logger;
     public string UIType => "telegram";
@@ -22,12 +23,14 @@ public class TelegramUI : BackgroundService, UserInterface
     public TelegramUI(UserService userService,
     ITelegramApi telegramApi,
     SourcesInformation sourcesInformation,
+    IStatsService statsService,
     ILogger<TelegramUI>? logger = null)
     {
         _userService = userService;
         _telegramApi = telegramApi;
         _sourcesInformation = sourcesInformation;
         _logger = logger;
+        _statsService = statsService;
     }
 
     protected override async Task ExecuteAsync(CancellationToken ct)
@@ -108,10 +111,12 @@ public class TelegramUI : BackgroundService, UserInterface
 
     private async Task SendUsersCount(long userId)
     {
-        var count = await _userService.UsersCount();
+        var userCount = await _statsService.UsersCount();
+        var notificationsCount = await _statsService.NotificationsCount();
         await _telegramApi.SendMessage(new SendMessageRequest
         {
-            Text = $"🎉🎉🎉 Нас уже {count}! 🎉🎉🎉",
+            Text = $"🎉 Нас уже {userCount}!" + Environment.NewLine +
+            $"🗞 Новостей отправлено: {notificationsCount}",
             Conversation = userId.ToString()
         });
     }

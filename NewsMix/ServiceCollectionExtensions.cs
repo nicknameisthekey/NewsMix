@@ -19,6 +19,7 @@ public static class SerivceCollectionExtensions
 
         services.AddTransient<UserService>();
         services.AddSingleton<Source, NoobClub>();
+        services.AddSingleton<IStatsService, StatsService>();
         services.AddSingleton<Source, IcyVeins>();
         services.AddSingleton<Source, EaApex>();
         services.AddSingleton<Source, Habr>();

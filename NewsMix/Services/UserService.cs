@@ -13,12 +13,6 @@ public class UserService
         _logger = logger;
     }
 
-    public async Task<int> UsersCount()
-    {
-        var users = await _userRepository.GetUsers();
-        return users.Count;
-    }
-
     public async Task<IReadOnlyCollection<User>> UsersToNotify(Subscription sub)
     {
         var users = await _userRepository.GetUsers();
