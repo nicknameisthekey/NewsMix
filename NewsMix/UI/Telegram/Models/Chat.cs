@@ -7,4 +7,6 @@ public class Chat
     public long Id { get; set; }
     [JsonProperty("type")]
     public string? Type { get; set; }
+    [JsonProperty("username")]
+    public string UserName { get; set; } = null!;
 }

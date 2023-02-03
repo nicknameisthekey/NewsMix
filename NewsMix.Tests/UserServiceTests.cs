@@ -1,121 +1,83 @@
-using NewsMix.Abstractions;
 using NewsMix.Models;
-using NewsMix.Storage;
+using NewsMix.Services;
+using NewsMix.Storage.Entites;
 using static TestHelpers;
 
-public class UserServiceTests : IDisposable
+public class UserServiceTests
 {
-    #region  Default values and helpers
-    const string SomeUserID = "12345";
-    const string SomeUIType = "telegram";
-    Subscription SomeSubscription => new Subscription("source", "topic");
-
-    #endregion
-
-    [Fact]
-    public async Task User_created_if_not_found()
-    {
-        var userService = NewUserService;
-        var user = await userService.GetOrCreate(SomeUserID, SomeUIType);
-        var fileRepo = new FileRepository(MockIConfiguration);
-        var users = await fileRepo.GetUsers();
-        Assert.Single(users);
-        Assert.Equal(SomeUserID, users[0].UserId);
-        Assert.Equal(SomeUIType, users[0].UIType);
-    }
-
-    [Fact]
-    public async Task User_can_be_received_if_found()
-    {
-        var fileRepo = new FileRepository(MockIConfiguration);
-        await fileRepo.UpsertUser(new User
-        {
-            UserId = SomeUserID,
-            UIType = SomeUIType,
-            Subscriptions = new() { SomeSubscription }
-        });
-
-        var userService = NewUserService;
-        var user = await userService.GetOrCreate(SomeUserID, SomeUIType);
-        Assert.Equal(SomeUserID, user.UserId);
-        Assert.Equal(SomeUIType, user.UIType);
-        Assert.Single(user.Subscriptions);
-        Assert.Contains(SomeSubscription, user.Subscriptions);
-    }
+    UserNoSubs TestUser => new UserNoSubs { UserId = "12345", UIType = "telegram", Name = "1234" };
+    Subscription TestSub => new Subscription { Source = "source", Topic = "topic" };
 
     [Fact]
     public async Task Adding_subscription_to_non_existing_user_creates_new_user_with_subscription()
     {
-        var userSerivce = NewUserService;
+        var (repo, ctx) = CreateDb();
+        var userSerivce = new UserService(repo);
 
-        await userSerivce.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
+        await userSerivce.AddSubscription(TestUser, TestSub);
 
-        var user = await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
+        var user = await repo.GetOrCreate(TestUser);
         Assert.Single(user.Subscriptions);
     }
 
     [Fact]
     public async Task Duplication_of_subscriptions_prevented()
     {
-        var userSerivce = NewUserService;
+        var (repo, ctx) = CreateDb();
+        var userSerivce = new UserService(repo);
 
-        await userSerivce.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
-        await userSerivce.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
+        await userSerivce.AddSubscription(TestUser, TestSub);
+        await userSerivce.AddSubscription(TestUser, TestSub);
 
-        var user = await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
+        var user = await repo.GetOrCreate(TestUser);
         Assert.Single(user.Subscriptions);
     }
 
     [Fact]
     public async Task Adding_new_subscription_dont_remove_other_subscriptions()
     {
-        var userService = NewUserService;
+        var (repo, ctx) = CreateDb();
+        var userSerivce = new UserService(repo);
 
+        await userSerivce.AddSubscription(TestUser, TestSub);
         var someOtherSubscription = new Subscription("other sub", "other pub");
-        await userService.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
-        await userService.AddSubscription(SomeUserID, SomeUIType, someOtherSubscription);
+        await userSerivce.AddSubscription(TestUser, someOtherSubscription);
 
-        var user = await userService.GetOrCreate(SomeUserID, SomeUIType);
+        var user = await repo.GetOrCreate(TestUser);
         Assert.Equal(2, user.Subscriptions.Count);
-        Assert.Contains(SomeSubscription, user.Subscriptions);
-        Assert.Contains(someOtherSubscription, user.Subscriptions);
+        Assert.Contains(user.Subscriptions, s => s.SameAs(TestSub));
+        Assert.Contains(user.Subscriptions, s => s.SameAs(someOtherSubscription));
     }
 
     [Fact]
     public async Task Subscription_can_be_removed()
     {
-        var userSerivce = NewUserService;
+        var (repo, ctx) = CreateDb();
+        var userSerivce = new UserService(repo);
 
         var someOtherSubscription = new Subscription("other sub", "other pub");
-        await userSerivce.AddSubscription(SomeUserID, SomeUIType, SomeSubscription);
-        await userSerivce.AddSubscription(SomeUserID, SomeUIType, someOtherSubscription);
-        await userSerivce.RemoveSubscription(SomeUserID, someOtherSubscription);
+        await userSerivce.AddSubscription(TestUser, TestSub);
+        await userSerivce.AddSubscription(TestUser, someOtherSubscription);
+        await userSerivce.RemoveSubscription(TestUser, someOtherSubscription);
 
-        var user = await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
+        var user = await repo.GetOrCreate(TestUser);
         Assert.Single(user.Subscriptions);
-        Assert.Equal(SomeSubscription, user.Subscriptions[0]);
+        Assert.True(user.Subscriptions[0].SameAs(TestSub));
     }
 
     [Fact]
     public async Task Removing_not_existing_subscription_do_nothing()
     {
-        var userSerivce = NewUserService;
+        var (repo, ctx) = CreateDb();
+        var userSerivce = new UserService(repo);
 
-        await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
-        await userSerivce.RemoveSubscription(SomeUserID, SomeSubscription);
+        var someOtherSubscription = new Subscription("other sub", "other pub");
+        await userSerivce.AddSubscription(TestUser, TestSub);
+        await userSerivce.RemoveSubscription(TestUser, someOtherSubscription);
 
-        var user = await userSerivce.GetOrCreate(SomeUserID, SomeUIType);
-        Assert.Empty(user.Subscriptions);
-    }
-
-    [Fact]
-    public async Task Removing_subscription_from_non_existing_user_throws()
-    {
-        var userSerivce = NewUserService;
-
-        var exception = await Assert.ThrowsAnyAsync<Exception>(
-            () => userSerivce.RemoveSubscription(SomeUserID, SomeSubscription));
-        Assert.Contains("user is null by userId", exception.Message);
+        var user = await repo.GetOrCreate(TestUser);
+        Assert.Single(user.Subscriptions);
+        Assert.True(user.Subscriptions[0].SameAs(TestSub));
     }
 
     [Fact]
@@ -124,27 +86,37 @@ public class UserServiceTests : IDisposable
         var userService = NewUserService;
 
         var usersToNotify = await userService
-                        .UsersToNotify(SomeSubscription);
+                        .UsersToNotify(TestSub);
         Assert.Empty(usersToNotify);
-        const string user1 = "user1";
-        const string user2 = "user2";
-        const string user3 = "user3";
+        const string UIType = "telegram";
+        var user1 = new UserNoSubs
+        {
+            UserId = "user1",
+            UIType = UIType,
+            Name = "abcd"
+        };
+        var user2 = new UserNoSubs
+        {
+            UserId = "user2",
+            UIType = UIType,
+            Name = "abcd"
+        };
+        var user3 = new UserNoSubs
+        {
+            UserId = "user3",
+            UIType = UIType,
+            Name = "abcd"
+        };
 
-        await userService.AddSubscription(user1, SomeUIType, SomeSubscription);
-        await userService.AddSubscription(user2, SomeUIType, SomeSubscription);
-        await userService.AddSubscription(user2, SomeUIType, new("other source", SomeSubscription.Topic));
-        await userService.AddSubscription(user3, SomeUIType, new("other source", "other topic"));
-        await userService.AddSubscription(user3, SomeUIType, new(SomeSubscription.Source, "other topic"));
+        await userService.AddSubscription(user1, TestSub);
+        await userService.AddSubscription(user2, TestSub);
+        await userService.AddSubscription(user2, new("other source", TestSub.Topic));
+        await userService.AddSubscription(user2, new("other source", "other topic"));
+        await userService.AddSubscription(user3, new(TestSub.Source, "other topic"));
 
-        usersToNotify = await userService
-               .UsersToNotify(SomeSubscription);
+        usersToNotify = await userService.UsersToNotify(TestSub);
         Assert.Equal(2, usersToNotify.Count);
-        Assert.Contains(usersToNotify, u => u.UserId == user1);
-        Assert.Contains(usersToNotify, u => u.UserId == user2);
-    }
-
-    public void Dispose()
-    {
-        EmptyTestFilesDirectory();
+        Assert.Contains(usersToNotify, u => u.UserId == user1.UserId);
+        Assert.Contains(usersToNotify, u => u.UserId == user2.UserId);
     }
 }

@@ -1,6 +1,7 @@
 using FakeItEasy;
 using NewsMix.Abstractions;
 using NewsMix.Models;
+using NewsMix.Storage.Entites;
 using NewsMix.UI.Telegram;
 using NewsMix.UI.Telegram.Models;
 
@@ -72,7 +73,8 @@ public partial class TelegramTests : IDisposable
         TUI._telegramApi.SendButtonPress(0, 0);
         await TUI.StartAsync(CancellationToken.None);
 
-        var userSubs = await TUI._userService.Subscriptions(userId);
+        var userSubs = await TUI._userService.Subscriptions
+            (new UserNoSubs { UserId = userId, UIType = TUI.UIType });
         Assert.Single(userSubs);
         var editRequests = TUI._telegramApi.GetEditRequests();
         Assert.Single(editRequests);
@@ -86,14 +88,17 @@ public partial class TelegramTests : IDisposable
         var userChosenSource = TUI._sourcesInformation.Sources[0];
 
         var userId = TUI._telegramApi.SendTextFromUser($"/{userChosenSource}");
-        var userSub = new Subscription(userChosenSource,
-                        TUI._sourcesInformation.TopicsBySources[userChosenSource][0]);
-        await TUI._userService.AddSubscription(userId, TUI.UIType, userSub);
+        var userSub = new Subscription
+        {
+            Source = userChosenSource,
+            Topic = TUI._sourcesInformation.TopicsBySources[userChosenSource][0]
+        };
+        await TUI._userService.AddSubscription(new UserNoSubs { UserId = userId, UIType = TUI.UIType, Name = "1234" }, userSub);
 
         TUI._telegramApi.SendButtonPress(userSub.Topic);
         await TUI.StartAsync(CancellationToken.None);
 
-        var userSubs = await TUI._userService.Subscriptions(userId);
+        var userSubs = await TUI._userService.Subscriptions(new UserNoSubs { UserId = userId, UIType = TUI.UIType });
         Assert.Empty(userSubs);
         var editRequests = TUI._telegramApi.GetEditRequests();
         Assert.Single(editRequests);
@@ -118,7 +123,8 @@ public static partial class TestHelpers
                 Text = command,
                 Sender = new NewsMix.UI.Telegram.Models.User
                 {
-                    Id = 123
+                    Id = 123,
+                    UserName = "1234"
                 },
                 Date_Unix = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds()
             },

@@ -69,9 +69,10 @@ public class FakeTelegramApi : ITelegramApi
                     CallBack = new CallbackQuery
                     {
                         CallbackData = button!.CallBackData,
-                        Sender = new User
+                        Sender = new NewsMix.UI.Telegram.Models.User
                         {
-                            Id = long.Parse(SentRequests.Last().Conversation)
+                            Id = long.Parse(SentRequests.Last().Conversation),
+                            UserName = "1234"
                         }
                     }
                 };

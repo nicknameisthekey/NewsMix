@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
@@ -11,17 +12,15 @@ public class SourcesService : BackgroundService
     private readonly IEnumerable<UserInterface> _userInterfaces;
     private readonly ILogger<SourcesService>? _logger;
 
-    public SourcesService(IEnumerable<Source> sources,
-    PublicationRepository publicationRepository,
-    UserService userService,
-    IEnumerable<UserInterface> userInterfaces,
-    ILogger<SourcesService>? logger = null)
+    public SourcesService(IServiceProvider services)
     {
-        _sources = sources;
-        _publicationRepository = publicationRepository;
-        _userService = userService;
-        _userInterfaces = userInterfaces;
-        _logger = logger;
+        var scope = services.CreateScope();
+        
+        _sources = scope.ServiceProvider.GetRequiredService<IEnumerable<Source>>();
+        _publicationRepository = scope.ServiceProvider.GetRequiredService<PublicationRepository>();
+        _userService = scope.ServiceProvider.GetRequiredService<UserService>();
+        _userInterfaces = scope.ServiceProvider.GetRequiredService<IEnumerable<UserInterface>>();
+        _logger = scope.ServiceProvider.GetRequiredService<ILogger<SourcesService>>();
     }
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -39,14 +38,18 @@ public class SourcesService : BackgroundService
                     if (await _publicationRepository.IsPublicationNew(publication.Url))
                     {
                         var usersToNotify = await _userService
-                            .UsersToNotify(new(source.SourceName, publication.Topic));
+                            .UsersToNotify(new Storage.Entites.Subscription
+                            {
+                                Source = source.SourceName,
+                                Topic = publication.Topic
+                            });
                         foreach (var user in usersToNotify)
                         {
                             var userInterface = _userInterfaces.FirstOrDefault(i => i.UIType == user.UIType);
                             if (userInterface != null)
                             {
                                 await userInterface.NotifyUser(user: user.UserId, publication.Url);
-                                _logger?.LogWarning("Notified user {userId}, publication {publication}", user.UserId, publication);
+                                _logger?.LogWarning("Notified user {user}, publication {publication}", user, publication);
                             }
                         }
                     }

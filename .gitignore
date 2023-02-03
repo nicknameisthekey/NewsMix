@@ -5,6 +5,7 @@
 
 appsettings.Development.json
 botfather-commands.txt
+SqliteDesignTime.cs
 SourcePages/
 # User-specific files
 *.rsuser
