@@ -52,7 +52,7 @@ public class TelegramUI : BackgroundService, UserInterface
         {
             try
             {
-                var user = new UserNoSubs
+                var user = new UserModel
                 {
                     UserId = (update.CallBack?.Sender?.Id ??
                                 update.Message?.Chat?.Id ??
@@ -82,7 +82,7 @@ public class TelegramUI : BackgroundService, UserInterface
         }
     }
 
-    public async Task ProcessCallback(UserNoSubs user, CallbackQuery callback)
+    public async Task ProcessCallback(UserModel user, CallbackQuery callback)
     {
         if (CallbackActions.TryGetValue
                 (user.UserId, out var userCallbacks) == false)
@@ -113,7 +113,7 @@ public class TelegramUI : BackgroundService, UserInterface
         });
     }
 
-    private async Task ProcessTextMessage(UserNoSubs user, Message message)
+    private async Task ProcessTextMessage(UserModel user, Message message)
     {
         if (message.Text == "/start")
         {
@@ -153,7 +153,7 @@ public class TelegramUI : BackgroundService, UserInterface
         });
     }
 
-    private async Task SendTopics(UserNoSubs user, string source)
+    private async Task SendTopics(UserModel user, string source)
     {
         var userSubs = await _userService.Subscriptions(user, source);
 
@@ -173,14 +173,14 @@ public class TelegramUI : BackgroundService, UserInterface
         await SendNewOrEdit(user.UserId, callbacks, "Что интересует?");
     }
 
-    private async Task SubscribeUser(UserNoSubs user, Subscription sub)
+    private async Task SubscribeUser(UserModel user, Subscription sub)
     {
         _logger?.LogWarning("User {user} subscribed to {subscription}", user, sub);
         await _userService.AddSubscription(user, sub);
         await ReplaceKeyboardWithSuccessMessage(user.UserId);
     }
 
-    private async Task UnsubscribeUser(UserNoSubs user, Subscription sub)
+    private async Task UnsubscribeUser(UserModel user, Subscription sub)
     {
         _logger?.LogWarning("User {user} unsubscribed from {subscription}", user, sub);
         await _userService.RemoveSubscription(user, sub);

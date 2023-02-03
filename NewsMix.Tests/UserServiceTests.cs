@@ -5,7 +5,7 @@ using static TestHelpers;
 
 public class UserServiceTests
 {
-    UserNoSubs TestUser => new UserNoSubs { UserId = "12345", UIType = "telegram", Name = "1234" };
+    UserModel TestUser => new UserModel { UserId = "12345", UIType = "telegram", Name = "1234" };
     Subscription TestSub => new Subscription { Source = "source", Topic = "topic" };
 
     [Fact]
@@ -89,19 +89,19 @@ public class UserServiceTests
                         .UsersToNotify(TestSub);
         Assert.Empty(usersToNotify);
         const string UIType = "telegram";
-        var user1 = new UserNoSubs
+        var user1 = new UserModel
         {
             UserId = "user1",
             UIType = UIType,
             Name = "abcd"
         };
-        var user2 = new UserNoSubs
+        var user2 = new UserModel
         {
             UserId = "user2",
             UIType = UIType,
             Name = "abcd"
         };
-        var user3 = new UserNoSubs
+        var user3 = new UserModel
         {
             UserId = "user3",
             UIType = UIType,

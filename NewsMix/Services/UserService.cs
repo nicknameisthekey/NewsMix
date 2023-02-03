@@ -8,34 +8,29 @@ public class UserService
 {
     private readonly UserRepository _userRepository;
     private readonly ILogger<UserService>? _logger;
-    
+
     public UserService(UserRepository userRepository, ILogger<UserService>? logger = null)
     {
         _userRepository = userRepository;
         _logger = logger;
     }
 
-    public async Task<IReadOnlyCollection<UserNoSubs>> UsersToNotify(Subscription sub)
+    public async Task<IReadOnlyCollection<UserModel>> UsersToNotify(Subscription sub)
     {
-        return (await _userRepository.GetToNotify(sub))
-            .Select(u => new UserNoSubs
-            {
-                UserId = u.UserId,
-                UIType = u.UIType
-            }).ToList();
+        return await _userRepository.GetToNotify(sub);
     }
 
-    public async Task AddSubscription(UserNoSubs user, Subscription sub)
+    public async Task AddSubscription(UserModel user, Subscription sub)
     {
         await _userRepository.AddSubscription(user, sub);
     }
 
-    public async Task RemoveSubscription(UserNoSubs user, Subscription sub)
+    public async Task RemoveSubscription(UserModel user, Subscription sub)
     {
         await _userRepository.RemoveSubscription(user, sub);
     }
 
-    public async Task<List<Subscription>> Subscriptions(UserNoSubs user, string? source = null)
+    public async Task<List<Subscription>> Subscriptions(UserModel user, string? source = null)
     {
         var u = await _userRepository.GetOrCreate(user);
         return source switch

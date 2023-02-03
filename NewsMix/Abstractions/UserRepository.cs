@@ -5,13 +5,13 @@ namespace NewsMix.Abstractions;
 
 public interface UserRepository
 {
-    Task<List<UserNoSubs>> GetToNotify(Subscription sub);
+    Task<List<UserModel>> GetToNotify(Subscription sub);
 
-    Task<NewsMix.Storage.Entites.User> GetOrCreate(UserNoSubs user);
+    Task<NewsMix.Storage.Entites.User> GetOrCreate(UserModel user);
 
-    Task AddSubscription(UserNoSubs user, Subscription sub);
+    Task AddSubscription(UserModel user, Subscription sub);
 
-    Task RemoveSubscription(UserNoSubs user, Subscription sub);
+    Task RemoveSubscription(UserModel user, Subscription sub);
 
     Task<int> UsersCount();
 }

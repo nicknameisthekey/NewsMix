@@ -22,13 +22,11 @@ public class SqliteRepositoryTests
     [Fact]
     public async Task Publication_is_new_if_not_in_notified_list()
     {
-        const string someValue = "this is value";
-        var result = await repo.IsPublicationNew(someValue);
-        Assert.True(result);
+        const string publication = "https://123.com";
 
-        await repo.SetPublicationNotified(someValue);
-        result = await repo.IsPublicationNew(someValue);
-        Assert.False(result);
+        Assert.True(await repo.IsPublicationNew(publication));
+        await repo.SetPublicationNotified(publication);
+        Assert.False(await repo.IsPublicationNew(publication));
     }
 
     [Fact]
@@ -49,14 +47,14 @@ public class SqliteRepositoryTests
         const string u1Id = "1234";
         const string u2Id = "4321";
 
-        await repo.GetOrCreate(new UserNoSubs
+        await repo.GetOrCreate(new UserModel
         {
             UserId = u1Id,
             UIType = "Telegram",
             Name = u1Id
         });
 
-        await repo.GetOrCreate(new UserNoSubs
+        await repo.GetOrCreate(new UserModel
         {
             UserId = u2Id,
             UIType = "Telegram",
@@ -81,7 +79,7 @@ public class SqliteRepositoryTests
         ctx.Users.Add(user);
         ctx.SaveChanges();
 
-        var result = await repo.GetOrCreate(new UserNoSubs
+        var result = await repo.GetOrCreate(new UserModel
         {
             UserId = user.UserId,
             UIType = user.UIType,
