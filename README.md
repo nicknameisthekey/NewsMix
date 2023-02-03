@@ -11,10 +11,17 @@ Gives users an ability to create inidividual news feed via subscription to difff
 # Users can use it via
 - [Telegram bot](https://t.me/news_mix_bot) ([Description](/NewsMix/UI/Telegram/Doc.md))
 
-# Commands to add to botfather via /set
+# Supported news sources
+- icy-veins.com
+- noob-club.ru
+- ea.com (only apex currently)
+- habr.com
 
-#TODO 
-- Add Telegram bot description
-- Add `How to run it` to readme
-- Startup customisation
-- More sources!
+# Configuration
+
+```json
+"ConnectionStrings": {
+        "Sqlite": "Data Source=path to .db"
+    },
+"TelegramBotToken":"token here"
+```

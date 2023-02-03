@@ -15,7 +15,7 @@ public class SourcesService : BackgroundService
     public SourcesService(IServiceProvider services)
     {
         var scope = services.CreateScope();
-        
+
         _sources = scope.ServiceProvider.GetRequiredService<IEnumerable<Source>>();
         _publicationRepository = scope.ServiceProvider.GetRequiredService<PublicationRepository>();
         _userService = scope.ServiceProvider.GetRequiredService<UserService>();
@@ -48,7 +48,7 @@ public class SourcesService : BackgroundService
                             var userInterface = _userInterfaces.FirstOrDefault(i => i.UIType == user.UIType);
                             if (userInterface != null)
                             {
-                                await userInterface.NotifyUser(user: user.UserId, publication.Url);
+                                await userInterface.NotifyUser(user: user.UserId, "#" + publication.Topic.Replace(" ", "") + Environment.NewLine + publication.Url);
                                 _logger?.LogWarning("Notified user {user}, publication {publication}", user, publication);
                             }
                         }
