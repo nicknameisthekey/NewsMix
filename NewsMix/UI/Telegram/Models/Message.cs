@@ -13,7 +13,6 @@ public class Message
     public Chat? Chat { get; set; }
     [JsonProperty("date")]
     public long Date_Unix { get; set; }
-    public bool IsChat => Chat.Type == "private";
     public DateTime Date => new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
         .AddSeconds(Date_Unix).ToLocalTime();
 }

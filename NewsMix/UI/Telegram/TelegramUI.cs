@@ -54,12 +54,8 @@ public class TelegramUI : BackgroundService, UserInterface
             {
                 var user = new UserModel
                 {
-                    UserId = (update.CallBack?.Sender?.Id ??
-                                update.Message?.Chat?.Id ??
-                                update.Message!.Sender!.Id)!.ToString(),
-                    Name = update.Message?.Chat?.UserName ??
-                            update.Message?.Sender?.UserName ??
-                            update.CallBack.Sender.UserName,
+                    UserId = update.UserId,
+                    Name = update.UserName,
                     UIType = UIType
                 };
 
@@ -246,7 +242,7 @@ public class TelegramUI : BackgroundService, UserInterface
                 Text = text
             });
             SentMessagesByUser.TryRemove(userId, out _);
-            SentMessagesByUser.TryAdd(userId, response.Result.MessageId);
+            SentMessagesByUser.TryAdd(userId, response.Result!.MessageId);
         }
     }
 }

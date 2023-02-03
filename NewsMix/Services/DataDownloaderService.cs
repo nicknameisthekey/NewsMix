@@ -62,7 +62,7 @@ public class DataDownloaderService : DataDownloader
         }
         catch (Exception e)
         {
-            _logger?.LogError(e, "could now download uri: {uri}");
+            _logger?.LogError(e, "could now download: {uri}", uri);
             return Page.FailedToLoadPage;
         }
     }

@@ -99,7 +99,7 @@ public class SqliteRepository : PublicationRepository, UserRepository
         var subToRemove = u.Subscriptions.FirstOrDefault
             (s => s.Source == sub.Source && s.Topic == sub.Topic);
 
-        u.Subscriptions.Remove(subToRemove); //todo
+        u.Subscriptions.Remove(subToRemove!);
 
         u.UserActions.Add(new UserAction
         {
