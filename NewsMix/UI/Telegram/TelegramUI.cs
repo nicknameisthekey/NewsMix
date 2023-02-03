@@ -118,7 +118,7 @@ public class TelegramUI : BackgroundService, UserInterface
 
         if (message.Text == "/stats")
         {
-            await SendUsersCount(message.Sender!.Id);
+            await SendStats(message.Sender!.Id);
         }
 
         string command = message.Text!.Replace("/", "");
@@ -128,15 +128,24 @@ public class TelegramUI : BackgroundService, UserInterface
         }
     }
 
-    private async Task SendUsersCount(long userId)
+    private async Task SendStats(long userId)
     {
         var userCount = await _statsService.UsersCount();
         var notificationsCount = await _statsService.NotificationsCount();
+        string text = $"🎉 Нас уже {userCount}\\!" + Environment.NewLine +
+                    $"🗞 Новостей отправлено: {notificationsCount}";
+
+        var commitUrl = Environment.GetEnvironmentVariable("GITCOMMITURL");
+        if (commitUrl != null)
+        {
+            text += $"{Environment.NewLine}Собрано из [этого комита]({commitUrl})";
+        }
+
         await _telegramApi.SendMessage(new SendMessageRequest
         {
-            Text = $"🎉 Нас уже {userCount}!" + Environment.NewLine +
-            $"🗞 Новостей отправлено: {notificationsCount}",
-            Conversation = userId.ToString()
+            Text = text,
+            Conversation = userId.ToString(),
+            ParseMode = SendMessageRequest.ParseModeMD2
         });
     }
 

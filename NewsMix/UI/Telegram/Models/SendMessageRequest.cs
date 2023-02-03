@@ -11,4 +11,8 @@ public class SendMessageRequest
     public long? ReplyToMessageId { get; set; }
     [JsonProperty("reply_markup")]
     public InlineKeyboard? Keyboard { get; set; }
+    [JsonProperty("parse_mode")]
+    public string? ParseMode { get; set; }
+
+    public static string ParseModeMD2 => "MarkdownV2";
 }
