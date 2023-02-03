@@ -15,5 +15,15 @@ public class Update
     [JsonIgnore]
     public bool HasTextMessage => Message?.Text != null;
 
+    [JsonIgnore]
+    public string UserId => (CallBack?.Sender?.Id ??
+                             Message?.Chat?.Id ??
+                             Message!.Sender!.Id)!.ToString();
+
+    [JsonIgnore]
+    public string UserName => Message?.Chat?.UserName ??
+                              Message?.Sender?.UserName ??
+                              CallBack?.Sender.UserName ?? "unkown";
+
     public bool OlderThan(int minutes) => Message?.Date < DateTime.Now.AddMinutes(-minutes);
 }

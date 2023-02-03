@@ -18,4 +18,11 @@ TODO: error messages?
 #### User subscriptions buttons
 Conitains current subscriptions, button removes sobscription and sends "success" or "error" message. 
 
+#### Botfather commands to add 
+start - Погнали
+icyveins - Новости с icy-veins.com
+noobclub - Новости с noob-club.ru
+habr - новости с habr.com
+ea  - новости с ea.com
+stats - статистика по боту
 

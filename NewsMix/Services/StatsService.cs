@@ -15,8 +15,7 @@ public class StatsService : IStatsService
 
     public async Task<int> UsersCount()
     {
-        var users = await _userRepository.GetUsers();
-        return users.Count;
+        return await _userRepository.UsersCount();
     }
 
     public async Task<int> NotificationsCount()

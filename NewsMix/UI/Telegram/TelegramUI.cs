@@ -1,9 +1,11 @@
 using System.Collections.Concurrent;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Models;
 using NewsMix.Services;
+using NewsMix.Storage.Entites;
 using NewsMix.UI.Telegram.Models;
 using static CallbackActionType;
 
@@ -16,11 +18,11 @@ public class TelegramUI : BackgroundService, UserInterface
     internal readonly SourcesInformation _sourcesInformation;
     private readonly ILogger<TelegramUI>? _logger;
     public string UIType => "telegram";
-    private ConcurrentDictionary<long, CallbackData[]> CallbackActions = new();
-    private ConcurrentDictionary<long, long> SentMessagesByUser = new();
+    private ConcurrentDictionary<string, CallbackData[]> CallbackActions = new();
+    private ConcurrentDictionary<string, long> SentMessagesByUser = new();
     public const string GreetinMessage = "Привет! Я умею присылать новости из разных источников. Посмотреть варианты можно по кнопке \"Меню\".";
 
-    public TelegramUI(UserService userService,
+    internal TelegramUI(UserService userService,
     ITelegramApi telegramApi,
     SourcesInformation sourcesInformation,
     IStatsService statsService,
@@ -33,22 +35,40 @@ public class TelegramUI : BackgroundService, UserInterface
         _statsService = statsService;
     }
 
+    public TelegramUI(IServiceProvider services)
+    {
+        var scope = services.CreateScope();
+
+        _userService = scope.ServiceProvider.GetRequiredService<UserService>();
+        _telegramApi = scope.ServiceProvider.GetRequiredService<ITelegramApi>();
+        _sourcesInformation = scope.ServiceProvider.GetRequiredService<SourcesInformation>();
+        _logger = scope.ServiceProvider.GetRequiredService<ILogger<TelegramUI>>();
+        _statsService = scope.ServiceProvider.GetRequiredService<IStatsService>();
+    }
+
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
         await foreach (var update in _telegramApi.GetUpdates(ct))
         {
             try
             {
+                var user = new UserModel
+                {
+                    UserId = update.UserId,
+                    Name = update.UserName,
+                    UIType = UIType
+                };
+
                 if (update.IsCallback)
                 {
-                    await ProcessCallback(update);
+                    await ProcessCallback(user, update.CallBack!);
                 }
                 else if (update.HasTextMessage)
                 {
                     if (update.OlderThan(minutes: 3))
                         continue;
 
-                    await ProcessTextMessage(update.Message!);
+                    await ProcessTextMessage(user, update.Message!);
                 }
             }
             catch (Exception e)
@@ -58,25 +78,24 @@ public class TelegramUI : BackgroundService, UserInterface
         }
     }
 
-    public async Task ProcessCallback(Update update)
+    public async Task ProcessCallback(UserModel user, CallbackQuery callback)
     {
-        var userId = update.CallBack!.Sender.Id;
         if (CallbackActions.TryGetValue
-                (userId, out var userCallbacks) == false)
+                (user.UserId, out var userCallbacks) == false)
         {
             //todo fail, we are waiting no callbacks
         }
 
-        CallbackActions.TryRemove(userId, out _);
+        CallbackActions.TryRemove(user.UserId, out _);
 
-        var selectedCallback = userCallbacks!.FirstOrDefault(c => c.ID == update.CallBack.CallbackData);
+        var selectedCallback = userCallbacks!.FirstOrDefault(c => c.ID == callback.CallbackData);
         ArgumentNullException.ThrowIfNull(selectedCallback);
 
         await (selectedCallback.CallbackActionType switch
         {
-            CallbackActionType.SendTopics => SendTopics(userId, selectedCallback.Source),
-            Subscribe => SubscribeUser(userId, new(selectedCallback.Source, selectedCallback.Topic)),
-            Unsubscribe => UnsubscribeUser(userId, new(selectedCallback.Source, selectedCallback.Topic)),
+            CallbackActionType.SendTopics => SendTopics(user, selectedCallback.Source),
+            Subscribe => SubscribeUser(user, new(selectedCallback.Source, selectedCallback.Topic)),
+            Unsubscribe => UnsubscribeUser(user, new(selectedCallback.Source, selectedCallback.Topic)),
             _ => throw new Exception()
         });
     }
@@ -90,7 +109,7 @@ public class TelegramUI : BackgroundService, UserInterface
         });
     }
 
-    private async Task ProcessTextMessage(Message message)
+    private async Task ProcessTextMessage(UserModel user, Message message)
     {
         if (message.Text == "/start")
         {
@@ -105,7 +124,7 @@ public class TelegramUI : BackgroundService, UserInterface
         string command = message.Text!.Replace("/", "");
         if (_sourcesInformation.Sources.Any(f => f == command))
         {
-            await SendTopics(message.Sender!.Id, command);
+            await SendTopics(user, command);
         }
     }
 
@@ -130,9 +149,9 @@ public class TelegramUI : BackgroundService, UserInterface
         });
     }
 
-    private async Task SendTopics(long userId, string source)
+    private async Task SendTopics(UserModel user, string source)
     {
-        var userSubs = await _userService.Subscriptions(userId.ToString(), source);
+        var userSubs = await _userService.Subscriptions(user, source);
 
         var callbacks = _sourcesInformation.TopicsBySources[source]
             .Select(topics => new CallbackData
@@ -144,34 +163,34 @@ public class TelegramUI : BackgroundService, UserInterface
                 Text = topics
             }).ToArray();
 
-        CallbackActions.TryRemove(userId, out var _);
-        CallbackActions.TryAdd(userId, callbacks);
+        CallbackActions.TryRemove(user.UserId, out var _);
+        CallbackActions.TryAdd(user.UserId, callbacks);
 
-        await SendNewOrEdit(userId, callbacks, "Что интересует?");
+        await SendNewOrEdit(user.UserId, callbacks, "Что интересует?");
     }
 
-    private async Task SubscribeUser(long userId, Subscription sub)
+    private async Task SubscribeUser(UserModel user, Subscription sub)
     {
-        _logger?.LogWarning("User {userId} subscribed to {subscription}", userId, sub);
-        await _userService.AddSubscription(userId.ToString(), UIType, sub);
-        await ReplaceKeyboardWithSuccessMessage(userId);
+        _logger?.LogWarning("User {user} subscribed to {subscription}", user, sub);
+        await _userService.AddSubscription(user, sub);
+        await ReplaceKeyboardWithSuccessMessage(user.UserId);
     }
 
-    private async Task UnsubscribeUser(long userId, Subscription sub)
+    private async Task UnsubscribeUser(UserModel user, Subscription sub)
     {
-        _logger?.LogWarning("User {userId} unsubscribed from {subscription}", userId, sub);
-        await _userService.RemoveSubscription(userId.ToString(), sub);
-        await ReplaceKeyboardWithSuccessMessage(userId);
+        _logger?.LogWarning("User {user} unsubscribed from {subscription}", user, sub);
+        await _userService.RemoveSubscription(user, sub);
+        await ReplaceKeyboardWithSuccessMessage(user.UserId);
     }
 
-    private async Task ReplaceKeyboardWithSuccessMessage(long userId)
+    private async Task ReplaceKeyboardWithSuccessMessage(string userId)
     {
         if (SentMessagesByUser.TryRemove(userId, out var messageId))
         {
             await _telegramApi.EditMessage(new EditMessageText
             {
                 MessageId = messageId,
-                ChatId = userId,
+                ChatId = long.Parse(userId),
                 Text = "Успешно"
             });
         }
@@ -202,14 +221,14 @@ public class TelegramUI : BackgroundService, UserInterface
         return keyboard;
     }
 
-    private async Task SendNewOrEdit(long userId, CallbackData[] callbacks, string text)
+    private async Task SendNewOrEdit(string userId, CallbackData[] callbacks, string text)
     {
         if (SentMessagesByUser.TryGetValue(userId, out var messageId))
         {
             var response = await _telegramApi.EditMessage(new EditMessageText
             {
                 MessageId = messageId,
-                ChatId = userId,
+                ChatId = long.Parse(userId),
                 Keyboard = CreateKeyboard(callbacks),
                 Text = text
             });
@@ -223,7 +242,7 @@ public class TelegramUI : BackgroundService, UserInterface
                 Text = text
             });
             SentMessagesByUser.TryRemove(userId, out _);
-            SentMessagesByUser.TryAdd(userId, response.Result.MessageId);
+            SentMessagesByUser.TryAdd(userId, response.Result!.MessageId);
         }
     }
 }

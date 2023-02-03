@@ -1,13 +1,12 @@
 using FakeItEasy;
 using NewsMix.Abstractions;
 using NewsMix.Models;
+using NewsMix.Storage.Entites;
 using NewsMix.UI.Telegram;
 using NewsMix.UI.Telegram.Models;
 
-public partial class TelegramTests : IDisposable
+public partial class TelegramTests
 {
-    const long SomeUserID = 1234;
-
     private TelegramUI NewTelegramUI()
         => new TelegramUI(TestHelpers.NewUserService, new FakeTelegramApi(), new FakeSourcesInformation(), A.Fake<IStatsService>());
 
@@ -68,11 +67,11 @@ public partial class TelegramTests : IDisposable
         var TUI = NewTelegramUI();
         var userChosenSource = TUI._sourcesInformation.Sources[0];
 
-        var userId = TUI._telegramApi.SendTextFromUser($"/{userChosenSource}");
+        var user = TUI._telegramApi.SendTextFromUser($"/{userChosenSource}");
         TUI._telegramApi.SendButtonPress(0, 0);
         await TUI.StartAsync(CancellationToken.None);
 
-        var userSubs = await TUI._userService.Subscriptions(userId);
+        var userSubs = await TUI._userService.Subscriptions(user);
         Assert.Single(userSubs);
         var editRequests = TUI._telegramApi.GetEditRequests();
         Assert.Single(editRequests);
@@ -85,30 +84,27 @@ public partial class TelegramTests : IDisposable
         var TUI = NewTelegramUI();
         var userChosenSource = TUI._sourcesInformation.Sources[0];
 
-        var userId = TUI._telegramApi.SendTextFromUser($"/{userChosenSource}");
-        var userSub = new Subscription(userChosenSource,
-                        TUI._sourcesInformation.TopicsBySources[userChosenSource][0]);
-        await TUI._userService.AddSubscription(userId, TUI.UIType, userSub);
+        var user = TUI._telegramApi.SendTextFromUser($"/{userChosenSource}");
+        var userSub = new Subscription
+        {
+            Source = userChosenSource,
+            Topic = TUI._sourcesInformation.TopicsBySources[userChosenSource][0]
+        };
+        await TUI._userService.AddSubscription(user, userSub);
 
         TUI._telegramApi.SendButtonPress(userSub.Topic);
         await TUI.StartAsync(CancellationToken.None);
 
-        var userSubs = await TUI._userService.Subscriptions(userId);
-        Assert.Empty(userSubs);
+        Assert.Empty(await TUI._userService.Subscriptions(user));
         var editRequests = TUI._telegramApi.GetEditRequests();
         Assert.Single(editRequests);
         Assert.Null(editRequests[0].Keyboard);
-    }
-
-    public void Dispose()
-    {
-        TestHelpers.EmptyTestFilesDirectory();
     }
 }
 
 public static partial class TestHelpers
 {
-    public static string SendTextFromUser(this ITelegramApi api, string command)
+    public static UserModel SendTextFromUser(this ITelegramApi api, string command)
     {
         var fakeApi = (FakeTelegramApi)api;
         Update update = new Update
@@ -118,13 +114,19 @@ public static partial class TestHelpers
                 Text = command,
                 Sender = new NewsMix.UI.Telegram.Models.User
                 {
-                    Id = 123
+                    Id = 123,
+                    UserName = "1234"
                 },
                 Date_Unix = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds()
             },
         };
         fakeApi.AddUpdate(update);
-        return update.Message.Sender.Id.ToString();
+        return new UserModel
+        {
+            UserId = update.Message.Sender.Id.ToString(),
+            Name = update.Message.Sender.UserName,
+            UIType = "telegram"
+        };
     }
 
     public static ITelegramApi SendButtonPress(this ITelegramApi api, int row, int col)

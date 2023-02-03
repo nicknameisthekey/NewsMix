@@ -8,14 +8,14 @@ public class Program
     public static async Task Main()
     {
         var host = Host.CreateDefaultBuilder()
-                       .ConfigureServices(s =>
+                       .ConfigureServices((ctx, services) =>
                           {
-                              s.AddNewsMix(true);
-                              s.AddLogging(b => b
+                              services.AddNewsMix(ctx.Configuration, true);
+                              services.AddLogging(b => b
                                   .AddDebug()
                                   .AddConsole());
 
-                              s.Configure<HostOptions>(options =>
+                              services.Configure<HostOptions>(options =>
                                 {
                                     options.ShutdownTimeout = TimeSpan.FromSeconds(2);
                                 });
