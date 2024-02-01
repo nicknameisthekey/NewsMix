@@ -3,34 +3,25 @@ using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Models;
 
-public class EaApex : Source
+public class EaApex(DataDownloader dataDownloader, ILogger<EaApex>? logger = null) : Source
 {
     public string SourceName => "ea";
 
-    public string[] Topics => new string[] { "Apex" };
+    public string[] Topics => ["Apex"];
 
     private const string url = "https://www.ea.com/ru-ru/games/apex-legends/news#news";
 
-    private readonly DataDownloader _dataDownloader;
-    private readonly ILogger<EaApex>? _logger;
-
-    public EaApex(DataDownloader dataDownloader, ILogger<EaApex>? logger = null)
-    {
-        _dataDownloader = dataDownloader;
-        _logger = logger;
-    }
-
     public async Task<IReadOnlyCollection<Publication>> GetPublications()
     {
-        var page = await _dataDownloader.GetPage(url, DownloadMethod.HttpClient);
+        var page = await dataDownloader.GetPage(url, DownloadMethod.HttpClient);
         if (page.FailedToLoad)
         {
-            _logger?.LogError("failed to load {url}", url);
+            logger?.LogError("failed to load {url}", url);
             return new List<Publication>();
         }
 
         var allNodes = page.HTMLRoot.SelectNodes("//ea-cta");
-        return allNodes.Select(n => GetUrl(n))
+        return allNodes.Select(GetUrl)
             .Where(u => string.IsNullOrEmpty(u) == false)
             .Distinct()
             .Select(u => new Publication
@@ -40,17 +31,17 @@ public class EaApex : Source
             }).ToList();
     }
 
-    private string? GetUrl(HtmlNode node)
+    private static string? GetUrl(HtmlNode node)
     {
         if (node.ChildNodes.Count() != 3)
             return null;
 
         var attribute = node.ChildNodes[1].GetAttributes()
-              .FirstOrDefault(a => a.Name == "href");
+            .FirstOrDefault(a => a.Name == "href");
 
         if (attribute == null)
             return null;
-            
+
         var url = attribute?.Value;
 
         if (url?.Contains("/games/apex-legends/news/") == false)

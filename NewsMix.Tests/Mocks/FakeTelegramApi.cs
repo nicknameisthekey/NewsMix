@@ -1,5 +1,7 @@
 using NewsMix.UI.Telegram.Models;
-using System.Linq;
+
+namespace NewsMix.Tests.Mocks;
+
 public class ButtonPress
 {
     public (int Row, int Col) ButtonNumber { get; init; }
@@ -17,8 +19,8 @@ public class FakeTelegramApi : ITelegramApi
 {
     private readonly List<object> _updates = new();
 
-    public List<SendMessageRequest> SentRequests = new();
-    public List<EditMessageText> EditedMessages = new();
+    public readonly List<SendMessageRequest> SentRequests = new();
+    public readonly List<EditMessageText> EditedMessages = new();
     private int currentResultMessageId = 0;
 
     public FakeTelegramApi AddUpdate(object update)
@@ -55,13 +57,13 @@ public class FakeTelegramApi : ITelegramApi
                 if (cu.ButtonWithText == null)
                 {
                     button = SentRequests.Last().Keyboard!
-                       .Keyboard[cu.ButtonNumber.Col, cu.ButtonNumber.Row] as InlineKeyboardButton;
+                        .Keyboard[cu.ButtonNumber.Col, cu.ButtonNumber.Row] as InlineKeyboardButton;
                 }
                 else
                 {
                     button = SentRequests.Last().Keyboard!.Keyboard
-                    .Cast<InlineKeyboardButton>()
-                    .First(k => k.Text.Contains(cu.ButtonWithText));
+                        .Cast<InlineKeyboardButton>()
+                        .First(k => k.Text.Contains(cu.ButtonWithText));
                 }
 
                 yield return new Update

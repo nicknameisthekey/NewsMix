@@ -5,7 +5,7 @@ using NewsMix.Models;
 
 namespace NewsMix.Sources;
 
-public class NoobClub : Source
+public class NoobClub(DataDownloader dataDownloader, ILogger<NoobClub>? logger = null) : Source
 {
     #region topics
     public const string Topic_overwatch = "overwatch";
@@ -22,8 +22,6 @@ public class NoobClub : Source
     public string SourceName => "noobclub";
     const string siteUrl = "https://www.noob-club.ru";
     private static readonly Dictionary<int, string> pagesUrls = new();
-    private readonly DataDownloader _dataDownloader;
-    private readonly ILogger<NoobClub>? _logger;
 
     static NoobClub()
     {
@@ -31,23 +29,17 @@ public class NoobClub : Source
             pagesUrls.Add(i, $"{siteUrl}/index.php?frontpage;p={(i - 1) * 15}");
     }
 
-    public NoobClub(DataDownloader dataDownloader, ILogger<NoobClub>? logger = null)
-    {
-        _dataDownloader = dataDownloader;
-        _logger = logger;
-    }
-
     public async Task<IReadOnlyCollection<Publication>> GetPublications()
     {
         var result = new List<Publication>();
         foreach (var (pageNum, url) in pagesUrls)
         {
-            _logger?.LogInformation("{SourceName}: loading page {pageNum}", SourceName, pageNum);
+            logger?.LogInformation("{SourceName}: loading page {pageNum}", SourceName, pageNum);
 
-            var page = await _dataDownloader.GetPage(url, DownloadMethod.HttpClient);
+            var page = await dataDownloader.GetPage(url, DownloadMethod.HttpClient);
             if (page.FailedToLoad)
             {
-                _logger?.LogWarning("failed to load {url}", url);
+                logger?.LogWarning("failed to load {url}", url);
                 continue;
             }
 

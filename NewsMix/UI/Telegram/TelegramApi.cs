@@ -19,7 +19,7 @@ public class TelegramApi : ITelegramApi
     private readonly ILogger<TelegramApi>? _logger;
 
 #if DEBUG
-    private readonly List<Update> updatesLog = new();
+    private readonly List<Update> updatesLog = new(); //todo: log this to file on condition
 #endif
     public TelegramApi(IConfiguration configuration, IHttpClientFactory httpClientFactory, ILogger<TelegramApi>? logger)
     {

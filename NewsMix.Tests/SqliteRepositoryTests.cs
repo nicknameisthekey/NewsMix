@@ -1,12 +1,13 @@
-using Microsoft.EntityFrameworkCore;
 using NewsMix.Models;
 using NewsMix.Storage.Entites;
-using static TestHelpers;
+using static NewsMix.Tests.TestHelpers;
+
+namespace NewsMix.Tests;
 
 public class SqliteRepositoryTests
 {
-    private SqliteContext ctx;
-    private SqliteRepository repo;
+    private readonly SqliteContext ctx;
+    private readonly SqliteRepository repo;
     public SqliteRepositoryTests() => (repo, ctx) = CreateDb();
 
     [Fact]

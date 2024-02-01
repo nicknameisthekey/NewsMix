@@ -1,4 +1,5 @@
 using NewsMix.Sources;
+using NewsMix.Tests.Mocks;
 
 namespace NewsMix.Tests;
 

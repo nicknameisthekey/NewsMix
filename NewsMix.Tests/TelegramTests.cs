@@ -2,13 +2,16 @@ using FakeItEasy;
 using NewsMix.Abstractions;
 using NewsMix.Models;
 using NewsMix.Storage.Entites;
+using NewsMix.Tests.Mocks;
 using NewsMix.UI.Telegram;
 using NewsMix.UI.Telegram.Models;
 
-public partial class TelegramTests
+namespace NewsMix.Tests;
+
+public class TelegramTests
 {
-    private TelegramUI NewTelegramUI()
-        => new TelegramUI(TestHelpers.NewUserService, new FakeTelegramApi(), new FakeSourcesInformation(), A.Fake<IStatsService>());
+    private static TelegramUI NewTelegramUI()
+        => new(TestHelpers.NewUserService, new FakeTelegramApi(), new FakeSourcesInformation(), A.Fake<IStatsService>());
 
     [Fact]
     public async Task Old_text_messages_ignored()
@@ -58,7 +61,7 @@ public partial class TelegramTests
         var sentRequests = TUI._telegramApi.GetSentRequests();
         Assert.Single(sentRequests);
         Assert.Equal(TUI._sourcesInformation.TopicsBySources[userChosenSource].Length,
-                     sentRequests[0]?.Keyboard?.Keyboard.Length);
+            sentRequests[0]?.Keyboard?.Keyboard.Length);
     }
 
     [Fact]
