@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using NewsMix.Storage.Entites;
 
+namespace NewsMix.Storage;
+
 public class SqliteContext : DbContext
 {
     public SqliteContext(DbContextOptions<SqliteContext> options) : base(options) { }

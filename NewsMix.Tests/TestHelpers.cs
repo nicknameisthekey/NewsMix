@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NewsMix.Services;
+using NewsMix.Storage;
 
 namespace NewsMix.Tests;
 

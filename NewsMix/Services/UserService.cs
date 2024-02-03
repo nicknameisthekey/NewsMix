@@ -4,6 +4,7 @@ using NewsMix.Storage.Entites;
 using NewsMix.Models;
 
 namespace NewsMix.Services;
+
 public class UserService(UserRepository userRepository, ILogger<UserService>? logger = null)
 {
     private readonly ILogger<UserService>? _logger = logger;
@@ -23,13 +24,9 @@ public class UserService(UserRepository userRepository, ILogger<UserService>? lo
         await userRepository.RemoveSubscription(user, sub);
     }
 
-    public async Task<List<Subscription>> Subscriptions(UserModel user, string? source = null)
+    public async Task<List<Subscription>> Subscriptions(UserModel user, string source)
     {
         var u = await userRepository.GetOrCreate(user);
-        return source switch
-        {
-            null => u.Subscriptions,
-            not null => u.Subscriptions.Where(s => s.Source == source).ToList()
-        };
+        return u.Subscriptions.Where(s => s.Source == source).ToList();
     }
 }

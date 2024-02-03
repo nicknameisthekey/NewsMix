@@ -1,4 +1,4 @@
-using NewsMix.Sources;
+using NewsMix.NewsSources;
 using NewsMix.Tests.Mocks;
 
 namespace NewsMix.Tests;
@@ -16,13 +16,13 @@ public class SourcesTests
 
         var items = await nk.GetPublications();
         Assert.Equal(15, items.Count);
-        var wowItems = items.Where(i => i.Topic == Sources.NoobClub.Topic_wow);
+        var wowItems = items.Where(i => i.Topic == NewsSources.NoobClub.Topic_wow);
         Assert.Equal(9, wowItems.Count());
 
-        var diabloItems = items.Where(i => i.Topic == Sources.NoobClub.Topic_diablo);
+        var diabloItems = items.Where(i => i.Topic == NewsSources.NoobClub.Topic_diablo);
         Assert.Equal(3, diabloItems.Count());
 
-        var wc3Items = items.Where(i => i.Topic == Sources.NoobClub.Topic_w3);
+        var wc3Items = items.Where(i => i.Topic == NewsSources.NoobClub.Topic_w3);
         Assert.Single(wc3Items);
     }
 

@@ -2,6 +2,6 @@ namespace NewsMix.Abstractions;
 
 public interface UserInterface
 {
-    string UIType { get; }
+    string UIName { get; }
     Task NotifyUser(string user, string message);
 }

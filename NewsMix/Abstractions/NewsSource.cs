@@ -2,9 +2,9 @@ using NewsMix.Models;
 
 namespace NewsMix.Abstractions;
 
-public interface Source
+public interface NewsSource
 {
-    string SourceName { get; }
+    string Name { get; }
     string[] Topics { get; }
     Task<IReadOnlyCollection<Publication>> GetPublications();
 }

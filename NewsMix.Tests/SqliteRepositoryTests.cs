@@ -1,4 +1,5 @@
 using NewsMix.Models;
+using NewsMix.Storage;
 using NewsMix.Storage.Entites;
 using static NewsMix.Tests.TestHelpers;
 

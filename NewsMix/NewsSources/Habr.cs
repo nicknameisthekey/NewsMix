@@ -1,14 +1,14 @@
-using NewsMix.Abstractions;
 using Microsoft.Extensions.Logging;
+using NewsMix.Abstractions;
 using NewsMix.Models;
 
-namespace NewsMix.Sources;
-public class Habr : Source
+namespace NewsMix.NewsSources;
+public class Habr : NewsSource
 {
     const string rssUrl = "https://habr.com/en/rss/all/top25/?fl=en%2Cru";
     private const string rating25Topic = "Rating > 25";
 
-    public string SourceName => "habr";
+    public string Name => "habr";
 
     public string[] Topics => new[] { rating25Topic };
 

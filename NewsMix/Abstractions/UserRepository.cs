@@ -7,7 +7,7 @@ public interface UserRepository
 {
     Task<List<UserModel>> GetToNotify(Subscription sub);
 
-    Task<NewsMix.Storage.Entites.User> GetOrCreate(UserModel user);
+    Task<User> GetOrCreate(UserModel user);
 
     Task AddSubscription(UserModel user, Subscription sub);
 

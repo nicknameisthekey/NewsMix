@@ -3,7 +3,9 @@ using NewsMix.Abstractions;
 using NewsMix.Models;
 using NewsMix.Storage.Entites;
 
-public class SqliteRepository : PublicationRepository, UserRepository
+namespace NewsMix.Storage;
+
+public class SqliteRepository : PublicationsRepository, UserRepository
 {
     private readonly SqliteContext _context;
 
@@ -12,10 +14,10 @@ public class SqliteRepository : PublicationRepository, UserRepository
         _context = context;
     }
 
-    public async Task<bool> IsPublicationNew(string publicationUniqeID)
+    public async Task<bool> IsPublicationNew(string publicationUniqueID)
     {
         return (await _context.NotifiedPublications.AnyAsync
-            (p => p.PublicationUniqeID == publicationUniqeID)) == false;
+            (p => p.PublicationUniqeID == publicationUniqueID)) == false;
     }
 
     public async Task<int> NotificationCount()
@@ -23,14 +25,14 @@ public class SqliteRepository : PublicationRepository, UserRepository
         return await _context.NotifiedPublications.CountAsync();
     }
 
-    public async Task SetPublicationNotified(string publicationUniqeID)
+    public async Task SetPublicationNotified(string publicationUniqueID)
     {
-        if (await IsPublicationNew(publicationUniqeID) == false)
+        if (await IsPublicationNew(publicationUniqueID) == false)
             return;
 
         _context.NotifiedPublications.Add(new NotifiedPublication
         {
-            PublicationUniqeID = publicationUniqeID,
+            PublicationUniqeID = publicationUniqueID,
             CreatedAt = DateTime.Now
         });
         await _context.SaveChangesAsync();
@@ -39,10 +41,10 @@ public class SqliteRepository : PublicationRepository, UserRepository
     public async Task<List<UserModel>> GetToNotify(Subscription sub)
     {
         return (await _context.Users
-        .Include(u => u.Subscriptions)
-        .ToListAsync()) //deliberately
-        .Where(u => u.Subscriptions.Any(s => s.SameAs(sub)))
-        .Select(UserModel.FromEntity).ToList();
+                .Include(u => u.Subscriptions)
+                .ToListAsync()) //deliberately
+            .Where(u => u.Subscriptions.Any(s => s.SameAs(sub)))
+            .Select(UserModel.FromEntity).ToList();
     }
 
     public async Task<User> GetOrCreate(UserModel userToFind)

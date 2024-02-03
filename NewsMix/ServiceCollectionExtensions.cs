@@ -1,9 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using NewsMix.Abstractions;
-using NewsMix.Sources;
 using NewsMix.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using NewsMix.NewsSources;
+using NewsMix.Storage;
 using Telegram.Bot;
 
 namespace NewsMix;
@@ -21,14 +22,14 @@ public static class SerivceCollectionExtensions
         }
 
         services.AddScoped<UserService>();
-        services.AddScoped<Source, NoobClub>();
+        services.AddScoped<NewsSource, NoobClub>();
         services.AddScoped<IStatsService, StatsService>();
-        services.AddScoped<Source, IcyVeins>();
-        services.AddScoped<Source, EaApex>();
-        services.AddScoped<Source, Habr>();
+        services.AddScoped<NewsSource, IcyVeins>();
+        services.AddScoped<NewsSource, EaApex>();
+        services.AddScoped<NewsSource, Habr>();
         services.AddSingleton<UserInterface, UI.Telegram.Telegram>();
         services.AddScoped<UserRepository, SqliteRepository>();
-        services.AddScoped<PublicationRepository, SqliteRepository>();
+        services.AddScoped<PublicationsRepository, SqliteRepository>();
         services.AddScoped<SourcesInformation, SourcessInformationService>();
         services.AddScoped<DataDownloader, DataDownloaderService>();
 

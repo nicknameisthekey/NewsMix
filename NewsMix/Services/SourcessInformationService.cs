@@ -8,11 +8,11 @@ public class SourcessInformationService : SourcesInformation
 
     public string[] Sources { get; init; }
 
-    public SourcessInformationService(IEnumerable<Source> sources)
+    public SourcessInformationService(IEnumerable<NewsSource> sources)
     {
         TopicsBySources = sources
-            .ToDictionary(g => g.SourceName, f => f.Topics);
+            .ToDictionary(g => g.Name, f => f.Topics);
 
-        Sources = sources.Select(f => f.SourceName).ToArray();
+        Sources = sources.Select(f => f.Name).ToArray();
     }
 }

@@ -17,10 +17,10 @@ namespace NewsMix.UI.Telegram;
 
 public class Telegram : BackgroundService, UserInterface
 {
-    public string UIType => "telegram";
+    public string UIName => "telegram";
 
-    private ConcurrentDictionary<string, CallbackData[]> CallbackActions = new();
-    private ConcurrentDictionary<string, long> SentMessagesByUser = new();
+    private readonly ConcurrentDictionary<string, CallbackData[]> CallbackActions = new();
+    private readonly ConcurrentDictionary<string, long> SentMessagesByUser = new();
     private readonly ITelegramBotClient _client;
     private readonly SourcesInformation _sourcesInformation;
     private readonly IStatsService _statsService;
@@ -79,7 +79,7 @@ public class Telegram : BackgroundService, UserInterface
             Name = update.CallbackQuery?.From?.Username ??
                    update.Message?.Chat?.Username ??
                    update.Message!.From!.Username ?? "unknown",
-            UIType = UIType
+            UIType = UIName
         };
 
         var task = update.Type switch

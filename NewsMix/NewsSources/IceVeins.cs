@@ -3,8 +3,8 @@ using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Models;
 
-namespace NewsMix.Sources;
-public class IcyVeins : Source
+namespace NewsMix.NewsSources;
+public class IcyVeins : NewsSource
 {
     #region topics
     public const string Topic_wow = "wow";
@@ -15,7 +15,7 @@ public class IcyVeins : Source
     public string[] Topics => new[] { Topic_wow_classic, Topic_wow, Topic_diablo, Topic_warcraft, Topic_lost_arc };
     #endregion
 
-    public string SourceName => "icyveins";
+    public string Name => "icyveins";
     const string siteUrl = "https://www.icy-veins.com";
     private readonly DataDownloader _dataDownloader;
     private readonly ILogger<IcyVeins>? _logger;

@@ -3,9 +3,11 @@ using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Models;
 
-public class EaApex(DataDownloader dataDownloader, ILogger<EaApex>? logger = null) : Source
+namespace NewsMix.NewsSources;
+
+public class EaApex(DataDownloader dataDownloader, ILogger<EaApex>? logger = null) : NewsSource
 {
-    public string SourceName => "ea";
+    public string Name => "ea";
 
     public string[] Topics => ["Apex"];
 

@@ -3,9 +3,9 @@ using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Models;
 
-namespace NewsMix.Sources;
+namespace NewsMix.NewsSources;
 
-public class NoobClub(DataDownloader dataDownloader, ILogger<NoobClub>? logger = null) : Source
+public class NoobClub(DataDownloader dataDownloader, ILogger<NoobClub>? logger = null) : NewsSource
 {
     #region topics
     public const string Topic_overwatch = "overwatch";
@@ -19,7 +19,7 @@ public class NoobClub(DataDownloader dataDownloader, ILogger<NoobClub>? logger =
     public string[] Topics => new[] { Topic_hs, Topic_overwatch, Topic_wow_classic, Topic_wow, Topic_w3, Topic_blizzard, Topic_diablo };
     #endregion
 
-    public string SourceName => "noobclub";
+    public string Name => "noobclub";
     const string siteUrl = "https://www.noob-club.ru";
     private static readonly Dictionary<int, string> pagesUrls = new();
 
@@ -34,7 +34,7 @@ public class NoobClub(DataDownloader dataDownloader, ILogger<NoobClub>? logger =
         var result = new List<Publication>();
         foreach (var (pageNum, url) in pagesUrls)
         {
-            logger?.LogInformation("{SourceName}: loading page {pageNum}", SourceName, pageNum);
+            logger?.LogInformation("{SourceName}: loading page {pageNum}", Name, pageNum);
 
             var page = await dataDownloader.GetPage(url, DownloadMethod.HttpClient);
             if (page.FailedToLoad)
