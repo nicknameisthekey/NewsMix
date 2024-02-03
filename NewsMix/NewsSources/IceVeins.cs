@@ -12,7 +12,6 @@ public class IcyVeins : NewsSource
     public const string Topic_diablo = "diablo";
     public const string Topic_warcraft = "warcraft 3";
     public const string Topic_lost_arc = "lost ark";
-    public string[] Topics => new[] { Topic_wow_classic, Topic_wow, Topic_diablo, Topic_warcraft, Topic_lost_arc };
     #endregion
 
     public string Name => "icyveins";

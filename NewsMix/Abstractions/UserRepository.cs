@@ -1,5 +1,5 @@
 using NewsMix.Models;
-using NewsMix.Storage.Entites;
+using NewsMix.Storage.Entities;
 
 namespace NewsMix.Abstractions;
 

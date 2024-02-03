@@ -8,6 +8,7 @@ namespace NewsMix.NewsSources;
 public class NoobClub(DataDownloader dataDownloader, ILogger<NoobClub>? logger = null) : NewsSource
 {
     #region topics
+
     public const string Topic_overwatch = "overwatch";
     public const string Topic_wow = "wow";
     public const string Topic_wow_classic = "wow_classic";
@@ -16,7 +17,6 @@ public class NoobClub(DataDownloader dataDownloader, ILogger<NoobClub>? logger =
     public const string Topic_blizzard = "blizzard";
     public const string Topic_diablo = "diablo";
 
-    public string[] Topics => new[] { Topic_hs, Topic_overwatch, Topic_wow_classic, Topic_wow, Topic_w3, Topic_blizzard, Topic_diablo };
     #endregion
 
     public string Name => "noobclub";

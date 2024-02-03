@@ -8,8 +8,7 @@ namespace NewsMix.NewsSources;
 public class EaApex(DataDownloader dataDownloader, ILogger<EaApex>? logger = null) : NewsSource
 {
     public string Name => "ea";
-
-    public string[] Topics => ["Apex"];
+    public const string ApexTopic = "apex";
 
     private const string url = "https://www.ea.com/ru-ru/games/apex-legends/news#news";
 

@@ -8,7 +8,7 @@ using NewsMix.Storage;
 using Telegram.Bot;
 
 namespace NewsMix;
-public static class SerivceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static void AddNewsMix(this IServiceCollection services, IConfiguration config, bool addHosted)
     {
@@ -30,7 +30,6 @@ public static class SerivceCollectionExtensions
         services.AddSingleton<UserInterface, UI.Telegram.Telegram>();
         services.AddScoped<UserRepository, SqliteRepository>();
         services.AddScoped<PublicationsRepository, SqliteRepository>();
-        services.AddScoped<SourcesInformation, SourcessInformationService>();
         services.AddScoped<DataDownloader, DataDownloaderService>();
 
         services.AddSingleton<ITelegramBotClient>(s =>
