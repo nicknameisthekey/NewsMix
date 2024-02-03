@@ -1,12 +1,27 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NewsMix.Services;
 
 namespace NewsMix.Tests;
 
-public static partial class TestHelpers
+public static class TestHelpers
 {
-    public static UserService NewUserService => new (CreateDb().repo);
+    public static void ReplaceWithSingleton<T>(this IServiceCollection sc, T newObj) where T : class
+    {
+        sc.Remove(sc.First(d => d.ServiceType == typeof(T)));
+        sc.AddSingleton<T>(newObj);
+    }
+
+    public static IConfiguration MockConfig => new ConfigurationBuilder()
+        .AddInMemoryCollection(new Dictionary<string, string>
+        {
+            { "sqlite", "sqlite" },
+        }!)
+        .Build();
+
+    public static UserService NewUserService => new(CreateDb().repo);
 
     public static (SqliteRepository repo, SqliteContext ctx) CreateDb()
     {
