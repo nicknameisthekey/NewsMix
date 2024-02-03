@@ -24,9 +24,13 @@ public class UserService(UserRepository userRepository, ILogger<UserService>? lo
         await userRepository.RemoveSubscription(user, sub);
     }
 
-    public async Task<List<Subscription>> Subscriptions(UserModel user, string source)
+    public async Task<List<Subscription>> Subscriptions(UserModel user, string? source = null)
     {
         var u = await userRepository.GetOrCreate(user);
-        return u.Subscriptions.Where(s => s.Source == source).ToList();
+        return source switch
+        {
+            not null => u.Subscriptions.Where(s => s.Source == source).ToList(),
+            null => u.Subscriptions
+        };
     }
 }

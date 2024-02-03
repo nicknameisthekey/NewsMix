@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsMix.Storage;
 
@@ -10,22 +11,25 @@ using NewsMix.Storage;
 namespace NewsMix.Migrations
 {
     [DbContext(typeof(SqliteContext))]
-    partial class SqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20240203185638_add_active_inline_queries")]
+    partial class add_active_inline_queries
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
 
             modelBuilder.Entity("NewsMix.Storage.Entities.ActiveInlineQuery", b =>
                 {
-                    b.Property<string>("QueryID")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("CallbackActionType")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ExternalUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("QueryID")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -36,8 +40,6 @@ namespace NewsMix.Migrations
                     b.Property<string>("TopicInternalName")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.HasKey("QueryID");
 
                     b.ToTable("ActiveInlineQueries");
                 });

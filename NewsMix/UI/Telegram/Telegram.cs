@@ -22,7 +22,6 @@ public class Telegram : BackgroundService, UserInterface
 {
     public string UIName => "telegram";
 
-    private readonly ConcurrentDictionary<string, CallbackData[]> CallbackActions = new();
     private readonly ConcurrentDictionary<string, long> SentMessagesByUser = new();
     private readonly ITelegramBotClient _client;
     private readonly IStatsService _statsService;
@@ -73,49 +72,61 @@ public class Telegram : BackgroundService, UserInterface
 
     public async Task HandleUpdateAsync(ITelegramBotClient c, Update update, CancellationToken arg3)
     {
-        var user = new UserModel
+        try
         {
-            ExternalUserId = (update.CallbackQuery?.From?.Id ??
-                      update.Message?.Chat?.Id ??
-                      update.Message!.From!.Id)!.ToString(),
-            Name = update.CallbackQuery?.From?.Username ??
-                   update.Message?.Chat?.Username ??
-                   update.Message!.From!.Username ?? "unknown",
-            UIType = UIName
-        };
+            var user = new UserModel
+            {
+                ExternalUserId = (update.CallbackQuery?.From?.Id ??
+                                  update.Message?.Chat?.Id ??
+                                  update.Message!.From!.Id)!.ToString(),
+                Name = update.CallbackQuery?.From?.Username ??
+                       update.Message?.Chat?.Username ??
+                       update.Message!.From!.Username ?? "unknown",
+                UIType = UIName
+            };
 
-        if (user.ExternalUserId == null)
-            throw new Exception($"Could not find userId in update {JsonConvert.SerializeObject(update)}");
+            if (user.ExternalUserId == null)
+                throw new Exception("Could not find userId in update");
 
-        var task = update.Type switch
+            var task = update.Type switch
+            {
+                UpdateType.CallbackQuery => ProcessCallback(user, update.CallbackQuery!),
+                UpdateType.Message when update.Message?.Date > DateTime.UtcNow.AddMinutes(-3) => ProcessTextMessage(
+                    user,
+                    update.Message!),
+                _ => Task.CompletedTask
+            };
+
+            await task;
+        }
+        catch (Exception e)
         {
-            UpdateType.CallbackQuery => ProcessCallback(user, update.CallbackQuery!),
-            UpdateType.Message when update.Message?.Date > DateTime.UtcNow.AddMinutes(-3) => ProcessTextMessage(user,
-                update.Message!),
-            _ => Task.CompletedTask
-        };
-
-        await task;
+            _logger?.LogError(e, $"Error on processing update {JsonConvert.SerializeObject(update)}");
+        }
     }
 
     public async Task ProcessCallback(UserModel user, CallbackQuery callback)
     {
-        if (CallbackActions.TryGetValue
-                (user.ExternalUserId, out var userCallbacks) == false)
+        var activeQueries = await _context.ActiveInlineQueries
+            .Where(q => q.ExternalUserId == user.ExternalUserId)
+            .ToListAsync();
+
+        if (activeQueries.Any() == false)
         {
-            //todo fail, we are waiting no callbacks
+            _logger?.LogError("callback not found for user with {externalId}", user.ExternalUserId);
+            //todo fail?
         }
 
-        CallbackActions.TryRemove(user.ExternalUserId, out _);
+        _context.ActiveInlineQueries.RemoveRange(activeQueries);
+        await _context.SaveChangesAsync();
 
-        var selectedCallback = userCallbacks!.FirstOrDefault(c => c.ID == callback.Data);
-        ArgumentNullException.ThrowIfNull(selectedCallback);
+        var selectedQuery = activeQueries.Single(c => c.QueryID == callback.Data);
 
-        await (selectedCallback.CallbackActionType switch
+        await (selectedQuery.CallbackActionType switch
         {
-            CallbackActionType.SendTopics => SendTopics(user, selectedCallback.Source),
-            Subscribe => SubscribeUser(user, new(selectedCallback.Source, selectedCallback.TopicInternalName)),
-            Unsubscribe => UnsubscribeUser(user, new(selectedCallback.Source, selectedCallback.TopicInternalName)),
+            CallbackActionType.SendTopics => SendTopics(user, selectedQuery.Source),
+            Subscribe => SubscribeUser(user, new(selectedQuery.Source, selectedQuery.TopicInternalName)),
+            Unsubscribe => UnsubscribeUser(user, new(selectedQuery.Source, selectedQuery.TopicInternalName)),
             _ => throw new Exception()
         });
     }
@@ -132,11 +143,25 @@ public class Telegram : BackgroundService, UserInterface
             await SendStats(message.From!.Id);
         }
 
+        if (message.Text == "/stop")
+        {
+            await UnsubscribeEverything(user);
+        }
+
         var command = message.Text!.Replace("/", "");
-        if (await _context.NewsTopics.AnyAsync(t=> t.NewsSource == command))
+        if (await _context.NewsTopics.AnyAsync(t => t.NewsSource == command))
         {
             await SendTopics(user, command);
         }
+    }
+
+    private async Task UnsubscribeEverything(UserModel user)
+    {
+        var subs = await _userService.Subscriptions(user);
+        foreach (var sub in subs.ToArray())
+            await _userService.RemoveSubscription(user, sub);
+
+        await _client.SendTextMessageAsync(user.ExternalUserId, "Успешно");
     }
 
     private async Task SendStats(long userId)
@@ -169,18 +194,31 @@ public class Telegram : BackgroundService, UserInterface
             .ToDictionary(t => t.Key);
 
         var callbacks = topicsBySource[source]
-            .OrderBy(t=>t.OrderInList)
+            .OrderBy(t => t.OrderInList)
             .Select(topic => new CallbackData
             {
                 ID = Guid.NewGuid().ToString(),
-                CallbackActionType = userSubs.Any(s => s.TopicInternalName == topic.InternalName) ? Unsubscribe : Subscribe,
+                CallbackActionType = userSubs.Any(s => s.TopicInternalName == topic.InternalName)
+                    ? Unsubscribe
+                    : Subscribe,
                 Source = source,
                 TopicInternalName = topic.InternalName,
                 Text = topic.VisibleNameRU
             }).ToArray();
 
-        CallbackActions.TryRemove(user.ExternalUserId, out var _);
-        CallbackActions.TryAdd(user.ExternalUserId, callbacks);
+        await _context.ActiveInlineQueries
+            .Where(q => q.ExternalUserId == user.ExternalUserId)
+            .ExecuteDeleteAsync();
+
+        _context.ActiveInlineQueries.AddRange(callbacks.Select(c => new ActiveInlineQuery()
+        {
+            ExternalUserId = user.ExternalUserId,
+            CallbackActionType = c.CallbackActionType,
+            QueryID = c.ID,
+            Source = c.Source,
+            TopicInternalName = c.TopicInternalName
+        }));
+        await _context.SaveChangesAsync();
 
         await SendNewOrEdit(user.ExternalUserId, callbacks, "Что интересует?");
     }

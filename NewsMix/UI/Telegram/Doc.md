@@ -25,4 +25,5 @@ noobclub - Новости с noob-club.ru
 habr - Новости с habr.com  
 ea  - Новости с ea.com  
 stats - статистика по боту  
+stop - Убрать все подписки
 

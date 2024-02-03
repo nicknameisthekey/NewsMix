@@ -10,6 +10,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
     public DbSet<UserAction> UserActions { get; set; } = null!;
     public DbSet<NotifiedPublication> NotifiedPublications { get; set; } = null!;
     public DbSet<NewsTopic> NewsTopics { get; set; } = null!;
+    public DbSet<ActiveInlineQuery> ActiveInlineQueries { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
