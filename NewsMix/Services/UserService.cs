@@ -4,35 +4,28 @@ using NewsMix.Storage.Entites;
 using NewsMix.Models;
 
 namespace NewsMix.Services;
-public class UserService
+public class UserService(UserRepository userRepository, ILogger<UserService>? logger = null)
 {
-    private readonly UserRepository _userRepository;
-    private readonly ILogger<UserService>? _logger;
-
-    public UserService(UserRepository userRepository, ILogger<UserService>? logger = null)
-    {
-        _userRepository = userRepository;
-        _logger = logger;
-    }
+    private readonly ILogger<UserService>? _logger = logger;
 
     public async Task<IReadOnlyCollection<UserModel>> UsersToNotify(Subscription sub)
     {
-        return await _userRepository.GetToNotify(sub);
+        return await userRepository.GetToNotify(sub);
     }
 
     public async Task AddSubscription(UserModel user, Subscription sub)
     {
-        await _userRepository.AddSubscription(user, sub);
+        await userRepository.AddSubscription(user, sub);
     }
 
     public async Task RemoveSubscription(UserModel user, Subscription sub)
     {
-        await _userRepository.RemoveSubscription(user, sub);
+        await userRepository.RemoveSubscription(user, sub);
     }
 
     public async Task<List<Subscription>> Subscriptions(UserModel user, string? source = null)
     {
-        var u = await _userRepository.GetOrCreate(user);
+        var u = await userRepository.GetOrCreate(user);
         return source switch
         {
             null => u.Subscriptions,

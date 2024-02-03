@@ -1,3 +1,5 @@
+namespace NewsMix.UI.Telegram;
+
 public class CallbackData
 {
     public CallbackActionType CallbackActionType { get; init; }
