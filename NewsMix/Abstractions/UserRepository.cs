@@ -5,8 +5,6 @@ namespace NewsMix.Abstractions;
 
 public interface UserRepository
 {
-    Task<List<UserModel>> GetToNotify(Subscription sub);
-
     Task<User> GetOrCreate(UserModel user);
 
     Task AddSubscription(UserModel user, Subscription sub);

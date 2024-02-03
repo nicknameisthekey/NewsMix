@@ -15,10 +15,10 @@ public class SqliteRepositoryTests
     public async Task SetPublicationNotified_doesnt_add_duplicates()
     {
         const string publicationUniqueId = "https://123.com";
-        await repo.SetPublicationNotified(publicationUniqueId);
-        await repo.SetPublicationNotified(publicationUniqueId);
+        await repo.AddPublication(publicationUniqueId);
+        await repo.AddPublication(publicationUniqueId);
 
-        Assert.Single(ctx.NotifiedPublications.ToList());
+        Assert.Single(ctx.FoundPublications.ToList());
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class SqliteRepositoryTests
         const string publication = "https://123.com";
 
         Assert.True(await repo.IsPublicationNew(publication));
-        await repo.SetPublicationNotified(publication);
+        await repo.AddPublication(publication);
         Assert.False(await repo.IsPublicationNew(publication));
     }
 
@@ -36,10 +36,10 @@ public class SqliteRepositoryTests
     {
         Assert.Equal(0, await repo.NotificationCount());
 
-        await repo.SetPublicationNotified("1234");
+        await repo.AddPublication("1234");
         Assert.Equal(1, await repo.NotificationCount());
 
-        await repo.SetPublicationNotified("4321");
+        await repo.AddPublication("4321");
         Assert.Equal(2, await repo.NotificationCount());
     }
 

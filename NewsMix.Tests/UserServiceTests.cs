@@ -81,44 +81,4 @@ public class UserServiceTests
         Assert.Single(user.Subscriptions);
         Assert.True(user.Subscriptions[0].SameAs(TestSub));
     }
-
-    [Fact]
-    public async Task Users_can_be_found_for_notification_by_subscription()
-    {
-        var userService = NewUserService;
-
-        var usersToNotify = await userService
-            .UsersToNotify(TestSub);
-        Assert.Empty(usersToNotify);
-        const string UIType = "telegram";
-        var user1 = new UserModel
-        {
-            ExternalUserId = "user1",
-            UIType = UIType,
-            Name = "abcd"
-        };
-        var user2 = new UserModel
-        {
-            ExternalUserId = "user2",
-            UIType = UIType,
-            Name = "abcd"
-        };
-        var user3 = new UserModel
-        {
-            ExternalUserId = "user3",
-            UIType = UIType,
-            Name = "abcd"
-        };
-
-        await userService.AddSubscription(user1, TestSub);
-        await userService.AddSubscription(user2, TestSub);
-        await userService.AddSubscription(user2, new("other source", TestSub.TopicInternalName));
-        await userService.AddSubscription(user2, new("other source", "other topic"));
-        await userService.AddSubscription(user3, new(TestSub.Source, "other topic"));
-
-        usersToNotify = await userService.UsersToNotify(TestSub);
-        Assert.Equal(2, usersToNotify.Count);
-        Assert.Contains(usersToNotify, u => u.ExternalUserId == user1.ExternalUserId);
-        Assert.Contains(usersToNotify, u => u.ExternalUserId == user2.ExternalUserId);
-    }
 }

@@ -74,7 +74,8 @@ public class IcyVeins : NewsSource
         {
             Text = title,
             Url = url,
-            Topic = topic
+            TopicInternalName = topic,
+            Source = Name
         };
     }
 }

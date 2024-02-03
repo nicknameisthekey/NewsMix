@@ -7,37 +7,51 @@ namespace NewsMix.Storage;
 
 public class SqliteRepository(SqliteContext context) : PublicationsRepository, UserRepository
 {
-    public async Task<bool> IsPublicationNew(string publicationUniqueID)
+    public async Task<bool> IsPublicationNew(string publicationUrl)
     {
-        return (await context.NotifiedPublications.AnyAsync
-            (p => p.PublicationUniqeID == publicationUniqueID)) == false;
+        return (await context.FoundPublications.AnyAsync
+            (p => p.PublicationUrl == publicationUrl)) == false;
+    }
+
+    public async Task CreateNotificationTasks(Publication publication)
+    {
+        var usersToNotify = await context.Users
+            .Include(u => u.Subscriptions)
+            .Include(u => u.NotificationTasks)
+            .Where(u => u.NotificationTasks.Any(t => t.Url == publication.Url) == false)
+            .Where(u => u.Subscriptions.Any(s => s.Source == publication.Source &&
+                                                 s.TopicInternalName == publication.TopicInternalName) == true)
+            .ToListAsync();
+
+        usersToNotify.ForEach(u => u.NotificationTasks.Add(new NotificationTask()
+        {
+            Id = Guid.NewGuid().ToString(),
+            Url = publication.Url,
+            Topic = publication.TopicInternalName,
+            HashTag = publication.HashTag,
+            CreatedAtUTC = DateTime.UtcNow,
+            Done = false
+        }));
+
+        await context.SaveChangesAsync();
     }
 
     public async Task<int> NotificationCount()
     {
-        return await context.NotifiedPublications.CountAsync();
+        return await context.FoundPublications.CountAsync();
     }
 
-    public async Task SetPublicationNotified(string publicationUniqueID)
+    public async Task AddPublication(string publicationUrl)
     {
-        if (await IsPublicationNew(publicationUniqueID) == false)
+        if (await IsPublicationNew(publicationUrl) == false)
             return;
 
-        context.NotifiedPublications.Add(new NotifiedPublication
+        context.FoundPublications.Add(new FoundPublication
         {
-            PublicationUniqeID = publicationUniqueID,
-            CreatedAt = DateTime.Now
+            PublicationUrl = publicationUrl,
+            CreatedAtUTC = DateTime.UtcNow
         });
         await context.SaveChangesAsync();
-    }
-
-    public async Task<List<UserModel>> GetToNotify(Subscription sub)
-    {
-        return (await context.Users
-                .Include(u => u.Subscriptions)
-                .ToListAsync()) //deliberately
-            .Where(u => u.Subscriptions.Any(s => s.SameAs(sub)))
-            .Select(UserModel.FromEntity).ToList();
     }
 
     public async Task<User> GetOrCreate(UserModel userToFind)
