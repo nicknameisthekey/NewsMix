@@ -32,7 +32,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     InternalName = Habr.rating25Topic,
                     NewsSource = "habr",
                     Enabled = true,
-                    VisibleNameRU = "Рейтинг > 25",
+                    VisibleNameRU = "Статьи с рейтингом > 25",
                     OrderInList = 1
                 },
                 
@@ -42,7 +42,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     InternalName = IcyVeins.Topic_wow,
                     NewsSource = "icyveins",
                     Enabled = true,
-                    VisibleNameRU = "World of warcraft",
+                    VisibleNameRU = "World of Warcraft",
                     OrderInList = 1
                 },
                 new()
@@ -51,7 +51,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     InternalName = IcyVeins.Topic_wow_classic,
                     NewsSource = "icyveins",
                     Enabled = true,
-                    VisibleNameRU = "World of warcraft Classic",
+                    VisibleNameRU = "World of Warcraft Classic",
                     OrderInList = 2,
                 },
                 new()

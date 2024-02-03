@@ -8,6 +8,7 @@ using NewsMix.Models;
 using NewsMix.Services;
 using NewsMix.Storage;
 using NewsMix.Storage.Entities;
+using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
@@ -74,7 +75,7 @@ public class Telegram : BackgroundService, UserInterface
     {
         var user = new UserModel
         {
-            UserId = (update.CallbackQuery?.From?.Id ??
+            ExternalUserId = (update.CallbackQuery?.From?.Id ??
                       update.Message?.Chat?.Id ??
                       update.Message!.From!.Id)!.ToString(),
             Name = update.CallbackQuery?.From?.Username ??
@@ -82,6 +83,9 @@ public class Telegram : BackgroundService, UserInterface
                    update.Message!.From!.Username ?? "unknown",
             UIType = UIName
         };
+
+        if (user.ExternalUserId == null)
+            throw new Exception($"Could not find userId in update {JsonConvert.SerializeObject(update)}");
 
         var task = update.Type switch
         {
@@ -97,12 +101,12 @@ public class Telegram : BackgroundService, UserInterface
     public async Task ProcessCallback(UserModel user, CallbackQuery callback)
     {
         if (CallbackActions.TryGetValue
-                (user.UserId, out var userCallbacks) == false)
+                (user.ExternalUserId, out var userCallbacks) == false)
         {
             //todo fail, we are waiting no callbacks
         }
 
-        CallbackActions.TryRemove(user.UserId, out _);
+        CallbackActions.TryRemove(user.ExternalUserId, out _);
 
         var selectedCallback = userCallbacks!.FirstOrDefault(c => c.ID == callback.Data);
         ArgumentNullException.ThrowIfNull(selectedCallback);
@@ -110,8 +114,8 @@ public class Telegram : BackgroundService, UserInterface
         await (selectedCallback.CallbackActionType switch
         {
             CallbackActionType.SendTopics => SendTopics(user, selectedCallback.Source),
-            Subscribe => SubscribeUser(user, new(selectedCallback.Source, selectedCallback.Topic)),
-            Unsubscribe => UnsubscribeUser(user, new(selectedCallback.Source, selectedCallback.Topic)),
+            Subscribe => SubscribeUser(user, new(selectedCallback.Source, selectedCallback.TopicInternalName)),
+            Unsubscribe => UnsubscribeUser(user, new(selectedCallback.Source, selectedCallback.TopicInternalName)),
             _ => throw new Exception()
         });
     }
@@ -169,30 +173,30 @@ public class Telegram : BackgroundService, UserInterface
             .Select(topic => new CallbackData
             {
                 ID = Guid.NewGuid().ToString(),
-                CallbackActionType = userSubs.Any(s => s.Topic == topic.InternalName) ? Unsubscribe : Subscribe,
+                CallbackActionType = userSubs.Any(s => s.TopicInternalName == topic.InternalName) ? Unsubscribe : Subscribe,
                 Source = source,
-                Topic = topic.InternalName,
+                TopicInternalName = topic.InternalName,
                 Text = topic.VisibleNameRU
             }).ToArray();
 
-        CallbackActions.TryRemove(user.UserId, out var _);
-        CallbackActions.TryAdd(user.UserId, callbacks);
+        CallbackActions.TryRemove(user.ExternalUserId, out var _);
+        CallbackActions.TryAdd(user.ExternalUserId, callbacks);
 
-        await SendNewOrEdit(user.UserId, callbacks, "Что интересует?");
+        await SendNewOrEdit(user.ExternalUserId, callbacks, "Что интересует?");
     }
 
     private async Task SubscribeUser(UserModel user, Subscription sub)
     {
         _logger?.LogWarning("User {user} subscribed to {subscription}", user, sub);
         await _userService.AddSubscription(user, sub);
-        await ReplaceKeyboardWithSuccessMessage(user.UserId);
+        await ReplaceKeyboardWithSuccessMessage(user.ExternalUserId);
     }
 
     private async Task UnsubscribeUser(UserModel user, Subscription sub)
     {
         _logger?.LogWarning("User {user} unsubscribed from {subscription}", user, sub);
         await _userService.RemoveSubscription(user, sub);
-        await ReplaceKeyboardWithSuccessMessage(user.UserId);
+        await ReplaceKeyboardWithSuccessMessage(user.ExternalUserId);
     }
 
     private async Task ReplaceKeyboardWithSuccessMessage(string userId)

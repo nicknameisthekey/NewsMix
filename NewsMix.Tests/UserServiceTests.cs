@@ -7,8 +7,8 @@ namespace NewsMix.Tests;
 
 public class UserServiceTests
 {
-    UserModel TestUser => new() { UserId = "12345", UIType = "telegram", Name = "1234" };
-    Subscription TestSub => new() { Source = "source", Topic = "topic" };
+    UserModel TestUser => new() { ExternalUserId = "12345", UIType = "telegram", Name = "1234" };
+    Subscription TestSub => new() { Source = "source", TopicInternalName = "topic" };
 
     [Fact]
     public async Task Adding_subscription_to_non_existing_user_creates_new_user_with_subscription()
@@ -93,32 +93,32 @@ public class UserServiceTests
         const string UIType = "telegram";
         var user1 = new UserModel
         {
-            UserId = "user1",
+            ExternalUserId = "user1",
             UIType = UIType,
             Name = "abcd"
         };
         var user2 = new UserModel
         {
-            UserId = "user2",
+            ExternalUserId = "user2",
             UIType = UIType,
             Name = "abcd"
         };
         var user3 = new UserModel
         {
-            UserId = "user3",
+            ExternalUserId = "user3",
             UIType = UIType,
             Name = "abcd"
         };
 
         await userService.AddSubscription(user1, TestSub);
         await userService.AddSubscription(user2, TestSub);
-        await userService.AddSubscription(user2, new("other source", TestSub.Topic));
+        await userService.AddSubscription(user2, new("other source", TestSub.TopicInternalName));
         await userService.AddSubscription(user2, new("other source", "other topic"));
         await userService.AddSubscription(user3, new(TestSub.Source, "other topic"));
 
         usersToNotify = await userService.UsersToNotify(TestSub);
         Assert.Equal(2, usersToNotify.Count);
-        Assert.Contains(usersToNotify, u => u.UserId == user1.UserId);
-        Assert.Contains(usersToNotify, u => u.UserId == user2.UserId);
+        Assert.Contains(usersToNotify, u => u.ExternalUserId == user1.ExternalUserId);
+        Assert.Contains(usersToNotify, u => u.ExternalUserId == user2.ExternalUserId);
     }
 }

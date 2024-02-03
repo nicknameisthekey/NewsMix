@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsMix.Storage;
 
@@ -10,9 +11,11 @@ using NewsMix.Storage;
 namespace NewsMix.Migrations
 {
     [DbContext(typeof(SqliteContext))]
-    partial class SqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20240203182546_add_user_ids")]
+    partial class add_user_ids
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
@@ -209,9 +212,12 @@ namespace NewsMix.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("InternalUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Subscription");
                 });
@@ -269,33 +275,28 @@ namespace NewsMix.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("InternalUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserActions");
                 });
 
             modelBuilder.Entity("NewsMix.Storage.Entities.Subscription", b =>
                 {
-                    b.HasOne("NewsMix.Storage.Entities.User", "User")
+                    b.HasOne("NewsMix.Storage.Entities.User", null)
                         .WithMany("Subscriptions")
-                        .HasForeignKey("InternalUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("NewsMix.Storage.Entities.UserAction", b =>
                 {
-                    b.HasOne("NewsMix.Storage.Entities.User", "User")
+                    b.HasOne("NewsMix.Storage.Entities.User", null)
                         .WithMany("UserActions")
-                        .HasForeignKey("InternalUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("NewsMix.Storage.Entities.User", b =>

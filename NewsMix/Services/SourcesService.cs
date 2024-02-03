@@ -43,14 +43,14 @@ public class SourcesService : BackgroundService
                             .UsersToNotify(new Subscription
                             {
                                 Source = source.Name,
-                                Topic = publication.Topic
+                                TopicInternalName = publication.Topic
                             });
                         foreach (var user in usersToNotify)
                         {
                             var userInterface = _userInterfaces.FirstOrDefault(i => i.UIName == user.UIType);
                             if (userInterface != null)
                             {
-                                await userInterface.NotifyUser(user: user.UserId, "#" + publication.Topic.Replace(" ", "").Replace(">", "") + Environment.NewLine + publication.Url);
+                                await userInterface.NotifyUser(user: user.ExternalUserId, "#" + publication.Topic.Replace(" ", "").Replace(">", "") + Environment.NewLine + publication.Url);
                                 _logger?.LogWarning("Notified user {user}, publication {publication}", user, publication);
                             }
                         }

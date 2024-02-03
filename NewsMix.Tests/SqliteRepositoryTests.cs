@@ -51,22 +51,22 @@ public class SqliteRepositoryTests
 
         await repo.GetOrCreate(new UserModel
         {
-            UserId = u1Id,
+            ExternalUserId = u1Id,
             UIType = "Telegram",
             Name = u1Id
         });
 
         await repo.GetOrCreate(new UserModel
         {
-            UserId = u2Id,
+            ExternalUserId = u2Id,
             UIType = "Telegram",
             Name = u2Id
         });
 
         var users = ctx.Users.ToList();
         Assert.Equal(2, users.Count);
-        Assert.Contains(users, u => u.UserId == u1Id);
-        Assert.Contains(users, u => u.UserId == u2Id);
+        Assert.Contains(users, u => u.ExternalUserId == u1Id);
+        Assert.Contains(users, u => u.ExternalUserId == u2Id);
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class SqliteRepositoryTests
     {
         var user = new User
         {
-            UserId = "1234",
+            ExternalUserId = "1234",
             UIType = "telegram",
             Name = "1234"
         };
@@ -83,7 +83,7 @@ public class SqliteRepositoryTests
 
         var result = await repo.GetOrCreate(new UserModel
         {
-            UserId = user.UserId,
+            ExternalUserId = user.ExternalUserId,
             UIType = user.UIType,
             Name = user.Name
         });

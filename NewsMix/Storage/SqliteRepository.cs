@@ -5,24 +5,17 @@ using NewsMix.Storage.Entities;
 
 namespace NewsMix.Storage;
 
-public class SqliteRepository : PublicationsRepository, UserRepository
+public class SqliteRepository(SqliteContext context) : PublicationsRepository, UserRepository
 {
-    private readonly SqliteContext _context;
-
-    public SqliteRepository(SqliteContext context)
-    {
-        _context = context;
-    }
-
     public async Task<bool> IsPublicationNew(string publicationUniqueID)
     {
-        return (await _context.NotifiedPublications.AnyAsync
+        return (await context.NotifiedPublications.AnyAsync
             (p => p.PublicationUniqeID == publicationUniqueID)) == false;
     }
 
     public async Task<int> NotificationCount()
     {
-        return await _context.NotifiedPublications.CountAsync();
+        return await context.NotifiedPublications.CountAsync();
     }
 
     public async Task SetPublicationNotified(string publicationUniqueID)
@@ -30,17 +23,17 @@ public class SqliteRepository : PublicationsRepository, UserRepository
         if (await IsPublicationNew(publicationUniqueID) == false)
             return;
 
-        _context.NotifiedPublications.Add(new NotifiedPublication
+        context.NotifiedPublications.Add(new NotifiedPublication
         {
             PublicationUniqeID = publicationUniqueID,
             CreatedAt = DateTime.Now
         });
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 
     public async Task<List<UserModel>> GetToNotify(Subscription sub)
     {
-        return (await _context.Users
+        return (await context.Users
                 .Include(u => u.Subscriptions)
                 .ToListAsync()) //deliberately
             .Where(u => u.Subscriptions.Any(s => s.SameAs(sub)))
@@ -49,22 +42,22 @@ public class SqliteRepository : PublicationsRepository, UserRepository
 
     public async Task<User> GetOrCreate(UserModel userToFind)
     {
-        var result = await _context.Users
+        var result = await context.Users
             .Include(u => u.Subscriptions)
-            .FirstOrDefaultAsync(u => u.UIType == userToFind.UIType && u.UserId == userToFind.UserId);
+            .FirstOrDefaultAsync(u => u.UIType == userToFind.UIType && u.ExternalUserId == userToFind.ExternalUserId);
 
         if (result == null)
         {
             result = new User
             {
-                UserId = userToFind.UserId,
+                ExternalUserId = userToFind.ExternalUserId,
                 Name = userToFind.Name,
                 UIType = userToFind.UIType,
-                CreatedAt = DateTime.Now,
-                Subscriptions = new List<Subscription>()
+                CreatedAt = DateTime.UtcNow,
+                Subscriptions = []
             };
-            _context.Users.Add(result);
-            await _context.SaveChangesAsync();
+            context.Users.Add(result);
+            await context.SaveChangesAsync();
         }
 
         await UpdateName(userToFind, result);
@@ -76,46 +69,49 @@ public class SqliteRepository : PublicationsRepository, UserRepository
     {
         var u = await GetOrCreate(user);
 
-        if (u.Subscriptions.Any(s => s.Source == sub.Source && s.Topic == sub.Topic))
-            return;
+        if (u.Subscriptions.Any(s => s.SameAs(sub)))
+            return; //todo log
 
         u.Subscriptions.Add(new Subscription
         {
             Source = sub.Source,
-            Topic = sub.Topic
+            TopicInternalName = sub.TopicInternalName,
+            CreatedOnUTC = DateTime.UtcNow,
+            InternalUserId = u.Id
         });
 
         u.UserActions.Add(new UserAction
         {
             ActionType = ActionType.Subscribe,
-            Topic = sub.Topic,
+            Topic = sub.TopicInternalName,
             Source = sub.Source,
-            CreatedAt = DateTime.Now
+            CreatedAtUTC = DateTime.UtcNow,
+            InternalUserId = u.Id
         });
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 
     public async Task RemoveSubscription(UserModel user, Subscription sub)
     {
         var u = await GetOrCreate(user);
-        var subToRemove = u.Subscriptions.FirstOrDefault
-            (s => s.Source == sub.Source && s.Topic == sub.Topic);
+        var subToRemove = u.Subscriptions.FirstOrDefault(s => s.SameAs(sub));
 
         u.Subscriptions.Remove(subToRemove!);
 
         u.UserActions.Add(new UserAction
         {
             ActionType = ActionType.Unsubscribe,
-            Topic = sub.Topic,
+            Topic = sub.TopicInternalName,
             Source = sub.Source,
-            CreatedAt = DateTime.Now
+            CreatedAtUTC = DateTime.UtcNow,
+            InternalUserId = u.Id
         });
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 
     public async Task<int> UsersCount()
     {
-        return await _context.Users.CountAsync();
+        return await context.Users.CountAsync();
     }
 
     private async Task UpdateName(UserModel newValue, User oldValue)
@@ -123,7 +119,7 @@ public class SqliteRepository : PublicationsRepository, UserRepository
         if (newValue.Name != oldValue.Name)
         {
             oldValue.Name = newValue.Name;
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
     }
 }

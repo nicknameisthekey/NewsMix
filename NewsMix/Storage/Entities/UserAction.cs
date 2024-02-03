@@ -8,10 +8,14 @@ public class UserAction
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
+    public int InternalUserId { get; set; }
     public ActionType ActionType { get; set; }
     [MaxLength(64)] public string Source { get; set; } = null!;
     [MaxLength(64)] public string Topic { get; set; } = null!;
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAtUTC { get; set; }
+    
+    [ForeignKey(nameof(InternalUserId))]
+    public virtual User User {get; set; }
 }
 
 public enum ActionType
