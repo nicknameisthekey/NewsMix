@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
-using NewsMix.Storage.Entites;
 using NewsMix.Models;
+using NewsMix.Storage.Entities;
 
 namespace NewsMix.Services;
 

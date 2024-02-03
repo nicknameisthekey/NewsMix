@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NewsMix.Storage.Entites;
+namespace NewsMix.Storage.Entities;
 
 public class NotifiedPublication
 {

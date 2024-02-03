@@ -1,11 +1,13 @@
 using System.Collections.Concurrent;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Models;
 using NewsMix.Services;
-using NewsMix.Storage.Entites;
+using NewsMix.Storage;
+using NewsMix.Storage.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
@@ -22,20 +24,19 @@ public class Telegram : BackgroundService, UserInterface
     private readonly ConcurrentDictionary<string, CallbackData[]> CallbackActions = new();
     private readonly ConcurrentDictionary<string, long> SentMessagesByUser = new();
     private readonly ITelegramBotClient _client;
-    private readonly SourcesInformation _sourcesInformation;
     private readonly IStatsService _statsService;
     private readonly UserService _userService;
     private readonly ILogger<Telegram>? _logger;
+    private readonly SqliteContext _context;
 
     public Telegram(ITelegramBotClient client,
-        IServiceProvider services,
-        ILogger<Telegram>? logger = null)
+        IServiceProvider services, ILogger<Telegram>? logger = null)
     {
         _client = client;
         var scope = services.CreateScope();
-        _sourcesInformation = scope.ServiceProvider.GetRequiredService<SourcesInformation>();
         _statsService = scope.ServiceProvider.GetRequiredService<IStatsService>();
         _userService = scope.ServiceProvider.GetRequiredService<UserService>();
+        _context = scope.ServiceProvider.GetRequiredService<SqliteContext>();
         _logger = logger;
     }
 
@@ -127,8 +128,8 @@ public class Telegram : BackgroundService, UserInterface
             await SendStats(message.From!.Id);
         }
 
-        string command = message.Text!.Replace("/", "");
-        if (_sourcesInformation.Sources.Any(f => f == command))
+        var command = message.Text!.Replace("/", "");
+        if (await _context.NewsTopics.AnyAsync(t=> t.NewsSource == command))
         {
             await SendTopics(user, command);
         }
@@ -158,15 +159,20 @@ public class Telegram : BackgroundService, UserInterface
     private async Task SendTopics(UserModel user, string source)
     {
         var userSubs = await _userService.Subscriptions(user, source);
+        //todo check order can be changed while running
+        var topicsBySource = (await _context.NewsTopics.ToListAsync())
+            .GroupBy(t => t.NewsSource)
+            .ToDictionary(t => t.Key);
 
-        var callbacks = _sourcesInformation.TopicsBySources[source]
-            .Select(topics => new CallbackData
+        var callbacks = topicsBySource[source]
+            .OrderBy(t=>t.OrderInList)
+            .Select(topic => new CallbackData
             {
                 ID = Guid.NewGuid().ToString(),
-                CallbackActionType = userSubs.Any(s => s.Topic == topics) ? Unsubscribe : Subscribe,
+                CallbackActionType = userSubs.Any(s => s.Topic == topic.InternalName) ? Unsubscribe : Subscribe,
                 Source = source,
-                Topic = topics,
-                Text = topics
+                Topic = topic.InternalName,
+                Text = topic.VisibleNameRU
             }).ToArray();
 
         CallbackActions.TryRemove(user.UserId, out var _);

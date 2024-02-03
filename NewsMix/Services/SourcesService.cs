@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Helpers;
+using NewsMix.Storage.Entities;
 
 namespace NewsMix.Services;
 public class SourcesService : BackgroundService
@@ -39,7 +40,7 @@ public class SourcesService : BackgroundService
                     if (await _publicationsRepository.IsPublicationNew(publication.Url))
                     {
                         var usersToNotify = await _userService
-                            .UsersToNotify(new Storage.Entites.Subscription
+                            .UsersToNotify(new Subscription
                             {
                                 Source = source.Name,
                                 Topic = publication.Topic

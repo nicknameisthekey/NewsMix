@@ -1,4 +1,4 @@
-using NewsMix.Storage.Entites;
+using NewsMix.Storage.Entities;
 
 namespace NewsMix.Models;
 

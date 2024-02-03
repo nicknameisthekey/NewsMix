@@ -1,6 +1,6 @@
 using NewsMix.Models;
 using NewsMix.Services;
-using NewsMix.Storage.Entites;
+using NewsMix.Storage.Entities;
 using static NewsMix.Tests.TestHelpers;
 
 namespace NewsMix.Tests;
