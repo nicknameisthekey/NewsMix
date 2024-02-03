@@ -18,7 +18,8 @@ public static class ServiceCollectionExtensions
         if (addHosted)
         {
             services.AddHostedService<UI.Telegram.Telegram>();
-            services.AddHostedService<SourcesService>();
+            services.AddHostedService<NewsCollector>();
+            services.AddHostedService<NotificationTasksExecutor>();
         }
 
         services.AddScoped<UserService>();

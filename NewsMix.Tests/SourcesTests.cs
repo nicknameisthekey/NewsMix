@@ -16,13 +16,13 @@ public class SourcesTests
 
         var items = await nk.GetPublications();
         Assert.Equal(15, items.Count);
-        var wowItems = items.Where(i => i.Topic == NewsSources.NoobClub.Topic_wow);
+        var wowItems = items.Where(i => i.TopicInternalName == NewsSources.NoobClub.Topic_wow);
         Assert.Equal(9, wowItems.Count());
 
-        var diabloItems = items.Where(i => i.Topic == NewsSources.NoobClub.Topic_diablo);
+        var diabloItems = items.Where(i => i.TopicInternalName == NewsSources.NoobClub.Topic_diablo);
         Assert.Equal(3, diabloItems.Count());
 
-        var wc3Items = items.Where(i => i.Topic == NewsSources.NoobClub.Topic_w3);
+        var wc3Items = items.Where(i => i.TopicInternalName == NewsSources.NoobClub.Topic_w3);
         Assert.Single(wc3Items);
     }
 
@@ -38,19 +38,19 @@ public class SourcesTests
         var items = await iv.GetPublications();
         Assert.Equal(30, items.Count);
 
-        var wowItems = items.Where(i => i.Topic == IcyVeins.Topic_wow);
+        var wowItems = items.Where(i => i.TopicInternalName == IcyVeins.Topic_wow);
         Assert.Equal(24, wowItems.Count());
 
-        var diabloItems = items.Where(i => i.Topic == IcyVeins.Topic_diablo);
+        var diabloItems = items.Where(i => i.TopicInternalName == IcyVeins.Topic_diablo);
         Assert.Equal(3, diabloItems.Count());
 
-        var wc3Items = items.Where(i => i.Topic == IcyVeins.Topic_warcraft);
+        var wc3Items = items.Where(i => i.TopicInternalName == IcyVeins.Topic_warcraft);
         Assert.Single(wc3Items);
 
-        var wowClassicItems = items.Where(i => i.Topic == IcyVeins.Topic_wow_classic);
+        var wowClassicItems = items.Where(i => i.TopicInternalName == IcyVeins.Topic_wow_classic);
         Assert.Single(wowClassicItems);
 
-        var lostArkItems = items.Where(i => i.Topic == IcyVeins.Topic_lost_arc);
+        var lostArkItems = items.Where(i => i.TopicInternalName == IcyVeins.Topic_lost_arc);
         Assert.Single(lostArkItems);
     }
 

@@ -28,7 +28,8 @@ public class EaApex(DataDownloader dataDownloader, ILogger<EaApex>? logger = nul
             .Select(u => new Publication
             {
                 Url = u!,
-                Topic = "Apex"
+                TopicInternalName = "Apex",
+                Source = Name
             }).ToList();
     }
 

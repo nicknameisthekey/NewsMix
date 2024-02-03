@@ -8,12 +8,7 @@ namespace NewsMix.Services;
 public class UserService(UserRepository userRepository, ILogger<UserService>? logger = null)
 {
     private readonly ILogger<UserService>? _logger = logger;
-
-    public async Task<IReadOnlyCollection<UserModel>> UsersToNotify(Subscription sub)
-    {
-        return await userRepository.GetToNotify(sub);
-    }
-
+    
     public async Task AddSubscription(UserModel user, Subscription sub)
     {
         await userRepository.AddSubscription(user, sub);

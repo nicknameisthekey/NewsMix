@@ -27,7 +27,8 @@ public class Habr : NewsSource
         {
             Url = i.Id,
             Text = "",
-            Topic = rating25Topic
+            TopicInternalName = rating25Topic,
+            Source = Name
         }).ToList();
     }
 }

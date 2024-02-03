@@ -18,4 +18,5 @@ public class User
     
     public List<UserAction> UserActions { get; init; } = new();
     public List<Subscription> Subscriptions { get; init; } = new();
+    public List<NotificationTask> NotificationTasks { get; set; } = new();
 }

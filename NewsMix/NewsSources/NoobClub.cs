@@ -70,7 +70,8 @@ public class NoobClub(DataDownloader dataDownloader, ILogger<NoobClub>? logger =
         {
             Text = title,
             Url = siteUrl + aritcleUrl,
-            Topic = topic
+            TopicInternalName = topic,
+            Source = Name
         };
     }
 
