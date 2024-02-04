@@ -29,7 +29,7 @@ public class EaApex(DataDownloader dataDownloader, ILogger<EaApex>? logger = nul
             {
                 Url = u!,
                 TopicInternalName = "Apex",
-                Source = Name
+                Source = Name,
             }).ToList();
     }
 

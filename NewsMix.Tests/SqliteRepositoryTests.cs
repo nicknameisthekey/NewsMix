@@ -10,13 +10,19 @@ public class SqliteRepositoryTests
     private readonly SqliteContext ctx;
     private readonly SqliteRepository repo;
     public SqliteRepositoryTests() => (repo, ctx) = CreateDb();
+    public Publication Publication =>  new Publication()
+    {
+        Url = "https://123.com",
+        TopicInternalName = "abcd",
+        HashTag = null,
+        Source = "source",
+    };
 
     [Fact]
     public async Task SetPublicationNotified_doesnt_add_duplicates()
     {
-        const string publicationUniqueId = "https://123.com";
-        await repo.AddPublication(publicationUniqueId);
-        await repo.AddPublication(publicationUniqueId);
+        await repo.AddPublication(Publication);
+        await repo.AddPublication(Publication);
 
         Assert.Single(ctx.FoundPublications.ToList());
     }
@@ -24,11 +30,9 @@ public class SqliteRepositoryTests
     [Fact]
     public async Task Publication_is_new_if_not_in_notified_list()
     {
-        const string publication = "https://123.com";
-
-        Assert.True(await repo.IsPublicationNew(publication));
-        await repo.AddPublication(publication);
-        Assert.False(await repo.IsPublicationNew(publication));
+        Assert.True(await repo.IsPublicationNew(Publication.Url));
+        await repo.AddPublication(Publication);
+        Assert.False(await repo.IsPublicationNew(Publication.Url));
     }
 
     [Fact]
@@ -36,10 +40,24 @@ public class SqliteRepositoryTests
     {
         Assert.Equal(0, await repo.NotificationCount());
 
-        await repo.AddPublication("1234");
+        var pub = new Publication()
+        {
+            Url = "https://123.com",
+            TopicInternalName = "abcd",
+            HashTag = null,
+            Source = "source",
+        };
+        await repo.AddPublication(pub);
         Assert.Equal(1, await repo.NotificationCount());
-
-        await repo.AddPublication("4321");
+        
+        var pub2 = new Publication()
+        {
+            Url = "https://321.com",
+            TopicInternalName = "abcd",
+            HashTag = null,
+            Source = "source",
+        };
+        await repo.AddPublication(pub2);
         Assert.Equal(2, await repo.NotificationCount());
     }
 

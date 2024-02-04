@@ -41,14 +41,17 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
         return await context.FoundPublications.CountAsync();
     }
 
-    public async Task AddPublication(string publicationUrl)
+    public async Task AddPublication(Publication publication)
     {
-        if (await IsPublicationNew(publicationUrl) == false)
+        if (await IsPublicationNew(publication.Url) == false)
             return;
 
         context.FoundPublications.Add(new FoundPublication
         {
-            PublicationUrl = publicationUrl,
+            PublicationUrl = publication.Url,
+            TopicInternalName = publication.TopicInternalName,
+            HashTag = publication.HashTag,
+            Source = publication.Source,
             CreatedAtUTC = DateTime.UtcNow
         });
         await context.SaveChangesAsync();

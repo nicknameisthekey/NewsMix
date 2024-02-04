@@ -36,7 +36,7 @@ public class NewsCollector : BackgroundService
                     if (await _publicationsRepository.IsPublicationNew(publication.Url))
                         await _publicationsRepository.CreateNotificationTasks(publication);
 
-                    await _publicationsRepository.AddPublication(publication.Url);
+                    await _publicationsRepository.AddPublication(publication);
                 }
             }
 
