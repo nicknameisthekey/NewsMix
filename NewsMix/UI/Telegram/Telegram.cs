@@ -74,6 +74,7 @@ public class Telegram : BackgroundService, UserInterface
     {
         try
         {
+            _logger?.LogInformation("got update {@update}", update);
             var user = new UserModel
             {
                 ExternalUserId = (update.CallbackQuery?.From?.Id ??
@@ -205,7 +206,7 @@ public class Telegram : BackgroundService, UserInterface
                 TopicInternalName = topic.InternalName,
                 Text = topic.VisibleNameRU
             }).ToArray();
-
+        
         await _context.ActiveInlineQueries
             .Where(q => q.ExternalUserId == user.ExternalUserId)
             .ExecuteDeleteAsync();

@@ -1,0 +1,14 @@
+services:
+  newsmix:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DOTNET_ENVIRONMENT: Docker
+    volumes:
+      - newsmix:/mount_dir
+    restart: unless-stopped
+
+volumes:
+  newsmix:
+    external: true

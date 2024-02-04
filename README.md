@@ -25,3 +25,62 @@ Gives users an ability to create inidividual news feed via subscription to difff
     },
 "TelegramBotToken":"token here"
 ```
+Also you can change [Serilog](https://github.com/serilog/serilog) configuration by adding `Serilog` section, for example: 
+```json
+"Serilog": {
+    "Using": [
+      "Serilog.Sinks.Console",
+      "Serilog.Sinks.File"
+    ],
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "System": "Warning"
+      }
+    },
+    "WriteTo": [
+      {
+        "Name": "File",
+        "Args": {
+          "path": "/mount_dir/Logs/log.txt",
+          "rollingInterval": "Day",
+          "outputTemplate": "{Timestamp:MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+        }
+      },
+      {
+        "Name": "Console",
+        "Args": {
+          "outputTemplate": "{Timestamp:MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+        }
+      }
+    ]
+  },
+```
+
+# Docker
+
+add `NewsMix.ConsoleRunner/appsettings.Docker.json`
+```json
+{
+  "TelegramBotToken": "TokenGoesHere",
+  "ConnectionStrings": {
+    "Sqlite": "Data Source=/mount_dir/newsmix.db"
+  }
+}
+```
+
+Create volume: 
+```
+docker volume create \
+  --driver local \
+  --opt type=none \
+  --opt device=i_forgot_to_set_the_path \
+  --opt o=bind \
+  newsmix
+```
+
+run docker-compose
+```
+docker-compose up
+```

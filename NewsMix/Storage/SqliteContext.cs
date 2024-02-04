@@ -4,8 +4,13 @@ using NewsMix.Storage.Entities;
 
 namespace NewsMix.Storage;
 
-public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(options)
+public class SqliteContext : DbContext
 {
+    public SqliteContext(DbContextOptions<SqliteContext> options) : base(options)
+    {
+        Database.Migrate();
+    }
+
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<UserAction> UserActions { get; set; } = null!;
     public DbSet<FoundPublication> FoundPublications { get; set; } = null!;

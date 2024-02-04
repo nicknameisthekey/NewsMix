@@ -2,18 +2,24 @@ using Microsoft.Extensions.DependencyInjection;
 using NewsMix.Abstractions;
 using NewsMix.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using NewsMix.NewsSources;
 using NewsMix.Storage;
 using Telegram.Bot;
 
 namespace NewsMix;
+
 public static class ServiceCollectionExtensions
 {
     public static void AddNewsMix(this IServiceCollection services, IConfiguration config, bool addHosted)
     {
         services.AddDbContext<SqliteContext>
-            (o => o.UseSqlite(config.GetConnectionString("sqlite")));
+        (o =>
+        {
+            o.ConfigureWarnings(w => w.Ignore(RelationalEventId.MultipleCollectionIncludeWarning));
+            o.UseSqlite(config.GetConnectionString("sqlite"));
+        });
 
         if (addHosted)
         {
@@ -35,9 +41,9 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<ITelegramBotClient>(s =>
         {
-            var token =  config["TelegramBotToken"] ?? throw new Exception("TelegramBotToken");
+            var token = config["TelegramBotToken"] ?? throw new Exception("TelegramBotToken");
 
-            var client =  new TelegramBotClient(token);
+            var client = new TelegramBotClient(token);
             return client;
         });
         services.AddHttpClient();

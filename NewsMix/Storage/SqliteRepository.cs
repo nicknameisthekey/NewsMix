@@ -23,19 +23,25 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
                                                  s.TopicInternalName == publication.TopicInternalName) == true)
             .ToListAsync();
 
+        if (usersToNotify.Any() == false)
+            return;
+
         var hashtag = (await context.NewsTopics
             .SingleAsync(t => t.Enabled && t.NewsSource == publication.Source &&
                               t.InternalName == publication.TopicInternalName)).HashTag;
 
-        usersToNotify.ForEach(u => u.NotificationTasks.Add(new NotificationTask()
+        foreach (var u in usersToNotify)
         {
-            Id = Guid.NewGuid().ToString(),
-            Url = publication.Url,
-            Topic = publication.TopicInternalName,
-            CreatedAtUTC = DateTime.UtcNow,
-            HashTag = hashtag,
-            Done = false
-        }));
+            u.NotificationTasks.Add(new NotificationTask()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Url = publication.Url,
+                Topic = publication.TopicInternalName,
+                CreatedAtUTC = DateTime.UtcNow,
+                HashTag = hashtag,
+                Done = false
+            });
+        }
 
         await context.SaveChangesAsync();
     }
