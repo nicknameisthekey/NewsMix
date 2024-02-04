@@ -6,5 +6,4 @@ public record class Publication
     public string Text { get; init; } = null!;
     public string Url { get; init; } = null!;
     public string TopicInternalName { get; init; } = null!;
-    public string? HashTag { get; init; }
 }

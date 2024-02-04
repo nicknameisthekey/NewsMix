@@ -25,6 +25,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "ea",
                     Enabled = true,
                     VisibleNameRU = "Apex Legends",
+                    HashTag = "#ea #apex",
                     OrderInList = 1
                 },
                 
@@ -35,6 +36,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "habr",
                     Enabled = true,
                     VisibleNameRU = "Статьи с рейтингом > 25",
+                    HashTag = "#habr #rating25plus",
                     OrderInList = 1
                 },
                 
@@ -45,6 +47,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "icyveins",
                     Enabled = true,
                     VisibleNameRU = "World of Warcraft",
+                    HashTag = "#icyveins #wow",
                     OrderInList = 1
                 },
                 new()
@@ -54,6 +57,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "icyveins",
                     Enabled = true,
                     VisibleNameRU = "World of Warcraft Classic",
+                    HashTag = "#icyveins #wowclassic",
                     OrderInList = 2,
                 },
                 new()
@@ -63,6 +67,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "icyveins",
                     Enabled = true,
                     VisibleNameRU = "Diablo",
+                    HashTag = "#icyveins #diablo",
                     OrderInList = 3,
                 },
                 new()
@@ -72,6 +77,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "icyveins",
                     Enabled = true,
                     VisibleNameRU = "Warcraft",
+                    HashTag = "#icyveins #warcraft",
                     OrderInList = 4,
                 },
                 new()
@@ -81,6 +87,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "icyveins",
                     Enabled = true,
                     VisibleNameRU = "Lost Arc",
+                    HashTag = "#icyveins #lostarc",
                     OrderInList = 5,
                 },
                 
@@ -91,6 +98,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "noobclub",
                     Enabled = true,
                     VisibleNameRU = "World of Warcraft",
+                    HashTag = "#noobclub #wow",
                     OrderInList = 1,
                 },
                 new()
@@ -100,6 +108,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "noobclub",
                     Enabled = true,
                     VisibleNameRU = "World of Warcraft Classic",
+                    HashTag = "#noobclub #wowclassic",
                     OrderInList = 2,
                 },
                 new()
@@ -109,6 +118,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "noobclub",
                     Enabled = true,
                     VisibleNameRU = "Diablo",
+                    HashTag = "#noobclub #diablo",
                     OrderInList = 3,
                 },
                 new()
@@ -118,6 +128,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "noobclub",
                     Enabled = true,
                     VisibleNameRU = "Hearthstone",
+                    HashTag = "#noobclub #hearthstone",
                     OrderInList = 4,
                 },
                 new()
@@ -127,6 +138,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "noobclub",
                     Enabled = true,
                     VisibleNameRU = "Overwatch",
+                    HashTag = "#noobclub #overwatch",
                     OrderInList = 5,
                 },
                 new()
@@ -135,7 +147,8 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     InternalName = NoobClub.Topic_w3,
                     NewsSource = "noobclub",
                     Enabled = true,
-                    VisibleNameRU = "Warcraft 3",
+                    VisibleNameRU = "Warcraft",
+                    HashTag = "#noobclub #warcraft",
                     OrderInList = 6,
                 },
                 new()
@@ -145,6 +158,7 @@ public class SqliteContext(DbContextOptions<SqliteContext> options) : DbContext(
                     NewsSource = "noobclub",
                     Enabled = true,
                     VisibleNameRU = "Blizzard",
+                    HashTag = "#noobclub #blizzard",
                     OrderInList = 7,
                 }
             });

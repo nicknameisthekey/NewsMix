@@ -1,6 +1,7 @@
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
+using NewsMix.Helpers;
 using NewsMix.Models;
 
 namespace NewsMix.NewsSources;
@@ -71,7 +72,7 @@ public class NoobClub(DataDownloader dataDownloader, ILogger<NoobClub>? logger =
             Text = title,
             Url = siteUrl + aritcleUrl,
             TopicInternalName = topic,
-            Source = Name
+            Source = Name,
         };
     }
 

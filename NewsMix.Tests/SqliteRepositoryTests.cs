@@ -14,7 +14,6 @@ public class SqliteRepositoryTests
     {
         Url = "https://123.com",
         TopicInternalName = "abcd",
-        HashTag = null,
         Source = "source",
     };
 
@@ -44,7 +43,6 @@ public class SqliteRepositoryTests
         {
             Url = "https://123.com",
             TopicInternalName = "abcd",
-            HashTag = null,
             Source = "source",
         };
         await repo.AddPublication(pub);
@@ -54,7 +52,6 @@ public class SqliteRepositoryTests
         {
             Url = "https://321.com",
             TopicInternalName = "abcd",
-            HashTag = null,
             Source = "source",
         };
         await repo.AddPublication(pub2);
