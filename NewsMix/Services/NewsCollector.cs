@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Helpers;
+using NewsMix.Models;
 
 namespace NewsMix.Services;
 
@@ -24,25 +25,45 @@ public class NewsCollector : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
-        
+
         while (cancellationToken.IsCancellationRequested == false)
         {
-            foreach (var source in _sources)
+            try
             {
-                var publications = await source.GetPublications();
-
-                _logger.LogPublicationsFetched(publications.Count, source.Name);
-
-                foreach (var publication in publications)
+                foreach (var source in _sources)
                 {
-                    if (await _publicationsRepository.IsPublicationNew(publication.Url))
-                        await _publicationsRepository.CreateNotificationTasks(publication);
+                    var publications = await GetSafe(source);
 
-                    await _publicationsRepository.AddPublication(publication);
+                    _logger.LogPublicationsFetched(publications.Count, source.Name);
+
+                    foreach (var publication in publications)
+                    {
+                        if (await _publicationsRepository.IsPublicationNew(publication.Url))
+                            await _publicationsRepository.CreateNotificationTasks(publication);
+
+                        await _publicationsRepository.AddPublication(publication);
+                    }
                 }
+                await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);
             }
+            catch (Exception e)
+            {
+                _logger?.LogError(e, "error while fetching news");
+                await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);
+            }
+        }
+    }
 
-            await Task.Delay(TimeSpan.FromMinutes(10));
+    private async Task<IReadOnlyCollection<Publication>> GetSafe(NewsSource source)
+    {
+        try
+        {
+            return await source.GetPublications();
+        }
+        catch (Exception e)
+        {
+            _logger?.LogError(e, "error while fetching news");
+            return Array.Empty<Publication>();
         }
     }
 }

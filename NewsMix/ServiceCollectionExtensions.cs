@@ -29,11 +29,14 @@ public static class ServiceCollectionExtensions
         }
 
         services.AddScoped<UserService>();
-        services.AddScoped<NewsSource, NoobClub>();
         services.AddScoped<IStatsService, StatsService>();
+
+        services.AddScoped<NewsSource, NoobClub>();
         services.AddScoped<NewsSource, IcyVeins>();
         services.AddScoped<NewsSource, EaApex>();
         services.AddScoped<NewsSource, Habr>();
+        services.AddScoped<NewsSource, WowHead>();
+
         services.AddSingleton<UserInterface, UI.Telegram.Telegram>();
         services.AddScoped<UserRepository, SqliteRepository>();
         services.AddScoped<SqliteRepository, SqliteRepository>(); //todo remove it completely?
