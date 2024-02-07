@@ -39,7 +39,7 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
                 Topic = publication.TopicInternalName,
                 CreatedAtUTC = DateTime.UtcNow,
                 HashTag = hashtag,
-                Done = false
+               DoneAtUTC = DateTime.UtcNow
             });
         }
 
@@ -138,6 +138,14 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
     public async Task<int> UsersCount()
     {
         return await context.Users.CountAsync();
+    }
+
+    public async Task<BotSentMessage?> ActiveKeyboardMessage(string externalUserId)
+    {
+        return await context.BotSentMessages
+            .SingleOrDefaultAsync(m => m.ExternalUserId == externalUserId &&
+                              m.MessageType == MessageType.Keyboard &&
+                              m.DeletedAtUTC.HasValue == false);
     }
 
     private async Task UpdateName(UserModel newValue, User oldValue)

@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,6 +14,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types;
 using static NewsMix.UI.Telegram.CallbackActionType;
+using MessageType = NewsMix.Storage.Entities.MessageType;
 
 namespace NewsMix.UI.Telegram;
 
@@ -22,12 +22,12 @@ public class Telegram : BackgroundService, UserInterface
 {
     public string UIName => "telegram";
 
-    private readonly ConcurrentDictionary<string, long> SentMessagesByUser = new();
     private readonly ITelegramBotClient _client;
     private readonly IStatsService _statsService;
     private readonly UserService _userService;
     private readonly ILogger<Telegram>? _logger;
     private readonly SqliteContext _context;
+    private readonly SqliteRepository _sqliteRepository;
 
     public Telegram(ITelegramBotClient client,
         IServiceProvider services, ILogger<Telegram>? logger = null)
@@ -37,16 +37,19 @@ public class Telegram : BackgroundService, UserInterface
         _statsService = scope.ServiceProvider.GetRequiredService<IStatsService>();
         _userService = scope.ServiceProvider.GetRequiredService<UserService>();
         _context = scope.ServiceProvider.GetRequiredService<SqliteContext>();
+        _sqliteRepository = scope.ServiceProvider.GetRequiredService<SqliteRepository>();
         _logger = logger;
     }
 
-    public const string GreetinMessage =
+    const string GreetinMessage =
         "Привет! Я умею присылать новости из разных источников. Посмотреть варианты можно по кнопке \"Меню\".";
 
 
-    public async Task NotifyUser(string user, string message)
+    public async Task NotifyUser(string externalUserId, string text)
     {
-        await _client.SendTextMessageAsync(chatId: user, text: message);
+        var message = await _client.SendTextMessageAsync(chatId: externalUserId, text: text);
+        await LogNewMessage(externalUserId, message.MessageId, MessageType.News);
+        await RemoveOldKeyboards(externalUserId);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -115,7 +118,9 @@ public class Telegram : BackgroundService, UserInterface
         if (activeQueries.Any() == false)
         {
             _logger?.LogError("callback not found for user with {externalId}", user.ExternalUserId);
-            //todo fail?
+            await _client.SendTextMessageAsync(user.ExternalUserId,
+                "Упс, произошла ошибка, действие больше недоступно.");
+            return;
         }
 
         _context.ActiveInlineQueries.RemoveRange(activeQueries);
@@ -136,12 +141,12 @@ public class Telegram : BackgroundService, UserInterface
     {
         if (message.Text == "/start")
         {
-            await SendGreetings(message.From!.Id);
+            await SendGreetings(user.ExternalUserId);
         }
 
         if (message.Text == "/stats")
         {
-            await SendStats(message.From!.Id);
+            await SendStats(user.ExternalUserId);
         }
 
         if (message.Text == "/stop")
@@ -162,10 +167,11 @@ public class Telegram : BackgroundService, UserInterface
         foreach (var sub in subs.ToArray())
             await _userService.RemoveSubscription(user, sub);
 
-        await _client.SendTextMessageAsync(user.ExternalUserId, "Успешно");
+        var message = await _client.SendTextMessageAsync(user.ExternalUserId, "Успешно");
+        await LogNewMessage(user.ExternalUserId, message.MessageId, MessageType.News);
     }
 
-    private async Task SendStats(long userId)
+    private async Task SendStats(string externalUserId)
     {
         var userCount = await _statsService.UsersCount();
         var notificationsCount = await _statsService.NotificationsCount();
@@ -178,12 +184,15 @@ public class Telegram : BackgroundService, UserInterface
             text += $"{Environment.NewLine}Собрано из [этого комита]({commitUrl})";
         }
 
-        await _client.SendTextMessageAsync(userId, text, parseMode: ParseMode.MarkdownV2);
+        var message = await _client.SendTextMessageAsync(externalUserId, text, parseMode: ParseMode.MarkdownV2);
+        await LogNewMessage(externalUserId, message.MessageId, MessageType.News);
+        await RemoveOldKeyboards(externalUserId);
     }
 
-    private async Task SendGreetings(long userId)
+    private async Task SendGreetings(string externalUserId)
     {
-        await _client.SendTextMessageAsync(userId.ToString(), GreetinMessage);
+        var message = await _client.SendTextMessageAsync(externalUserId, GreetinMessage);
+        await LogNewMessage(externalUserId, message.MessageId, MessageType.Information);
     }
 
     private async Task SendTopics(UserModel user, string source)
@@ -206,7 +215,7 @@ public class Telegram : BackgroundService, UserInterface
                 TopicInternalName = topic.InternalName,
                 Text = topic.VisibleNameRU
             }).ToArray();
-        
+
         await _context.ActiveInlineQueries
             .Where(q => q.ExternalUserId == user.ExternalUserId)
             .ExecuteDeleteAsync();
@@ -221,7 +230,7 @@ public class Telegram : BackgroundService, UserInterface
         }));
         await _context.SaveChangesAsync();
 
-        await SendNewOrEdit(user.ExternalUserId, callbacks, "Что интересует?");
+        await SendNewKeyboard(user.ExternalUserId, callbacks, "Что интересует?");
     }
 
     private async Task SubscribeUser(UserModel user, Subscription sub)
@@ -238,13 +247,28 @@ public class Telegram : BackgroundService, UserInterface
         await ReplaceKeyboardWithSuccessMessage(user.ExternalUserId);
     }
 
-    private async Task ReplaceKeyboardWithSuccessMessage(string userId)
+    private async Task ReplaceKeyboardWithSuccessMessage(string externalUserId)
     {
-        if (SentMessagesByUser.TryRemove(userId, out var messageId))
+        var messageToEdit = await _sqliteRepository.ActiveKeyboardMessage(externalUserId);
+        if (messageToEdit == null)
         {
-            await _client.EditMessageTextAsync(chatId: userId, messageId: (int)messageId, text: "Успешно");
+            _logger?.LogError("Message with active keyboard not found for user {}", externalUserId);
+            return;
         }
-        //todo else case
+
+        await _client.DeleteMessageAsync(chatId: externalUserId, messageId: (int)messageToEdit.TelegramMessageId);
+        var newMessage = await _client.SendTextMessageAsync(chatId: externalUserId, text: "Успешно");
+
+        messageToEdit.DeletedAtUTC = DateTime.UtcNow;
+        _context.BotSentMessages.Add(new BotSentMessage
+        {
+            ExternalUserId = externalUserId,
+            TelegramMessageId = newMessage.MessageId,
+            MessageType = MessageType.Information,
+            SendAtUTC = DateTime.UtcNow,
+        });
+
+        await _context.SaveChangesAsync();
     }
 
     private InlineKeyboardMarkup CreateKeyboard(CallbackData[] callBacks)
@@ -263,22 +287,52 @@ public class Telegram : BackgroundService, UserInterface
         return new InlineKeyboardMarkup(rows);
     }
 
-    private async Task SendNewOrEdit(string userId, CallbackData[] callbacks, string text)
+    private async Task SendNewKeyboard(string externalUserId, CallbackData[] callbacks, string text)
     {
-        if (SentMessagesByUser.TryGetValue(userId, out var messageId))
-        {
-            var response = await _client.EditMessageTextAsync(chatId: userId,
-                messageId: (int)messageId,
-                text: text,
-                replyMarkup: CreateKeyboard(callbacks));
-        }
-        else
-        {
-            var response =
-                await _client.SendTextMessageAsync(chatId: userId, text: text, replyMarkup: CreateKeyboard(callbacks));
+        var message = await _sqliteRepository.ActiveKeyboardMessage(externalUserId);
+        if (message != null)
+            await DeleteMessage(message);
 
-            SentMessagesByUser.TryRemove(userId, out _);
-            SentMessagesByUser.TryAdd(userId, response!.MessageId);
+        var newMessage =
+            await _client.SendTextMessageAsync(chatId: externalUserId, text: text,
+                replyMarkup: CreateKeyboard(callbacks));
+
+       await LogNewMessage(externalUserId, newMessage.MessageId, MessageType.Keyboard);
+    }
+
+    private async Task RemoveOldKeyboards(string externalUserId)
+    {
+        var keyboardMessage = await _sqliteRepository.ActiveKeyboardMessage(externalUserId);
+        if (keyboardMessage == null)
+            return;
+
+        var messagesSince = await _context.BotSentMessages
+            .CountAsync(m => m.DeletedAtUTC.HasValue == false &&
+                             m.SendAtUTC > keyboardMessage.SendAtUTC);
+
+        if (messagesSince > 4)
+        {
+            await DeleteMessage(keyboardMessage);
+            await _context.SaveChangesAsync();
         }
+    }
+
+    private async Task DeleteMessage(BotSentMessage message)
+    {
+        await _client.DeleteMessageAsync(chatId: message.ExternalUserId, messageId: (int)message.TelegramMessageId);
+        message.DeletedAtUTC = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
+    }
+
+    private async Task LogNewMessage(string externalUserId, int messageId, MessageType type)
+    {
+        _context.BotSentMessages.Add(new BotSentMessage
+        {
+            ExternalUserId = externalUserId,
+            TelegramMessageId = messageId,
+            MessageType = type,
+            SendAtUTC = DateTime.UtcNow
+        });
+        await _context.SaveChangesAsync();
     }
 }

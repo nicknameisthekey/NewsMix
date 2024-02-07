@@ -26,9 +26,9 @@ public class NotificationTasksExecutor : BackgroundService
         while (cancellationToken.IsCancellationRequested == false)
         {
             var usersToNotify = await _context.Users
-                .Include(u => u.NotificationTasks.Where(t => t.Done == false))
+                .Include(u => u.NotificationTasks.Where(t => t.DoneAtUTC.HasValue == false))
                 .Where(u => u.NotificationTasks.Any() == true)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             foreach (var user in usersToNotify)
             {
@@ -47,7 +47,7 @@ public class NotificationTasksExecutor : BackgroundService
 
                         _logger?.LogWarning("Notified user {user}, publication {task}", user, task);
 
-                        task.Done = true;
+                        task.DoneAtUTC = DateTime.UtcNow;
                         await _context.SaveChangesAsync();
                     }
                 }

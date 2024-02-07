@@ -36,6 +36,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<NewsSource, Habr>();
         services.AddSingleton<UserInterface, UI.Telegram.Telegram>();
         services.AddScoped<UserRepository, SqliteRepository>();
+        services.AddScoped<SqliteRepository, SqliteRepository>(); //todo remove it completely?
         services.AddScoped<PublicationsRepository, SqliteRepository>();
         services.AddScoped<DataDownloader, DataDownloaderService>();
 

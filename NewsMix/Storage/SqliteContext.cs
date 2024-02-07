@@ -17,7 +17,8 @@ public class SqliteContext : DbContext
     public DbSet<NewsTopic> NewsTopics { get; set; } = null!;
     public DbSet<ActiveInlineQuery> ActiveInlineQueries { get; set; } = null!;
     public DbSet<NotificationTask> NotificationTasks { get; set; } = null!;
-
+    public DbSet<BotSentMessage> BotSentMessages { get; set; } = null!;
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<NewsTopic>().HasData

@@ -11,7 +11,7 @@ public class NotificationTask
     public string Url { get; init; } = null!;
     public string Topic { get; init; } = null!;
     public string? HashTag { get; set; }
-    public bool Done { get; set; }
+    public DateTime? DoneAtUTC { get; set; }
     public DateTime CreatedAtUTC { get; set; }
     
     [ForeignKey(nameof(InternalUserId))]

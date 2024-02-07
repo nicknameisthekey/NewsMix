@@ -23,6 +23,8 @@ public class NewsCollector : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
+        await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
+        
         while (cancellationToken.IsCancellationRequested == false)
         {
             foreach (var source in _sources)
