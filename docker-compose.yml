@@ -4,7 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      DOTNET_ENVIRONMENT: Docker
+      - DOTNET_ENVIRONMENT=Docker
+      - GITCOMMITURL=${GITCOMMITURL}
     volumes:
       - newsmix:/mount_dir
     restart: unless-stopped

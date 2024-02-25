@@ -7,6 +7,8 @@ appsettings.Development.json
 appsettings.Docker.json
 botfather-commands.txt
 SqliteDesignTime.cs
+deploy.sh
+.env
 SourcePages/
 # User-specific files
 *.rsuser
