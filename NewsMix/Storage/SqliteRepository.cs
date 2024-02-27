@@ -18,8 +18,8 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
         var usersToNotify = await context.Users
             .Include(u => u.Subscriptions)
             .Include(u => u.NotificationTasks)
-            .Where(u => u.NotificationTasks.Any(t => t.Url == publication.Url) == false)
-            .Where(u => u.Subscriptions.Any(s => s.Source == publication.Source &&
+            .Where(u => u.NotificationTasks!.Any(t => t.Url == publication.Url) == false)
+            .Where(u => u.Subscriptions!.Any(s => s.Source == publication.Source &&
                                                  s.TopicInternalName == publication.TopicInternalName) == true)
             .ToListAsync();
 
@@ -32,11 +32,11 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
 
         foreach (var u in usersToNotify)
         {
-            u.NotificationTasks.Add(new NotificationTask()
+            u.NotificationTasks!.Add(new NotificationTask()
             {
-                Id = Guid.NewGuid().ToString(),
                 Url = publication.Url,
-                Topic = publication.TopicInternalName,
+                NewsSource = publication.Source,
+                TopicInternalName = publication.TopicInternalName,
                 CreatedAtUTC = DateTime.UtcNow,
                 HashTag = hashtag,
                 DoneAtUTC = null
@@ -80,7 +80,8 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
                 Name = userToFind.Name,
                 UIType = userToFind.UIType,
                 CreatedAt = DateTime.UtcNow,
-                Subscriptions = []
+                Subscriptions = [],
+                UserActions = []
             };
             context.Users.Add(result);
             await context.SaveChangesAsync();
@@ -95,10 +96,10 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
     {
         var u = await GetOrCreate(user);
 
-        if (u.Subscriptions.Any(s => s.SameAs(sub)))
+        if (u.Subscriptions!.Any(s => s.SameAs(sub)))
             return; //todo log
 
-        u.Subscriptions.Add(new Subscription
+        u.Subscriptions!.Add(new Subscription
         {
             Source = sub.Source,
             TopicInternalName = sub.TopicInternalName,
@@ -106,7 +107,7 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
             InternalUserId = u.Id
         });
 
-        u.UserActions.Add(new UserAction
+        u.UserActions!.Add(new UserAction
         {
             ActionType = ActionType.Subscribe,
             Topic = sub.TopicInternalName,
@@ -120,11 +121,11 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
     public async Task RemoveSubscription(UserModel user, Subscription sub)
     {
         var u = await GetOrCreate(user);
-        var subToRemove = u.Subscriptions.FirstOrDefault(s => s.SameAs(sub));
+        var subToRemove = u.Subscriptions!.FirstOrDefault(s => s.SameAs(sub));
 
-        u.Subscriptions.Remove(subToRemove!);
+        u.Subscriptions!.Remove(subToRemove!);
 
-        u.UserActions.Add(new UserAction
+        u.UserActions!.Add(new UserAction
         {
             ActionType = ActionType.Unsubscribe,
             Topic = sub.TopicInternalName,
@@ -144,8 +145,8 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
     {
         return await context.BotSentMessages
             .SingleOrDefaultAsync(m => m.ExternalUserId == externalUserId &&
-                              m.MessageType == MessageType.Keyboard &&
-                              m.DeletedAtUTC.HasValue == false);
+                                       m.MessageType == MessageType.Keyboard &&
+                                       m.DeletedAtUTC.HasValue == false);
     }
 
     private async Task UpdateName(UserModel newValue, User oldValue)

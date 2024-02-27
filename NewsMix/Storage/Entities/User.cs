@@ -16,7 +16,7 @@ public class User
     public string UIType { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
     
-    public List<UserAction> UserActions { get; init; } = new();
-    public List<Subscription> Subscriptions { get; init; } = new();
-    public List<NotificationTask> NotificationTasks { get; set; } = new();
+    public List<UserAction>? UserActions { get; set; }
+    public List<Subscription>? Subscriptions { get; set; }
+    public List<NotificationTask>? NotificationTasks { get; set; }
 }

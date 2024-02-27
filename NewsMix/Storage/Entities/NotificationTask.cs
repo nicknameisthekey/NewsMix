@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,10 +7,11 @@ namespace NewsMix.Storage.Entities;
 public class NotificationTask
 {
     [Key]
-    public string Id { get; set; }
+    public int Id { get; set; }
     public int InternalUserId { get; set; }
-    public string Url { get; init; } = null!;
-    public string Topic { get; init; } = null!;
+    public string Url { get; set; } = null!;
+    public string NewsSource { get; set; } = null!;
+    public string TopicInternalName { get; set; } = null!;
     public string? HashTag { get; set; }
     public DateTime? DoneAtUTC { get; set; }
     public DateTime CreatedAtUTC { get; set; }

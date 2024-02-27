@@ -12,13 +12,17 @@ namespace NewsMix;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddNewsMix(this IServiceCollection services, IConfiguration config, bool addHosted)
+    public static IServiceCollection AddNewsMix(this IServiceCollection services, IConfiguration config, bool addHosted)
     {
+        var connStr = config.GetConnectionString("sqlite");
+        if (connStr == null)
+            throw new Exception("sqlite connection string is not set");
+
         services.AddDbContext<SqliteContext>
         (o =>
         {
             o.ConfigureWarnings(w => w.Ignore(RelationalEventId.MultipleCollectionIncludeWarning));
-            o.UseSqlite(config.GetConnectionString("sqlite"));
+            o.UseSqlite(connStr);
         });
 
         if (addHosted)
@@ -51,5 +55,7 @@ public static class ServiceCollectionExtensions
             return client;
         });
         services.AddHttpClient();
+
+        return services;
     }
 }

@@ -24,8 +24,8 @@ public class UserService(UserRepository userRepository, ILogger<UserService>? lo
         var u = await userRepository.GetOrCreate(user);
         return source switch
         {
-            not null => u.Subscriptions.Where(s => s.Source == source).ToList(),
+            not null => u.Subscriptions?.Where(s => s.Source == source).ToList(),
             null => u.Subscriptions
-        };
+        } ?? [];
     }
 }

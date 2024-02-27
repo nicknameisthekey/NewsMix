@@ -1,6 +1,6 @@
 using FakeItEasy;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NewsMix.UI.Telegram;
 using Telegram.Bot;
 using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
@@ -10,6 +10,8 @@ namespace NewsMix.Tests;
 
 public class TelegramTests
 {
+    private readonly IConfiguration config = TestHelpers.PrepareTestEnv();
+    
     [Fact]
     public async Task Old_text_messages_ignored()
     {
@@ -17,12 +19,14 @@ public class TelegramTests
         A.CallTo(() => client.MakeRequestAsync((SendMessageRequest)null!, default))
             .WithAnyArguments()
             .Throws(new Exception());
-
-        var sc = new ServiceCollection();
-        sc.AddNewsMix(TestHelpers.MockConfig, false);
-        sc.ReplaceWithSingleton(client);
-        sc.AddSingleton<UI.Telegram.Telegram>();
-        var telegram = sc.BuildServiceProvider().GetRequiredService<UI.Telegram.Telegram>();
+        
+        var services = new ServiceCollection()
+            .AddNewsMix(config, false)
+            .WithSingletonMock(client)
+            .AddSingleton<UI.Telegram.Telegram>()
+            .CreateScope();
+        
+        var telegram = services.GetRequiredService<UI.Telegram.Telegram>();
 
         await telegram.HandleUpdateAsync(null!, new Update
         {

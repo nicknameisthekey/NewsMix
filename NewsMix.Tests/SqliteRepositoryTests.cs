@@ -1,16 +1,17 @@
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NewsMix.Models;
 using NewsMix.Storage;
 using NewsMix.Storage.Entities;
-using static NewsMix.Tests.TestHelpers;
 
 namespace NewsMix.Tests;
 
 public class SqliteRepositoryTests
 {
-    private readonly SqliteContext ctx;
-    private readonly SqliteRepository repo;
-    public SqliteRepositoryTests() => (repo, ctx) = CreateDb();
-    public Publication Publication =>  new Publication()
+    private readonly IConfiguration config = TestHelpers.PrepareTestEnv();
+    
+    Publication Publication =>  new Publication()
     {
         Url = "https://123.com",
         TopicInternalName = "abcd",
@@ -20,6 +21,12 @@ public class SqliteRepositoryTests
     [Fact]
     public async Task SetPublicationNotified_doesnt_add_duplicates()
     {
+        var services = new ServiceCollection()
+            .AddNewsMix(config, false)
+            .CreateScope();
+        var repo = services.GetRequiredService<SqliteRepository>();
+        var ctx = services.GetRequiredService<SqliteContext>();
+        
         await repo.AddPublication(Publication);
         await repo.AddPublication(Publication);
 
@@ -29,6 +36,11 @@ public class SqliteRepositoryTests
     [Fact]
     public async Task Publication_is_new_if_not_in_notified_list()
     {
+        var services = new ServiceCollection()
+            .AddNewsMix(config, false)
+            .CreateScope();
+        var repo = services.GetRequiredService<SqliteRepository>();
+        
         Assert.True(await repo.IsPublicationNew(Publication.Url));
         await repo.AddPublication(Publication);
         Assert.False(await repo.IsPublicationNew(Publication.Url));
@@ -37,6 +49,11 @@ public class SqliteRepositoryTests
     [Fact]
     public async Task Count_notifications_shows_all_notified_publications()
     {
+        var services = new ServiceCollection()
+            .AddNewsMix(config, false)
+            .CreateScope();
+        var repo = services.GetRequiredService<SqliteRepository>();
+        
         Assert.Equal(0, await repo.NotificationCount());
 
         var pub = new Publication()
@@ -64,6 +81,12 @@ public class SqliteRepositoryTests
         const string u1Id = "1234";
         const string u2Id = "4321";
 
+        var services = new ServiceCollection()
+            .AddNewsMix(config, false)
+            .CreateScope();
+        var repo = services.GetRequiredService<SqliteRepository>();
+        var ctx = services.GetRequiredService<SqliteContext>();
+        
         await repo.GetOrCreate(new UserModel
         {
             ExternalUserId = u1Id,
@@ -87,12 +110,19 @@ public class SqliteRepositoryTests
     [Fact]
     public async Task GetOrCreate_returns_existing_user()
     {
+        var services = new ServiceCollection()
+            .AddNewsMix(config, false)
+            .CreateScope();
+        var repo = services.GetRequiredService<SqliteRepository>();
+        var ctx = services.GetRequiredService<SqliteContext>();
+        
         var user = new User
         {
             ExternalUserId = "1234",
             UIType = "telegram",
             Name = "1234"
         };
+        
         ctx.Users.Add(user);
         ctx.SaveChanges();
 

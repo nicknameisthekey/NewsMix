@@ -45,10 +45,10 @@ public class Telegram : BackgroundService, UserInterface
         "Привет! Я умею присылать новости из разных источников. Посмотреть варианты можно по кнопке \"Меню\".";
 
 
-    public async Task NotifyUser(string externalUserId, string text)
+    public async Task NotifyUser(string externalUserId, string text, int notificationTaskId)
     {
         var message = await _client.SendTextMessageAsync(chatId: externalUserId, text: text);
-        await LogNewMessage(externalUserId, message.MessageId, MessageType.News);
+        await LogNewMessage(externalUserId, message.MessageId, MessageType.News, notificationTaskId);
         await RemoveOldKeyboards(externalUserId);
     }
 
@@ -105,7 +105,7 @@ public class Telegram : BackgroundService, UserInterface
         }
         catch (Exception e)
         {
-            _logger?.LogError(e, $"Error on processing update {JsonConvert.SerializeObject(update)}");
+            _logger?.LogError(e, "Error on processing update {@update}", update);
         }
     }
 
@@ -324,13 +324,14 @@ public class Telegram : BackgroundService, UserInterface
         await _context.SaveChangesAsync();
     }
 
-    private async Task LogNewMessage(string externalUserId, int messageId, MessageType type)
+    private async Task LogNewMessage(string externalUserId, int messageId, MessageType type, int? notificationTaskId = null)
     {
         _context.BotSentMessages.Add(new BotSentMessage
         {
             ExternalUserId = externalUserId,
             TelegramMessageId = messageId,
             MessageType = type,
+            NotificationTaskId = notificationTaskId,
             SendAtUTC = DateTime.UtcNow
         });
         await _context.SaveChangesAsync();

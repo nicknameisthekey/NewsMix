@@ -1,5 +1,8 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NewsMix.Models;
 using NewsMix.Services;
+using NewsMix.Storage;
 using NewsMix.Storage.Entities;
 using static NewsMix.Tests.TestHelpers;
 
@@ -7,14 +10,18 @@ namespace NewsMix.Tests;
 
 public class UserServiceTests
 {
+    private readonly IConfiguration config = TestHelpers.PrepareTestEnv();
     UserModel TestUser => new() { ExternalUserId = "12345", UIType = "telegram", Name = "1234" };
     Subscription TestSub => new() { Source = "source", TopicInternalName = "topic" };
 
     [Fact]
     public async Task Adding_subscription_to_non_existing_user_creates_new_user_with_subscription()
     {
-        var (repo, ctx) = CreateDb();
-        var userService = new UserService(repo);
+        var services = new ServiceCollection()
+            .AddNewsMix(config, false)
+            .CreateScope();
+        var repo = services.GetRequiredService<SqliteRepository>();
+        var userService = services.GetRequiredService<UserService>();
 
         await userService.AddSubscription(TestUser, TestSub);
 
@@ -25,8 +32,11 @@ public class UserServiceTests
     [Fact]
     public async Task Duplication_of_subscriptions_prevented()
     {
-        var (repo, ctx) = CreateDb();
-        var userService = new UserService(repo);
+        var services = new ServiceCollection()
+            .AddNewsMix(config, false)
+            .CreateScope();
+        var repo = services.GetRequiredService<SqliteRepository>();
+        var userService = services.GetRequiredService<UserService>();
 
         await userService.AddSubscription(TestUser, TestSub);
         await userService.AddSubscription(TestUser, TestSub);
@@ -38,8 +48,11 @@ public class UserServiceTests
     [Fact]
     public async Task Adding_new_subscription_dont_remove_other_subscriptions()
     {
-        var (repo, ctx) = CreateDb();
-        var userService = new UserService(repo);
+        var services = new ServiceCollection()
+            .AddNewsMix(config, false)
+            .CreateScope();
+        var repo = services.GetRequiredService<SqliteRepository>();
+        var userService = services.GetRequiredService<UserService>();
 
         await userService.AddSubscription(TestUser, TestSub);
         var someOtherSubscription = new Subscription("other sub", "other pub");
@@ -54,8 +67,11 @@ public class UserServiceTests
     [Fact]
     public async Task Subscription_can_be_removed()
     {
-        var (repo, ctx) = CreateDb();
-        var userService = new UserService(repo);
+        var services = new ServiceCollection()
+            .AddNewsMix(config, false)
+            .CreateScope();
+        var repo = services.GetRequiredService<SqliteRepository>();
+        var userService = services.GetRequiredService<UserService>();
 
         var someOtherSubscription = new Subscription("other sub", "other pub");
         await userService.AddSubscription(TestUser, TestSub);
@@ -70,8 +86,11 @@ public class UserServiceTests
     [Fact]
     public async Task Removing_not_existing_subscription_do_nothing()
     {
-        var (repo, ctx) = CreateDb();
-        var userService = new UserService(repo);
+        var services = new ServiceCollection()
+            .AddNewsMix(config, false)
+            .CreateScope();
+        var repo = services.GetRequiredService<SqliteRepository>();
+        var userService = services.GetRequiredService<UserService>();
 
         var someOtherSubscription = new Subscription("other sub", "other pub");
         await userService.AddSubscription(TestUser, TestSub);
