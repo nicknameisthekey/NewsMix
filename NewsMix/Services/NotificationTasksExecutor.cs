@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsMix.Abstractions;
 using NewsMix.Storage;
+using NewsMix.Storage.Entities;
 
 namespace NewsMix.Services;
 
@@ -34,26 +35,38 @@ public class NotificationTasksExecutor : BackgroundService
             {
                 foreach (var task in user.NotificationTasks.ToArray())
                 {
-                    var userInterface = _userInterfaces.FirstOrDefault(i => i.UIName == user.UIType);
-                    if (userInterface != null)
+                    try
                     {
-                        var text = task.HashTag switch
-                        {
-                            null => task.Url,
-                            not null => task.HashTag + Environment.NewLine + task.Url
-                        };
-
-                        await userInterface.NotifyUser(user.ExternalUserId, text);
-
-                        _logger?.LogWarning("Notified user {user}, publication {task}", user, task);
-
-                        task.DoneAtUTC = DateTime.UtcNow;
-                        await _context.SaveChangesAsync();
+                        await Notify(user, task, cancellationToken);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "Error while sending {@notification} to {@user}", task, user);
                     }
                 }
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(30));
+            await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
+        }
+    }
+
+    private async Task Notify(User user, NotificationTask task, CancellationToken cancellationToken)
+    {
+        var userInterface = _userInterfaces.FirstOrDefault(i => i.UIName == user.UIType);
+        if (userInterface != null)
+        {
+            var text = task.HashTag switch
+            {
+                null => task.Url,
+                not null => task.HashTag + Environment.NewLine + task.Url
+            };
+
+            await userInterface.NotifyUser(user.ExternalUserId, text);
+
+            _logger?.LogWarning("Notified user {@user}, publication {@task}", user, task);
+
+            task.DoneAtUTC = DateTime.UtcNow;
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

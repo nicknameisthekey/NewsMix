@@ -39,7 +39,7 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
                 Topic = publication.TopicInternalName,
                 CreatedAtUTC = DateTime.UtcNow,
                 HashTag = hashtag,
-               DoneAtUTC = DateTime.UtcNow
+                DoneAtUTC = null
             });
         }
 
