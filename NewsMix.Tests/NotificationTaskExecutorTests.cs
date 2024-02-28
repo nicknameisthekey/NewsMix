@@ -21,7 +21,8 @@ public class NotificationTaskExecutorTests
             OnNotify = (_, _, _) => throw new Exception()
         };
         var services = new ServiceCollection()
-            .AddNewsMix(config, true)
+            .AddNewsMix(config, false)
+            .AddHostedService<NotificationTasksExecutor>()
             .WithScopedMock<UserInterface, FakeTelegramUI>(fakeTelegram)
             .CreateScope();
 
@@ -66,7 +67,8 @@ public class NotificationTaskExecutorTests
             OnNotify = (_, _, _) => { }
         };
         var services = new ServiceCollection()
-            .AddNewsMix(config, true)
+            .AddNewsMix(config, false)
+            .AddHostedService<NotificationTasksExecutor>()
             .WithScopedMock<UserInterface, FakeTelegramUI>(fakeTelegram)
             .CreateScope();
 

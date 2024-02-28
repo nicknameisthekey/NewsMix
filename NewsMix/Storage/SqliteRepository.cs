@@ -20,7 +20,7 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
             .Include(u => u.NotificationTasks)
             .Where(u => u.NotificationTasks!.Any(t => t.Url == publication.Url) == false)
             .Where(u => u.Subscriptions!.Any(s => s.Source == publication.Source &&
-                                                 s.TopicInternalName == publication.TopicInternalName) == true)
+                                                  s.TopicInternalName == publication.TopicInternalName) == true)
             .ToListAsync();
 
         if (usersToNotify.Any() == false)
@@ -70,6 +70,7 @@ public class SqliteRepository(SqliteContext context) : PublicationsRepository, U
     {
         var result = await context.Users
             .Include(u => u.Subscriptions)
+            .Include(u => u.UserActions)
             .FirstOrDefaultAsync(u => u.UIType == userToFind.UIType && u.ExternalUserId == userToFind.ExternalUserId);
 
         if (result == null)
